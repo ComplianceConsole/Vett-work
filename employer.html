@@ -1058,17 +1058,13 @@ async function handleEmployerSubmit() {
   }
 
   try {
-    await fetch('/api/send-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    await sendToFormspree({
         type: 'employer_enquiry',
         name, company, email,
         role: document.getElementById('empRole').value.trim(),
         message: document.getElementById('empMessage').value.trim(),
         tier: document.getElementById('empType').value,
-      }),
-    });
+      });
 
     showToast(`Got it, ${name} — we'll be in touch within one business day`);
     btn.textContent = 'Sent';
