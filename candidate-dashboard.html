@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vett.work — My Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --navy: #0c1445;
+  --navy2: #111d5e;
+  --emerald: #10b981;
+  --emerald-light: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  --emerald-dark: #059669;
+  --white: #ffffff;
+  --off: #f8fafc;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --text: #0f172a;
+  --error: #ef4444;
+  --error-light: #fef2f2;
+  --warning: #f59e0b;
+  --warning-light: #fffbeb;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--off);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* NAV */
+nav {
+  background: var(--navy);
+  padding: 0 48px;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
+.logo-dot { color: var(--emerald); }
+
+.nav-right { display: flex; align-items: center; gap: 16px; }
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+}
+
+.nav-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--emerald);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.nav-signout {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: color 0.15s;
+  padding: 7px 14px;
+  border-radius: 7px;
+}
+
+.nav-signout:hover { color: white; }
+
+/* LAYOUT */
+.page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* PROGRESS BAR */
+.progress-banner {
+  background: var(--navy);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.progress-left { flex: 1; }
+
+.progress-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 6px;
+}
+
+.progress-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 14px;
+}
+
+.progress-bar-wrap {
+  background: rgba(255,255,255,0.1);
+  border-radius: 100px;
+  height: 6px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--emerald);
+  border-radius: 100px;
+  transition: width 0.5s ease;
+}
+
+.progress-pct {
+  font-size: 12px;
+  color: var(--emerald);
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.progress-cta {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 9px;
+  border: none;
+  background: var(--emerald);
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s;
+  flex-shrink: 0;
+}
+
+.progress-cta:hover { background: var(--emerald-dark); }
+
+/* SECTIONS */
+.section {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--navy);
+  letter-spacing: -0.3px;
+}
+
+.section-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.badge-complete { background: var(--emerald-light); color: var(--emerald-dark); border: 1px solid var(--emerald-border); }
+.badge-pending { background: var(--warning-light); color: var(--warning); border: 1px solid #fde68a; }
+.badge-locked { background: var(--off); color: var(--muted2); border: 1px solid var(--border); }
+
+/* PROFILE DETAILS */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.field-group { display: flex; flex-direction: column; gap: 5px; }
+
+.field-group label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field-group input {
+  width: 100%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--off);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 10px 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.field-group input:focus { border-color: var(--emerald); }
+.field-group input::placeholder { color: var(--muted2); }
+
+.field-full { grid-column: 1 / -1; }
+
+.save-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: var(--emerald);
+  color: white;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 8px;
+}
+
+.save-btn:hover { background: var(--emerald-dark); }
+
+/* CV UPLOAD */
+.upload-area {
+  border: 2px dashed var(--border);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.upload-area:hover { border-color: var(--emerald); background: var(--emerald-light); }
+.upload-area.dragover { border-color: var(--emerald); background: var(--emerald-light); }
+.upload-area.has-file { border-color: var(--emerald); background: var(--emerald-light); border-style: solid; }
+
+.upload-icon {
+  width: 40px; height: 40px;
+  background: var(--off);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+}
+
+.upload-icon svg { width: 18px; height: 18px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
+.upload-area.has-file .upload-icon { background: var(--emerald-light); border-color: var(--emerald-border); }
+.upload-area.has-file .upload-icon svg { stroke: var(--emerald-dark); }
+
+.upload-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.upload-sub { font-size: 12px; color: var(--muted); }
+.upload-sub span { color: var(--emerald-dark); font-weight: 600; }
+
+#cvInput { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+.or-row {
+  display: flex; align-items: center; gap: 12px;
+  color: var(--muted2); font-size: 12px; margin: 16px 0;
+}
+.or-row::before, .or-row::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+.li-input-wrap {
+  display: flex;
+  gap: 8px;
+  background: var(--off);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 4px 4px 4px 14px;
+  transition: border-color 0.2s;
+}
+
+.li-input-wrap:focus-within { border-color: var(--emerald); }
+.li-input-wrap svg { width: 16px; height: 16px; fill: #0077b5; opacity: 0.7; align-self: center; flex-shrink: 0; }
+
+.li-input-wrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  padding: 10px 0;
+}
+
+.li-input-wrap input::placeholder { color: var(--muted2); }
+
+.li-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background: var(--navy);
+  color: white;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+}
+
+.li-btn:hover { background: var(--navy2); }
+
+/* AI PROMPTS */
+.prompts-list { display: flex; flex-direction: column; gap: 12px; }
+
+.prompt-item {
+  background: var(--off);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  border-left: 3px solid var(--emerald);
+}
+
+.prompt-num {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--emerald-dark);
+  margin-bottom: 6px;
+}
+
+.prompt-text {
+  font-size: 14px;
+  color: var(--navy);
+  line-height: 1.55;
+  font-style: italic;
+}
+
+.prompts-locked {
+  text-align: center;
+  padding: 32px;
+}
+
+.prompts-locked-icon {
+  width: 48px; height: 48px;
+  background: var(--off);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 14px;
+}
+
+.prompts-locked-icon svg { width: 20px; height: 20px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
+.prompts-locked-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.prompts-locked-sub { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 20px; max-width: 360px; margin-left: auto; margin-right: auto; }
+
+.generate-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: 10px;
+  border: none;
+  background: var(--navy);
+  color: white;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.generate-btn:hover { background: var(--navy2); }
+
+/* VIDEO CLIPS */
+.clips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.clip-item {
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.clip-item:hover { box-shadow: 0 4px 16px rgba(12,20,69,0.08); }
+
+.clip-thumb {
+  background: var(--navy);
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  position: relative;
+  cursor: pointer;
+}
+
+.clip-thumb.empty { cursor: default; }
+
+.clip-thumb::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(16,185,129,0.08), transparent);
+}
+
+.clip-play {
+  width: 32px; height: 32px;
+  background: var(--emerald);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+  transition: transform 0.15s;
+}
+
+.clip-thumb:hover .clip-play { transform: scale(1.1); }
+
+.clip-play svg { width: 11px; height: 11px; fill: white; margin-left: 2px; }
+
+.clip-record-icon {
+  width: 32px; height: 32px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  position: relative; z-index: 1;
+}
+
+.clip-record-icon svg { width: 14px; height: 14px; stroke: rgba(255,255,255,0.4); stroke-width: 1.5; fill: none; }
+
+.clip-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  position: relative; z-index: 1;
+  padding: 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.clip-thumb.done .clip-lbl { color: rgba(255,255,255,0.6); }
+
+.clip-status {
+  position: absolute;
+  top: 8px; right: 8px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 2;
+}
+
+.clip-status.done { background: var(--emerald); }
+.clip-status.done svg { width: 10px; height: 10px; stroke: white; stroke-width: 2.5; fill: none; }
+
+.clip-footer {
+  padding: 10px 12px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.clip-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.1px;
+}
+
+.clip-action {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border);
+  background: white;
+  color: var(--navy);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.clip-action:hover { background: var(--navy); color: white; border-color: var(--navy); }
+.clip-action.record { background: var(--navy); color: white; border-color: var(--navy); }
+.clip-action.record:hover { background: var(--emerald); border-color: var(--emerald); }
+
+/* PAYMENT */
+.payment-banner {
+  background: linear-gradient(135deg, var(--navy), var(--navy2));
+  border-radius: 14px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.payment-icon {
+  width: 44px; height: 44px;
+  background: rgba(16,185,129,0.15);
+  border: 1px solid rgba(16,185,129,0.25);
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.payment-icon svg { width: 18px; height: 18px; stroke: var(--emerald); stroke-width: 2; fill: none; }
+.payment-text h3 { font-size: 15px; font-weight: 700; color: white; margin-bottom: 4px; }
+.payment-text p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.5; }
+
+.pay-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 22px;
+  border-radius: 9px;
+  border: none;
+  background: var(--emerald);
+  color: white;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.pay-btn:hover { background: var(--emerald-dark); }
+
+/* VISIBILITY TOGGLE */
+.visibility-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.visibility-info h4 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+.visibility-info p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+.toggle-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+
+.toggle {
+  width: 44px; height: 24px;
+  background: var(--border);
+  border-radius: 100px;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: none;
+  flex-shrink: 0;
+}
+
+.toggle.on { background: var(--emerald); }
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  width: 18px; height: 18px;
+  background: white;
+  border-radius: 50%;
+  top: 3px; left: 3px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.toggle.on::after { transform: translateX(20px); }
+
+.toggle-label { font-size: 13px; font-weight: 600; color: var(--muted); }
+.toggle.on + .toggle-label { color: var(--emerald-dark); }
+
+/* SHARE LINK */
+.share-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  background: var(--off);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: 4px 4px 4px 14px;
+}
+
+.share-url {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  padding: 9px 0;
+}
+
+.copy-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 9px 16px;
+  border-radius: 7px;
+  border: none;
+  background: var(--navy);
+  color: white;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.copy-btn:hover { background: var(--emerald); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 32px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--navy);
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 14px 24px;
+  border-radius: 10px;
+  border: 1px solid var(--emerald);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+  z-index: 999;
+  white-space: nowrap;
+}
+
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* LOADING */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 64px);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .page { padding: 24px 16px 60px; }
+  .profile-grid { grid-template-columns: 1fr; }
+  .clips-grid { grid-template-columns: repeat(2, 1fr); }
+  .payment-banner { flex-direction: column; }
+  .pay-btn { width: 100%; margin-left: 0; }
+  .visibility-row { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
+  <div class="nav-right">
+    <div class="nav-user">
+      <div class="nav-avatar" id="navAvatar">?</div>
+      <span id="navName">Loading...</span>
+    </div>
+    <button class="nav-signout" onclick="handleSignOut()">Sign out</button>
+  </div>
+</nav>
+
+<div id="loadingState" class="loading">Loading your profile...</div>
+
+<div id="dashboardContent" style="display:none">
+<div class="page">
+
+  <!-- PROGRESS -->
+  <div class="progress-banner" id="progressBanner">
+    <div class="progress-left">
+      <div class="progress-title" id="progressTitle">Complete your profile</div>
+      <div class="progress-sub" id="progressSub">Upload your CV to get started</div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+      </div>
+      <div class="progress-pct" id="progressPct">0% complete</div>
+    </div>
+    <button class="progress-cta" id="progressCta" onclick="scrollToNext()">Get started</button>
+  </div>
+
+  <!-- PAYMENT GATE -->
+  <div class="section" id="paymentSection" style="display:none">
+    <div class="section-header">
+      <div class="section-title">Unlock your video profile</div>
+      <span class="section-badge badge-pending">Payment required</span>
+    </div>
+    <div class="payment-banner">
+      <div class="payment-icon">
+        <svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg>
+      </div>
+      <div class="payment-text">
+        <h3>Get your video profile — $19.99</h3>
+        <p>One payment. Six personalised video clips. MP4 download. One free role-specific interview included.</p>
+      </div>
+      <button class="pay-btn" onclick="handlePayment()">Pay $19.99 to unlock</button>
+    </div>
+  </div>
+
+  <!-- PROFILE DETAILS -->
+  <div class="section" id="profileSection">
+    <div class="section-header">
+      <div class="section-title">Your details</div>
+      <span class="section-badge badge-pending" id="profileBadge">Incomplete</span>
+    </div>
+    <div class="profile-grid">
+      <div class="field-group">
+        <label>First name</label>
+        <input type="text" id="firstName" placeholder="First name">
+      </div>
+      <div class="field-group">
+        <label>Last name</label>
+        <input type="text" id="lastName" placeholder="Last name">
+      </div>
+      <div class="field-group">
+        <label>Location</label>
+        <input type="text" id="location" placeholder="e.g. Brisbane, QLD">
+      </div>
+      <div class="field-group">
+        <label>Headline</label>
+        <input type="text" id="headline" placeholder="e.g. Operations Manager | Brisbane">
+      </div>
+    </div>
+    <button class="save-btn" onclick="saveProfile()">Save details</button>
+  </div>
+
+  <!-- CV UPLOAD -->
+  <div class="section" id="cvSection">
+    <div class="section-header">
+      <div class="section-title">Your CV or LinkedIn</div>
+      <span class="section-badge badge-pending" id="cvBadge">Not uploaded</span>
+    </div>
+
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('cvInput').click()">
+      <input type="file" id="cvInput" accept=".pdf,.doc,.docx" onchange="handleCVUpload(event)">
+      <div class="upload-icon">
+        <svg viewBox="0 0 18 18"><path d="M9 2v10M5 8l4-4 4 4"/><path d="M3 14h12a1 1 0 0 0 1-1v-1"/></svg>
+      </div>
+      <div class="upload-title" id="uploadTitle">Upload your CV</div>
+      <div class="upload-sub" id="uploadSub">Drag and drop or <span>browse files</span> · PDF or Word</div>
+    </div>
+
+    <div class="or-row"><span>or paste your LinkedIn URL</span></div>
+
+    <div class="li-input-wrap">
+      <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      <input type="url" id="linkedinUrl" placeholder="linkedin.com/in/yourname">
+      <button class="li-btn" onclick="saveLinkedIn()">Save</button>
+    </div>
+  </div>
+
+  <!-- AI PROMPTS -->
+  <div class="section" id="promptsSection">
+    <div class="section-header">
+      <div class="section-title">Your personalised questions</div>
+      <span class="section-badge badge-pending" id="promptsBadge">Not generated</span>
+    </div>
+
+    <div id="promptsContent">
+      <div class="prompts-locked">
+        <div class="prompts-locked-icon">
+          <svg viewBox="0 0 18 18"><rect x="3" y="8" width="12" height="9" rx="1.5"/><path d="M6 8V6a3 3 0 0 1 6 0v2"/></svg>
+        </div>
+        <div class="prompts-locked-title">Upload your CV first</div>
+        <div class="prompts-locked-sub">Once you've uploaded your CV or LinkedIn, we'll generate 6 personalised questions based on your actual experience. No two profiles are the same.</div>
+        <button class="generate-btn" id="generateBtn" onclick="generatePrompts()" style="display:none">Generate my questions</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO CLIPS -->
+  <div class="section" id="clipsSection">
+    <div class="section-header">
+      <div class="section-title">Your video clips</div>
+      <span class="section-badge badge-locked" id="clipsBadge">Locked</span>
+    </div>
+
+    <div id="clipsContent">
+      <div class="prompts-locked">
+        <div class="prompts-locked-icon">
+          <svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg>
+        </div>
+        <div class="prompts-locked-title">Complete the steps above first</div>
+        <div class="prompts-locked-sub">Pay for your profile and generate your questions — then you'll be ready to record your 6 video clips.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VISIBILITY & SHARING -->
+  <div class="section" id="visibilitySection">
+    <div class="section-header">
+      <div class="section-title">Profile visibility</div>
+    </div>
+
+    <div class="visibility-row">
+      <div class="visibility-info">
+        <h4>Add me to the employer database</h4>
+        <p>Employers can discover your profile and reach out for off-market roles. You can turn this off at any time.</p>
+      </div>
+      <div class="toggle-wrap">
+        <button class="toggle" id="visibilityToggle" onclick="toggleVisibility()"></button>
+        <span class="toggle-label" id="visibilityLabel">Private</span>
+      </div>
+    </div>
+
+    <div class="share-row" id="shareRow" style="display:none">
+      <input type="text" class="share-url" id="shareUrl" readonly>
+      <button class="copy-btn" onclick="copyLink()">Copy link</button>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+const STRIPE_PUBLISHABLE_KEY = 'YOUR_STRIPE_PUBLISHABLE_KEY';
+const STRIPE_PRICE_ID = 'YOUR_STRIPE_PRICE_ID_19.99';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let candidate = null;
+let clips = [];
+
+// ── INIT ──
+async function init() {
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) { window.location.href = 'candidate-auth.html'; return; }
+
+  const { data, error } = await supabase
+    .from('candidates')
+    .select('*')
+    .eq('user_id', session.user.id)
+    .single();
+
+  if (error || !data) { window.location.href = 'candidate-auth.html'; return; }
+
+  candidate = data;
+
+  // Load clips
+  const { data: clipData } = await supabase
+    .from('candidate_clips')
+    .select('*')
+    .eq('candidate_id', candidate.id)
+    .order('clip_number');
+
+  clips = clipData || [];
+
+  renderDashboard();
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('dashboardContent').style.display = 'block';
+}
+
+function renderDashboard() {
+  // Nav
+  const initials = ((candidate.first_name || '?')[0] + (candidate.last_name || '')[0]).toUpperCase();
+  document.getElementById('navAvatar').textContent = initials;
+  document.getElementById('navName').textContent = candidate.first_name || candidate.email;
+
+  // Profile fields
+  document.getElementById('firstName').value = candidate.first_name || '';
+  document.getElementById('lastName').value = candidate.last_name || '';
+  document.getElementById('location').value = candidate.location || '';
+  document.getElementById('headline').value = candidate.headline || '';
+  document.getElementById('linkedinUrl').value = candidate.linkedin_url || '';
+
+  // CV badge
+  if (candidate.cv_url || candidate.linkedin_url || candidate.cv_text) {
+    document.getElementById('cvBadge').textContent = 'Uploaded';
+    document.getElementById('cvBadge').className = 'section-badge badge-complete';
+    document.getElementById('uploadArea').classList.add('has-file');
+    document.getElementById('uploadTitle').textContent = 'CV uploaded';
+    document.getElementById('uploadSub').textContent = 'Upload a new file to replace it';
+    document.getElementById('generateBtn').style.display = 'inline-block';
+  }
+
+  // Profile badge
+  if (candidate.first_name && candidate.location) {
+    document.getElementById('profileBadge').textContent = 'Complete';
+    document.getElementById('profileBadge').className = 'section-badge badge-complete';
+  }
+
+  // Payment section
+  if (!candidate.has_paid) {
+    document.getElementById('paymentSection').style.display = 'block';
+  }
+
+  // Prompts
+  if (candidate.ai_prompts && candidate.ai_prompts.length > 0) {
+    renderPrompts(candidate.ai_prompts);
+  } else if (candidate.cv_text || candidate.linkedin_url) {
+    document.getElementById('promptsContent').innerHTML = `
+      <div class="prompts-locked">
+        <div class="prompts-locked-icon">
+          <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/><line x1="9" y1="6" x2="9" y2="10"/><circle cx="9" cy="12.5" r="0.5" fill="currentColor"/></svg>
+        </div>
+        <div class="prompts-locked-title">Ready to generate</div>
+        <div class="prompts-locked-sub">Your CV is uploaded. Click below to generate your personalised questions.</div>
+        <button class="generate-btn" onclick="generatePrompts()">Generate my questions</button>
+      </div>
+    `;
+  }
+
+  // Clips
+  if (candidate.has_paid && candidate.ai_prompts && candidate.ai_prompts.length > 0) {
+    renderClips();
+  }
+
+  // Visibility
+  const toggle = document.getElementById('visibilityToggle');
+  const label = document.getElementById('visibilityLabel');
+  if (candidate.is_public) {
+    toggle.classList.add('on');
+    label.textContent = 'Visible to employers';
+    document.getElementById('shareRow').style.display = 'flex';
+    document.getElementById('shareUrl').value = window.location.origin + '/profile/' + candidate.id;
+  }
+
+  // Progress
+  updateProgress();
+}
+
+function updateProgress() {
+  let steps = 0;
+  let total = 5;
+  if (candidate.first_name && candidate.location) steps++;
+  if (candidate.cv_text || candidate.linkedin_url) steps++;
+  if (candidate.has_paid) steps++;
+  if (candidate.ai_prompts && candidate.ai_prompts.length > 0) steps++;
+  const doneClips = clips.filter(c => c.is_complete).length;
+  if (doneClips === 6) steps++;
+
+  const pct = Math.round((steps / total) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '% complete';
+
+  if (pct === 100) {
+    document.getElementById('progressTitle').textContent = 'Profile complete!';
+    document.getElementById('progressSub').textContent = 'Your video profile is live and ready to be seen.';
+    document.getElementById('progressCta').textContent = 'Share my profile';
+  } else if (!candidate.first_name) {
+    document.getElementById('progressSub').textContent = 'Start by filling in your details below.';
+    document.getElementById('progressCta').textContent = 'Fill in details';
+  } else if (!candidate.cv_text && !candidate.linkedin_url) {
+    document.getElementById('progressSub').textContent = 'Upload your CV or paste your LinkedIn URL.';
+    document.getElementById('progressCta').textContent = 'Upload CV';
+  } else if (!candidate.has_paid) {
+    document.getElementById('progressSub').textContent = 'Pay $19.99 to unlock your video profile.';
+    document.getElementById('progressCta').textContent = 'Unlock now — $19.99';
+  } else if (!candidate.ai_prompts) {
+    document.getElementById('progressSub').textContent = 'Generate your personalised interview questions.';
+    document.getElementById('progressCta').textContent = 'Generate questions';
+  } else {
+    document.getElementById('progressSub').textContent = `${doneClips} of 6 clips recorded.`;
+    document.getElementById('progressCta').textContent = 'Record clips';
+  }
+}
+
+function renderPrompts(prompts) {
+  document.getElementById('promptsBadge').textContent = 'Generated';
+  document.getElementById('promptsBadge').className = 'section-badge badge-complete';
+
+  const clipTitles = ['Your Passion & Direction', 'Work History', 'Career Highlight', 'Ideal Next Role', 'Strengths', 'Growth Area'];
+
+  document.getElementById('promptsContent').innerHTML = `
+    <div class="prompts-list">
+      ${prompts.map((p, i) => `
+        <div class="prompt-item">
+          <div class="prompt-num">Clip ${i + 1} · ${clipTitles[i]}</div>
+          <div class="prompt-text">"${p}"</div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function renderClips() {
+  document.getElementById('clipsBadge').textContent = `${clips.filter(c => c.is_complete).length}/6 recorded`;
+  document.getElementById('clipsBadge').className = 'section-badge badge-pending';
+
+  const clipTitles = ['Your Passion & Direction', 'Work History', 'Career Highlight', 'Ideal Next Role', 'Strengths', 'Growth Area'];
+
+  document.getElementById('clipsContent').innerHTML = `
+    <div class="clips-grid">
+      ${clipTitles.map((title, i) => {
+        const clip = clips.find(c => c.clip_number === i + 1);
+        const done = clip && clip.is_complete;
+        return `
+          <div class="clip-item">
+            <div class="clip-thumb ${done ? 'done' : 'empty'}" onclick="${done ? `playClip('${clip.video_url}')` : `recordClip(${i + 1})`}">
+              ${done ? `
+                <div class="clip-status done"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div>
+                <div class="clip-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg></div>
+              ` : `
+                <div class="clip-record-icon"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6"/><circle cx="9" cy="9" r="3" fill="currentColor"/></svg></div>
+              `}
+              <div class="clip-lbl">${done ? 'Recorded' : 'Not recorded'}</div>
+            </div>
+            <div class="clip-footer">
+              <div class="clip-name">${title}</div>
+              <button class="clip-action ${done ? '' : 'record'}" onclick="${done ? `recordClip(${i + 1})` : `recordClip(${i + 1})`}">
+                ${done ? 'Re-record' : 'Record'}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-top:14px">Max 5 minutes per clip · We recommend about 3 minutes · You can re-record any clip</p>
+  `;
+}
+
+// ── ACTIONS ──
+async function saveProfile() {
+  const { error } = await supabase.from('candidates').update({
+    first_name: document.getElementById('firstName').value.trim(),
+    last_name: document.getElementById('lastName').value.trim(),
+    location: document.getElementById('location').value.trim(),
+    headline: document.getElementById('headline').value.trim(),
+  }).eq('id', candidate.id);
+
+  if (error) { showToast('Error saving — please try again'); return; }
+
+  candidate.first_name = document.getElementById('firstName').value.trim();
+  candidate.last_name = document.getElementById('lastName').value.trim();
+  candidate.location = document.getElementById('location').value.trim();
+  candidate.headline = document.getElementById('headline').value.trim();
+
+  document.getElementById('profileBadge').textContent = 'Complete';
+  document.getElementById('profileBadge').className = 'section-badge badge-complete';
+  updateProgress();
+  showToast('Details saved');
+}
+
+async function saveLinkedIn() {
+  const url = document.getElementById('linkedinUrl').value.trim();
+  if (!url) { showToast('Please enter a LinkedIn URL'); return; }
+
+  const { error } = await supabase.from('candidates').update({
+    linkedin_url: url,
+  }).eq('id', candidate.id);
+
+  if (error) { showToast('Error saving — please try again'); return; }
+
+  candidate.linkedin_url = url;
+  document.getElementById('cvBadge').textContent = 'Saved';
+  document.getElementById('cvBadge').className = 'section-badge badge-complete';
+  document.getElementById('generateBtn').style.display = 'inline-block';
+  updateProgress();
+  showToast('LinkedIn URL saved');
+}
+
+async function handleCVUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  showToast('Uploading CV...');
+
+  const fileName = `${candidate.id}/${Date.now()}-${file.name}`;
+  const { data, error } = await supabase.storage
+    .from('candidate-cvs')
+    .upload(fileName, file, { upsert: true });
+
+  if (error) { showToast('Upload failed — please try again'); return; }
+
+  const { data: urlData } = supabase.storage.from('candidate-cvs').getPublicUrl(fileName);
+
+  await supabase.from('candidates').update({
+    cv_url: urlData.publicUrl,
+    cv_text: `CV uploaded: ${file.name}`, // placeholder — AI will process this
+  }).eq('id', candidate.id);
+
+  candidate.cv_url = urlData.publicUrl;
+  candidate.cv_text = `CV uploaded: ${file.name}`;
+
+  document.getElementById('uploadArea').classList.add('has-file');
+  document.getElementById('uploadTitle').textContent = file.name;
+  document.getElementById('uploadSub').textContent = 'Upload a new file to replace it';
+  document.getElementById('cvBadge').textContent = 'Uploaded';
+  document.getElementById('cvBadge').className = 'section-badge badge-complete';
+
+  // Show generate button in prompts section
+  if (!candidate.ai_prompts) {
+    document.getElementById('promptsContent').innerHTML = `
+      <div class="prompts-locked">
+        <div class="prompts-locked-icon">
+          <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/><line x1="9" y1="6" x2="9" y2="10"/></svg>
+        </div>
+        <div class="prompts-locked-title">Ready to generate</div>
+        <div class="prompts-locked-sub">Your CV is uploaded. Click below to generate your personalised questions.</div>
+        <button class="generate-btn" onclick="generatePrompts()">Generate my questions</button>
+      </div>
+    `;
+  }
+
+  updateProgress();
+  showToast('CV uploaded successfully');
+}
+
+async function generatePrompts() {
+  if (!candidate.cv_text && !candidate.linkedin_url) {
+    showToast('Please upload your CV or add your LinkedIn URL first');
+    return;
+  }
+
+  showToast('Generating your questions...');
+  document.getElementById('promptsContent').innerHTML = `
+    <div class="prompts-locked">
+      <div class="prompts-locked-icon">
+        <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/></svg>
+      </div>
+      <div class="prompts-locked-title">Generating your questions...</div>
+      <div class="prompts-locked-sub">This takes about 30 seconds. Please wait.</div>
+    </div>
+  `;
+
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    const response = await fetch(
+      `${SUPABASE_URL}/functions/v1/generate-prompts`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+          'apikey': SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({ candidate_id: candidate.id }),
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok) throw new Error(result.error || 'Failed to generate prompts');
+
+    candidate.ai_prompts = result.prompts;
+    renderPrompts(result.prompts);
+    updateProgress();
+    showToast('Questions generated!');
+
+  } catch (err) {
+    console.error(err);
+    showToast('Something went wrong — please try again');
+    document.getElementById('promptsContent').innerHTML = `
+      <div class="prompts-locked">
+        <div class="prompts-locked-icon">
+          <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/></svg>
+        </div>
+        <div class="prompts-locked-title">Generation failed</div>
+        <div class="prompts-locked-sub">Something went wrong. Please try again.</div>
+        <button class="generate-btn" onclick="generatePrompts()">Try again</button>
+      </div>
+    `;
+  }
+}
+
+async function handlePayment() {
+  if (!STRIPE_PUBLISHABLE_KEY || STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') {
+    showToast('Payment coming soon — Stripe not configured yet');
+    return;
+  }
+  // Stripe redirect will happen here
+  showToast('Redirecting to payment...');
+}
+
+async function toggleVisibility() {
+  const newState = !candidate.is_public;
+  const { error } = await supabase.from('candidates').update({
+    is_public: newState,
+  }).eq('id', candidate.id);
+
+  if (error) { showToast('Error updating visibility'); return; }
+
+  candidate.is_public = newState;
+  const toggle = document.getElementById('visibilityToggle');
+  const label = document.getElementById('visibilityLabel');
+  const shareRow = document.getElementById('shareRow');
+
+  toggle.classList.toggle('on', newState);
+  label.textContent = newState ? 'Visible to employers' : 'Private';
+  shareRow.style.display = newState ? 'flex' : 'none';
+
+  if (newState) {
+    document.getElementById('shareUrl').value = window.location.origin + '/profile/' + candidate.id;
+  }
+
+  showToast(newState ? 'Profile now visible to employers' : 'Profile set to private');
+}
+
+function copyLink() {
+  const url = document.getElementById('shareUrl').value;
+  navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
+}
+
+async function recordClip(clipNumber) {
+  if (!candidate.has_paid) {
+    showToast('Complete payment first to unlock recording');
+    return;
+  }
+
+  // Get Mux upload URL from Edge Function
+  showToast('Preparing recording...');
+
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    const response = await fetch(
+      `${SUPABASE_URL}/functions/v1/mux-upload`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${session.access_token}`,
+          'apikey': SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          candidate_id: candidate.id,
+          clip_number: clipNumber,
+        }),
+      }
+    );
+
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Failed to get upload URL');
+
+    // Go to recording page with upload URL
+    window.location.href = `candidate-record.html?clip=${clipNumber}&candidate=${candidate.id}&upload_id=${result.upload_id}&upload_url=${encodeURIComponent(result.upload_url)}`;
+
+  } catch (err) {
+    console.error(err);
+    showToast('Something went wrong — please try again');
+  }
+}
+
+function playClip(url) {
+  window.open(url, '_blank');
+}
+
+function scrollToNext() {
+  if (!candidate.first_name) {
+    document.getElementById('profileSection').scrollIntoView({ behavior: 'smooth' });
+  } else if (!candidate.cv_text && !candidate.linkedin_url) {
+    document.getElementById('cvSection').scrollIntoView({ behavior: 'smooth' });
+  } else if (!candidate.has_paid) {
+    document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
+  } else if (!candidate.ai_prompts) {
+    document.getElementById('promptsSection').scrollIntoView({ behavior: 'smooth' });
+  } else {
+    document.getElementById('clipsSection').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+async function handleSignOut() {
+  await supabase.auth.signOut();
+  window.location.href = 'index.html';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
