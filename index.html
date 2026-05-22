@@ -822,7 +822,7 @@ footer p { font-size: 12px; color: var(--muted2); }
     <a href="candidate.html" class="main-btn btn-candidate">
       <div class="btn-label">For candidates</div>
       <div class="btn-title">I'm looking for my next role</div>
-      <div class="btn-desc">Create a video cover letter and get seen by the right employers.</div>
+      <div class="btn-desc">Create a video profile and get seen by the right employers.</div>
       <div class="btn-arrow">
         Get started
         <svg viewBox="0 0 14 14"><line x1="2" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/></svg>
@@ -832,7 +832,7 @@ footer p { font-size: 12px; color: var(--muted2); }
     <a href="employer.html" class="main-btn btn-employer">
       <div class="btn-label">For employers</div>
       <div class="btn-title">I'm looking for the right person</div>
-      <div class="btn-desc">Post a role or browse candidates. Watch video cover letters before you shortlist.</div>
+      <div class="btn-desc">Post a role or browse candidates. Watch video profiles before you shortlist.</div>
       <div class="btn-arrow">
         Post a role
         <svg viewBox="0 0 14 14"><line x1="2" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/></svg>
@@ -874,22 +874,46 @@ footer p { font-size: 12px; color: var(--muted2); }
       </div>
     </div>
 
-    <!-- Employer type -->
+    <!-- Company type -->
     <div class="emp-type-row">
-      <span class="filter-label">Posted by</span>
+      <span class="filter-label">Company type</span>
       <label class="check-opt">
         <input type="checkbox" name="empType" value="direct" checked onchange="filterJobs()">
-        <span>Direct employers</span>
+        <span>Direct employer</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="empType" value="startup" checked onchange="filterJobs()">
+        <span>Start-up</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="empType" value="nfp" checked onchange="filterJobs()">
+        <span>Not-for-profit</span>
       </label>
       <label class="check-opt">
         <input type="checkbox" name="empType" value="agency" checked onchange="filterJobs()">
-        <span>Recruitment agencies</span>
+        <span>Recruitment agency</span>
       </label>
     </div>
 
     <!-- Work type -->
     <div class="emp-type-row">
       <span class="filter-label">Work type</span>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="fulltime" checked onchange="filterJobs()">
+        <span>Full-time</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="parttime" checked onchange="filterJobs()">
+        <span>Part-time</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="casual" checked onchange="filterJobs()">
+        <span>Casual</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="contractor" checked onchange="filterJobs()">
+        <span>Contractor</span>
+      </label>
       <label class="check-opt">
         <input type="checkbox" name="workType" value="office" checked onchange="filterJobs()">
         <span>In office</span>
@@ -901,27 +925,6 @@ footer p { font-size: 12px; color: var(--muted2); }
       <label class="check-opt">
         <input type="checkbox" name="workType" value="remote" checked onchange="filterJobs()">
         <span>Remote</span>
-      </label>
-    </div>
-
-    <!-- Employment type -->
-    <div class="emp-type-row">
-      <span class="filter-label">Employment type</span>
-      <label class="check-opt">
-        <input type="checkbox" name="empTypeWork" value="fulltime" checked onchange="filterJobs()">
-        <span>Full-time</span>
-      </label>
-      <label class="check-opt">
-        <input type="checkbox" name="empTypeWork" value="parttime" checked onchange="filterJobs()">
-        <span>Part-time</span>
-      </label>
-      <label class="check-opt">
-        <input type="checkbox" name="empTypeWork" value="casual" checked onchange="filterJobs()">
-        <span>Casual</span>
-      </label>
-      <label class="check-opt">
-        <input type="checkbox" name="empTypeWork" value="contractor" checked onchange="filterJobs()">
-        <span>Contractor</span>
       </label>
     </div>
 
@@ -1077,8 +1080,8 @@ footer p { font-size: 12px; color: var(--muted2); }
         <svg viewBox="0 0 10 12"><polygon points="1,1 9,6 1,11"/></svg>
       </div>
       <div>
-        <div class="nudge-title">Stand out with a video cover letter</div>
-        <div class="nudge-body">Employers post on vett.work because they want to see video applications. Candidates with a video cover letter are significantly more likely to get a response.</div>
+        <div class="nudge-title">Stand out with a video profile</div>
+        <div class="nudge-body">Employers post on vett.work because they want to see video applications. Candidates with a video profile are significantly more likely to get a response.</div>
         <a href="candidate.html" class="nudge-cta">Create yours — $19.99</a>
       </div>
     </div>
@@ -1148,7 +1151,6 @@ function filterJobs() {
   const location = document.getElementById('jobLocation').value.toLowerCase();
   const empTypes = [...document.querySelectorAll('input[name="empType"]:checked')].map(i => i.value);
   const workTypes = [...document.querySelectorAll('input[name="workType"]:checked')].map(i => i.value);
-  const empWorkTypes = [...document.querySelectorAll('input[name="empTypeWork"]:checked')].map(i => i.value);
   const cards = document.querySelectorAll('.job-card');
   let visible = 0;
   cards.forEach(card => {
@@ -1162,9 +1164,7 @@ function filterJobs() {
     const matchLoc = !location || loc.includes(location) || text.includes(location);
     const matchType = empTypes.length === 0 || empTypes.includes(type);
     const matchWork = workTypes.length === 0 || workTypes.includes(work);
-    const empWork = card.dataset.empworktype || 'fulltime';
-    const matchEmpWork = empWorkTypes.length === 0 || empWorkTypes.includes(empWork);
-    const show = matchCat && matchSearch && matchLoc && matchType && matchWork && matchEmpWork;
+    const show = matchCat && matchSearch && matchLoc && matchType && matchWork;
     card.style.display = show ? '' : 'none';
     if (show) visible++;
   });
