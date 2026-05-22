@@ -1202,11 +1202,7 @@ async function handleApply() {
   btn.disabled = true;
 
   try {
-    await fetch('/api/send-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'job_application', name, email, role, company, link, note }),
-    });
+    await sendToFormspree({ type: 'job_application', name, email, role, company, link, note });
     showToast('Application submitted — good luck!');
     document.getElementById('applyModal').classList.remove('open');
     document.body.style.overflow = '';
