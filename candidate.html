@@ -627,6 +627,18 @@ const CONFIG = {
   STRIPE_PRICE_ID_ADHOC: 'YOUR_STRIPE_PRICE_ID_29.99',
   STRIPE_PRICE_ID_MONTHLY: 'YOUR_STRIPE_PRICE_ID_199',
 };
+
+async function sendToFormspree(data) {
+  const FORMSPREE_ID = 'mqejbjgg'; // replace with your Formspree form ID
+  const response = await fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) throw new Error('Failed');
+  return response;
+}
+
 </script>
 <script src="https://js.stripe.com/v3/"></script>
 
