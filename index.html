@@ -141,7 +141,9 @@ h1 em {
   flex-wrap: wrap;
   position: relative;
   z-index: 1;
-  margin-bottom: 20px;
+  margin-bottom: 48px;
+  width: 100%;
+  max-width: 900px;
 }
 
 .main-btn {
@@ -153,7 +155,8 @@ h1 em {
   cursor: pointer;
   transition: all 0.2s;
   text-decoration: none;
-  min-width: 240px;
+  flex: 1 1 380px;
+  max-width: 440px;
   text-align: left;
   border: 1.5px solid transparent;
 }
@@ -631,7 +634,7 @@ footer p { font-size: 12px; color: var(--muted2); }
   .hero { padding: 48px 20px 64px; min-height: calc(100vh - 64px); }
   h1 { letter-spacing: -2px; }
   .main-buttons { flex-direction: column; align-items: center; }
-  .main-btn { min-width: 100%; max-width: 360px; }
+  .main-btn { flex: 1 1 100%; max-width: 100%; width: 100%; }
   .jobs-section { padding: 48px 20px 64px; }
   .jobs-header { flex-direction: column; align-items: flex-start; gap: 12px; }
   .modal { padding: 24px 20px; }
@@ -801,6 +804,7 @@ footer p { font-size: 12px; color: var(--muted2); }
 <nav>
   <a href="#" class="logo">vett<span class="logo-dot">.</span>work</a>
   
+<a href="contact.html" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;padding:7px 14px;border-radius:7px;transition:color 0.15s;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Contact</a>
 </nav>
 
 <section class="hero">

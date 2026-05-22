@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vett.work — AI Video Cover Letter · $19.99</title>
+<meta name="description" content="Upload your CV. AI writes your prompts. You record yourself. Six video clips that video-fy your CV — attach to any job application. $19.99 one-time.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0c1445;
+  --emerald: #10b981;
+  --emerald-light: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  --emerald-dark: #059669;
+  --white: #ffffff;
+  --off: #f8fafc;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --text: #0f172a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--white);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  background: var(--navy);
+  padding: 0 48px;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
+.logo-dot { color: var(--emerald); }
+.nav-back { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+.nav-back:hover { color: white; }
+.nav-back svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+.nav-cta { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; }
+.nav-cta:hover { background: var(--emerald-dark); }
+
+/* HERO */
+.hero {
+  background: var(--navy);
+  padding: 80px 48px 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 65%);
+  top: 50%; right: -100px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.hero-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-tag::before { content: ''; width: 24px; height: 2px; background: var(--emerald); }
+
+.hero h1 {
+  font-size: clamp(36px, 4.5vw, 58px);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2.5px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.hero h1 em { font-style: normal; color: var(--emerald); }
+
+.hero-sub {
+  font-size: 16px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 460px;
+}
+
+/* Important notice */
+.notice {
+  background: rgba(16,185,129,0.07);
+  border: 1px solid rgba(16,185,129,0.18);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.notice-icon {
+  width: 20px; height: 20px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.notice-icon svg { width: 20px; height: 20px; stroke: var(--emerald); stroke-width: 2; fill: none; }
+
+.notice p { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+.notice p strong { color: var(--emerald); }
+
+/* Price block */
+.price-block {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 16px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.price-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; }
+.price-main { font-size: 56px; font-weight: 800; letter-spacing: -2.5px; color: white; line-height: 1; }
+.price-period { font-size: 15px; color: rgba(255,255,255,0.35); font-weight: 400; }
+.price-note { font-size: 13px; color: rgba(255,255,255,0.3); margin-bottom: 20px; }
+
+.includes { display: flex; flex-direction: column; gap: 10px; }
+
+.inc-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(255,255,255,0.65); }
+
+.inc-check {
+  width: 18px; height: 18px;
+  background: rgba(16,185,129,0.15);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.inc-check svg { width: 9px; height: 9px; stroke: var(--emerald); stroke-width: 2.5; fill: none; }
+
+.inc-badge { background: rgba(16,185,129,0.15); color: var(--emerald); font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.05em; text-transform: uppercase; margin-left: 4px; }
+
+.cta-btn {
+  width: 100%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  padding: 16px;
+  border-radius: 12px;
+  border: none;
+  background: var(--emerald);
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s;
+  box-shadow: 0 4px 20px rgba(16,185,129,0.2);
+  margin-bottom: 10px;
+}
+
+.cta-btn:hover { background: var(--emerald-dark); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(16,185,129,0.28); }
+
+.cta-note {
+  font-size: 12px;
+  color: rgba(255,255,255,0.25);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.cta-note svg { width: 12px; height: 12px; stroke: rgba(255,255,255,0.25); stroke-width: 2; fill: none; }
+
+/* Hero right - AI vs You diagram */
+.process-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 32px;
+  margin-top: 56px;
+}
+
+.pc-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  margin-bottom: 24px;
+}
+
+.pc-steps { display: flex; flex-direction: column; gap: 0; }
+
+.pc-step {
+  display: flex;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  align-items: flex-start;
+}
+
+.pc-step:last-child { border-bottom: none; padding-bottom: 0; }
+.pc-step:first-child { padding-top: 0; }
+
+.pc-badge {
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: 5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pc-badge.ai { background: rgba(16,185,129,0.15); color: var(--emerald); border: 1px solid rgba(16,185,129,0.2); }
+.pc-badge.you { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); }
+
+.pc-text { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.55; }
+
+/* SECTION STYLES */
+.section { padding: 88px 48px; max-width: 1100px; margin: 0 auto; }
+
+.section-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--emerald-dark);
+  background: var(--emerald-light);
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.section-h {
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+  color: var(--navy);
+  margin-bottom: 48px;
+}
+
+/* 6 CLIPS */
+.clips-section {
+  background: var(--off);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 88px 48px;
+}
+
+.clips-inner { max-width: 1100px; margin: 0 auto; }
+
+.clips-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.clip-card {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 24px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+}
+
+.clip-card:hover { border-color: var(--emerald-border); box-shadow: 0 4px 20px rgba(12,20,69,0.06); }
+
+.clip-num {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: var(--emerald);
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.clip-title { font-size: 17px; font-weight: 800; color: var(--navy); letter-spacing: -0.3px; margin-bottom: 8px; }
+.clip-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* HOW IT WORKS */
+.how-section { padding: 88px 48px; }
+.how-inner { max-width: 1100px; margin: 0 auto; }
+
+.steps-list { display: flex; flex-direction: column; }
+
+.step-row {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 32px;
+  padding: 36px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+}
+
+.step-row:last-child { border-bottom: none; }
+
+.step-n { font-size: 36px; font-weight: 800; letter-spacing: -2px; color: var(--emerald-border); line-height: 1; }
+
+.step-title { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--navy); margin-bottom: 8px; }
+.step-body { font-size: 15px; color: var(--muted); line-height: 1.65; max-width: 560px; margin-bottom: 14px; }
+
+.step-who {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--off);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 7px 14px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.who-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.who-badge.ai { background: var(--emerald-light); color: var(--emerald-dark); }
+.who-badge.you { background: #eff6ff; color: #1d4ed8; }
+
+/* SAMPLE QUESTIONS */
+.questions-section {
+  background: var(--navy);
+  padding: 88px 48px;
+}
+
+.questions-inner { max-width: 1100px; margin: 0 auto; }
+.questions-inner .section-h { color: white; }
+.questions-inner .section-tag { background: rgba(16,185,129,0.1); color: var(--emerald); border: 1px solid rgba(16,185,129,0.2); }
+
+.q-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
+.q-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  padding: 24px;
+  transition: border-color 0.2s;
+}
+
+.q-card:hover { border-color: rgba(16,185,129,0.25); }
+
+.q-clip { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--emerald); margin-bottom: 4px; }
+
+.q-type-badge {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.q-type-badge.personalised { background: rgba(16,185,129,0.15); color: var(--emerald); }
+.q-type-badge.standard { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.35); }
+
+.q-text { font-size: 15px; color: rgba(255,255,255,0.78); line-height: 1.55; font-style: italic; margin: 10px 0 8px; }
+.q-note { font-size: 11px; color: rgba(255,255,255,0.22); }
+
+/* ROLE-SPECIFIC */
+.role-section { padding: 88px 48px; background: var(--off); border-top: 1px solid var(--border); }
+.role-inner { max-width: 1100px; margin: 0 auto; }
+
+.role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+.role-card {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: box-shadow 0.2s;
+}
+
+.role-card:hover { box-shadow: 0 8px 32px rgba(12,20,69,0.07); }
+.role-card.featured { background: var(--navy); border-color: var(--navy); }
+
+.role-tier { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted2); margin-bottom: 10px; }
+.role-card.featured .role-tier { color: rgba(255,255,255,0.3); }
+
+.role-price { font-size: 36px; font-weight: 800; letter-spacing: -1.5px; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+.role-card.featured .role-price { color: white; }
+.role-period { font-size: 13px; font-weight: 400; color: var(--muted2); }
+
+.role-desc { font-size: 13px; color: var(--muted); margin: 12px 0 20px; line-height: 1.55; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.role-card.featured .role-desc { color: rgba(255,255,255,0.38); border-color: rgba(255,255,255,0.08); }
+
+.role-items { display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px; }
+
+.role-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text); }
+.role-card.featured .role-item { color: rgba(255,255,255,0.7); }
+
+.r-check { width: 16px; height: 16px; background: var(--emerald-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.r-check svg { width: 8px; height: 8px; stroke: var(--emerald-dark); stroke-width: 2.5; fill: none; }
+.role-card.featured .r-check { background: rgba(16,185,129,0.18); }
+.role-card.featured .r-check svg { stroke: var(--emerald); }
+
+.role-btn { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 12px; border-radius: 9px; border: 1.5px solid var(--border); background: transparent; color: var(--navy); cursor: pointer; transition: all 0.15s; }
+.role-btn:hover { background: var(--off); }
+.role-btn.featured-btn { background: var(--emerald); border-color: var(--emerald); color: white; }
+.role-btn.featured-btn:hover { background: var(--emerald-dark); border-color: var(--emerald-dark); }
+
+/* FREE PROFILE ADD-ON */
+.profile-section {
+  padding: 88px 48px;
+  border-top: 1px solid var(--border);
+}
+
+.profile-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.profile-left h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; letter-spacing: -1.5px; color: var(--navy); line-height: 1.05; margin-bottom: 14px; }
+.profile-left h2 span { color: var(--emerald); }
+.profile-left p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+
+.profile-features { display: flex; flex-direction: column; gap: 14px; }
+
+.pf-item { display: flex; align-items: flex-start; gap: 14px; }
+
+.pf-icon { width: 34px; height: 34px; background: var(--emerald-light); border: 1px solid var(--emerald-border); border-radius: 9px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.pf-icon svg { width: 16px; height: 16px; stroke: var(--emerald-dark); stroke-width: 2; fill: none; }
+
+.pf-text strong { font-size: 14px; font-weight: 700; color: var(--navy); display: block; margin-bottom: 3px; }
+.pf-text span { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+/* Profile mockup */
+.profile-mockup {
+  background: var(--off);
+  border: 1.5px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 8px 32px rgba(12,20,69,0.06);
+}
+
+.mock-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+
+.mock-av { width: 48px; height: 48px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.mock-av svg { width: 20px; height: 20px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
+
+.mock-name-bar { height: 16px; background: var(--border); border-radius: 4px; width: 140px; margin-bottom: 8px; }
+.mock-tag-bar { height: 12px; background: #f1f5f9; border-radius: 4px; width: 200px; margin-bottom: 12px; }
+
+.mock-badges { display: flex; gap: 6px; }
+.mock-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; background: var(--emerald-light); color: var(--emerald-dark); border: 1px solid var(--emerald-border); }
+
+.mock-clips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+
+.mock-clip {
+  background: var(--navy);
+  border-radius: 8px;
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mock-clip::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(16,185,129,0.1), transparent); }
+
+.mock-play { width: 22px; height: 22px; background: var(--emerald); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+.mock-play svg { width: 8px; height: 8px; fill: white; margin-left: 1px; }
+
+.mock-clip-lbl { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.45); text-align: center; position: relative; z-index: 1; padding: 0 4px; }
+
+.mock-prompts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+.mock-prompt { background: white; border-radius: 8px; padding: 12px; border-left: 2px solid var(--emerald); border: 1px solid var(--border); border-left: 2px solid var(--emerald); }
+.mock-prompt-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--emerald-dark); margin-bottom: 6px; }
+.mock-prompt-bar { height: 10px; background: var(--off); border-radius: 3px; margin-bottom: 4px; }
+.mock-prompt-bar.short { width: 65%; }
+
+/* PRIVACY */
+.privacy-section { padding: 80px 48px; background: var(--off); border-top: 1px solid var(--border); }
+.privacy-inner { max-width: 760px; margin: 0 auto; text-align: center; }
+
+.privacy-inner h2 { font-size: clamp(22px, 3vw, 34px); font-weight: 800; letter-spacing: -1px; color: var(--navy); margin-bottom: 14px; }
+.privacy-inner > p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 36px; max-width: 500px; margin-left: auto; margin-right: auto; }
+
+.opt-card { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 32px; text-align: left; max-width: 540px; margin: 0 auto; }
+.opt-card h3 { font-size: 17px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+.opt-card p { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 20px; }
+
+.checkbox-row { display: flex; align-items: flex-start; gap: 14px; padding: 14px 16px; background: var(--off); border: 1.5px solid var(--border); border-radius: 10px; cursor: pointer; transition: border-color 0.15s; margin-bottom: 10px; user-select: none; }
+.checkbox-row:hover { border-color: var(--emerald-border); }
+.checkbox-row.selected { border-color: var(--emerald); background: var(--emerald-light); }
+
+.cb { width: 18px; height: 18px; border: 2px solid var(--border); border-radius: 5px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; background: white; }
+.checkbox-row.selected .cb { background: var(--emerald); border-color: var(--emerald); }
+.cb svg { width: 9px; height: 9px; stroke: white; stroke-width: 2.5; fill: none; display: none; }
+.checkbox-row.selected .cb svg { display: block; }
+
+.cb-label strong { font-size: 13px; font-weight: 700; color: var(--navy); display: block; margin-bottom: 2px; }
+.cb-label span { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+.opt-note { font-size: 11px; color: var(--muted2); text-align: center; line-height: 1.5; margin-top: 8px; }
+.opt-note a { color: var(--muted); }
+
+/* BOTTOM CTA */
+.bottom-cta { background: var(--navy); padding: 100px 48px; text-align: center; }
+.bottom-cta h2 { font-size: clamp(30px, 5vw, 58px); font-weight: 800; letter-spacing: -2.5px; color: white; line-height: 1.0; margin-bottom: 16px; }
+.bottom-cta h2 span { color: var(--emerald); }
+.bottom-cta p { font-size: 17px; color: rgba(255,255,255,0.38); margin-bottom: 48px; }
+
+.bottom-price { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 32px; }
+.bp-amount { font-size: 64px; font-weight: 800; letter-spacing: -3px; color: white; line-height: 1; }
+.bp-info { text-align: left; }
+.bp-info strong { font-size: 16px; color: white; display: block; margin-bottom: 4px; }
+.bp-info span { font-size: 13px; color: rgba(255,255,255,0.3); }
+
+.bottom-btn { display: inline-block; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 17px; font-weight: 700; padding: 18px 52px; border-radius: 12px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: all 0.15s; box-shadow: 0 8px 32px rgba(16,185,129,0.2); margin-bottom: 14px; }
+.bottom-btn:hover { background: var(--emerald-dark); transform: translateY(-2px); }
+.bottom-note { font-size: 13px; color: rgba(255,255,255,0.25); }
+
+/* FOOTER */
+footer { background: #060a1e; border-top: 1px solid rgba(255,255,255,0.05); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: white; font-size: 14px; font-weight: 600; padding: 14px 24px; border-radius: 10px; border: 1px solid var(--emerald); box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s ease; z-index: 999; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 900px) {
+  nav { padding: 0 20px; }
+  .hero { padding: 60px 20px 80px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .clips-section, .how-section, .questions-section, .role-section, .profile-section, .privacy-section, .bottom-cta { padding: 60px 20px; }
+  .clips-grid, .role-grid { grid-template-columns: 1fr; }
+  .q-grid { grid-template-columns: 1fr; }
+  .profile-inner { grid-template-columns: 1fr; gap: 40px; }
+  .bottom-price { flex-direction: column; gap: 8px; }
+  .bp-info { text-align: center; }
+  footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<script>
+const CONFIG = {
+  STRIPE_PUBLISHABLE_KEY: 'YOUR_STRIPE_PUBLISHABLE_KEY',
+  STRIPE_PRICE_ID_INTERVIEW: 'YOUR_STRIPE_PRICE_ID_19.99',
+  STRIPE_PRICE_ID_ADHOC: 'YOUR_STRIPE_PRICE_ID_29.99',
+  STRIPE_PRICE_ID_MONTHLY: 'YOUR_STRIPE_PRICE_ID_199',
+};
+</script>
+<script src="https://js.stripe.com/v3/"></script>
+
+<nav>
+  <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 14 14"><line x1="12" y1="7" x2="2" y2="7"/><polyline points="6,3 2,7 6,11"/></svg>
+    Back
+  </a>
+  <a href="contact.html" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;padding:7px 14px;border-radius:7px;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Contact</a><button class="nav-cta" onclick="handlePurchase()">Get mine — $19.99</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag">For candidates</div>
+      <h1>Your video cover letter.<br>Because nobody reads<br><em>the other kind.</em></h1>
+      <p class="hero-sub">Upload your CV or paste your LinkedIn. AI writes personalised prompts for 6 video clips. You record yourself. Download and attach to any application — anywhere.</p>
+
+      <div class="notice">
+        <div class="notice-icon">
+          <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><line x1="10" y1="9" x2="10" y2="14"/><circle cx="10" cy="6.5" r="0.5" fill="currentColor"/></svg>
+        </div>
+        <p>This is <strong>you, on camera</strong> — not an AI-generated avatar. The AI reads your CV and writes the questions. You record yourself answering them. What employers see is the real you.</p>
+      </div>
+
+      <div class="price-block">
+        <div class="price-row">
+          <div class="price-main">$19.99</div>
+          <div class="price-period">one-time</div>
+        </div>
+        <div class="price-note">Your videos forever · No subscription</div>
+        <div class="includes">
+          <div class="inc-item"><div class="inc-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>6 personalised video clips that video-fy your CV</div>
+          <div class="inc-item"><div class="inc-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>MP4 download + shareable profile link</div>
+          <div class="inc-item"><div class="inc-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Works with Seek, LinkedIn, any job board</div>
+          <div class="inc-item"><div class="inc-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>1 free role-specific interview <span class="inc-badge">Included</span></div>
+        </div>
+      </div>
+
+      <button class="cta-btn" onclick="handlePurchase()">Get my video cover letter — $19.99</button>
+      <div class="cta-note">
+        <svg viewBox="0 0 12 12"><rect x="2" y="5" width="8" height="6" rx="1"/><path d="M4 5V4a2 2 0 0 1 4 0v1"/></svg>
+        Secure checkout · Instant access · Ready in about 15 minutes
+      </div>
+    </div>
+
+    <div>
+      <div class="process-card">
+        <div class="pc-label">What the AI does vs what you do</div>
+        <div class="pc-steps">
+          <div class="pc-step">
+            <div class="pc-badge ai">The AI</div>
+            <div class="pc-text">Reads your CV or LinkedIn and writes personalised prompts for each of your 6 clips — based on your actual roles and experience.</div>
+          </div>
+          <div class="pc-step">
+            <div class="pc-badge you">You</div>
+            <div class="pc-text">Record yourself answering each prompt on camera, in your browser, in your own time. Redo any clip as many times as you need.</div>
+          </div>
+          <div class="pc-step">
+            <div class="pc-badge ai">The AI</div>
+            <div class="pc-text">Packages your 6 clips with a shareable link and MP4 files ready to attach to any application.</div>
+          </div>
+          <div class="pc-step">
+            <div class="pc-badge you">You</div>
+            <div class="pc-text">Attach to Seek, drop in an email, share the link on LinkedIn — your videos, your story, everywhere.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 CLIPS -->
+<section class="clips-section">
+  <div class="clips-inner">
+    <span class="section-tag">The 6 clips</span>
+    <div class="section-h">Six videos that<br>video-fy your CV.</div>
+    <div class="clips-grid">
+      <div class="clip-card">
+        <div class="clip-num">Clip 01</div>
+        <div class="clip-title">Video Cover Letter</div>
+        <div class="clip-desc">Why you, why this kind of role, what you bring. Replaces the written cover letter nobody reads.</div>
+      </div>
+      <div class="clip-card">
+        <div class="clip-num">Clip 02</div>
+        <div class="clip-title">Work History</div>
+        <div class="clip-desc">Walk the employer through your career. AI references your actual roles and asks you to connect the dots.</div>
+      </div>
+      <div class="clip-card">
+        <div class="clip-num">Clip 03</div>
+        <div class="clip-title">Career Highlight</div>
+        <div class="clip-desc">AI picks something specific from your CV and asks you to tell the real story behind it.</div>
+      </div>
+      <div class="clip-card">
+        <div class="clip-num">Clip 04</div>
+        <div class="clip-title">Ideal Next Role</div>
+        <div class="clip-desc">Not the title — what you'd actually be doing day to day, what kind of team, and why.</div>
+      </div>
+      <div class="clip-card">
+        <div class="clip-num">Clip 05</div>
+        <div class="clip-title">Strengths</div>
+        <div class="clip-desc">What you genuinely do better than most people around you — a real example, not a bullet point.</div>
+      </div>
+      <div class="clip-card">
+        <div class="clip-num">Clip 06</div>
+        <div class="clip-title">Honest Weakness</div>
+        <div class="clip-desc">What you're working on and what you're doing about it. Answer it on your terms before they ask in an interview.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <span class="section-tag">How it works</span>
+    <div class="section-h">Done in about 15 minutes.<br>Useful forever.</div>
+    <div class="steps-list">
+      <div class="step-row">
+        <div class="step-n">01</div>
+        <div>
+          <div class="step-title">Upload your CV or paste your LinkedIn</div>
+          <div class="step-body">PDF, Word (.docx), Canva export, or your LinkedIn URL. We read your background, roles, and experience automatically.</div>
+          <div class="step-who"><span class="who-badge ai">AI</span> reads and processes your CV</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-n">02</div>
+        <div>
+          <div class="step-title">AI writes your personalised prompts</div>
+          <div class="step-body">We generate tailored questions for each of your 6 clips based on your actual experience. Not a template — specific to your background. Takes about 30 seconds.</div>
+          <div class="step-who"><span class="who-badge ai">AI</span> writes the questions based on your CV</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-n">03</div>
+        <div>
+          <div class="step-title">You record yourself answering each question</div>
+          <div class="step-body">On camera, in your browser, in your own time. Redo any clip as many times as you need. No live audience, no pressure.</div>
+          <div class="step-who"><span class="who-badge you">You</span> record on camera · Redo any clip · About 10 minutes</div>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-n">04</div>
+        <div>
+          <div class="step-title">Download and use everywhere</div>
+          <div class="step-body">Get your MP4 files and a shareable profile link. Attach to Seek applications, include in emails, or share directly — your videos work anywhere.</div>
+          <div class="step-who"><span class="who-badge you">You</span> download and share on any platform</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SAMPLE QUESTIONS -->
+<section class="questions-section">
+  <div class="questions-inner">
+    <span class="section-tag">Sample questions</span>
+    <div class="section-h">Personalised to your CV.<br>Not generic templates.</div>
+    <div class="q-grid">
+      <div class="q-card">
+        <div class="q-clip">Clip 01 · Video Cover Letter <span class="q-type-badge standard">Same for everyone</span></div>
+        <div class="q-text">"Why should we consider you? Tell us what you bring and why this kind of role gets you out of bed."</div>
+        <div class="q-note">Replaces the written cover letter</div>
+      </div>
+      <div class="q-card">
+        <div class="q-clip">Clip 02 · Work History <span class="q-type-badge personalised">Personalised</span></div>
+        <div class="q-text">"You've moved between quite different industries — what's the thread that connects all of it for you?"</div>
+        <div class="q-note">Generated from your actual career history</div>
+      </div>
+      <div class="q-card">
+        <div class="q-clip">Clip 03 · Career Highlight <span class="q-type-badge personalised">Personalised</span></div>
+        <div class="q-text">"Tell me about [specific project or role from your CV] — what was the actual situation and what did you do?"</div>
+        <div class="q-note">AI picks something specific from your CV</div>
+      </div>
+      <div class="q-card">
+        <div class="q-clip">Clip 04 · Ideal Next Role <span class="q-type-badge standard">Same for everyone</span></div>
+        <div class="q-text">"Describe your ideal next role — not the title, but what you'd actually be doing and what kind of team you'd be in."</div>
+        <div class="q-note">Helps employers assess culture fit early</div>
+      </div>
+      <div class="q-card">
+        <div class="q-clip">Clip 05 · Strengths <span class="q-type-badge standard">Same for everyone</span></div>
+        <div class="q-text">"What do you do better than most people around you? Give me a real example — not a bullet point from your resume."</div>
+        <div class="q-note">Shows self-awareness and communication style</div>
+      </div>
+      <div class="q-card">
+        <div class="q-clip">Clip 06 · Honest Weakness <span class="q-type-badge standard">Same for everyone</span></div>
+        <div class="q-text">"What's something you're genuinely working on improving — and what are you actually doing about it?"</div>
+        <div class="q-note">Answer it on your own terms before they ask</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROLE-SPECIFIC UPGRADE -->
+<section class="role-section">
+  <div class="role-inner">
+    <span class="section-tag">Role-specific interviews</span>
+    <div class="section-h">Want to go further?<br>Your first one is <span style="color:var(--emerald-dark)">included free.</span></div>
+    <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:40px;max-width:560px">Paste any job ad URL. AI matches it against your CV and writes 3 questions tailored to that specific role. After your free one, go ad hoc or get a full month of unlimited.</p>
+    <div class="role-grid">
+      <div class="role-card">
+        <div class="role-tier">Included</div>
+        <div class="role-price">Free<span class="role-period"> with purchase</span></div>
+        <div class="role-desc">One role-specific interview included with your $19.99 purchase.</div>
+        <div class="role-items">
+          <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>Paste any job ad URL</div>
+          <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>AI matches job ad vs your CV</div>
+          <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>3 tailored questions for that role</div>
+        </div>
+        <button class="role-btn" onclick="handlePurchase()">Get started</button>
+      </div>
+      <div class="role-card featured">
+        <div class="role-tier">Ad hoc</div>
+        <div class="role-price">$29.99<span class="role-period">/interview</span></div>
+        <div class="role-desc">Pay per role-specific interview after your free one. Good for occasional use.</div>
+        <div class="role-items">
+          <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>One role-specific interview</div>
+          <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>MP4 clips included</div>
+          <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>No subscription</div>
+        </div>
+        <button class="role-btn featured-btn" onclick="handleStripeUpgrade('ADHOC')">Buy now</button>
+      </div>
+      <div class="role-card">
+        <div class="role-tier">Unlimited</div>
+        <div class="role-price">$199<span class="role-period">/month</span></div>
+        <div class="role-desc">Unlimited role-specific interviews for one month. For active job hunters applying to a lot of roles.</div>
+        <div class="role-items">
+          <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>Unlimited interviews</div>
+          <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>All clips downloadable</div>
+          <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>Cancel anytime</div>
+        </div>
+        <button class="role-btn" onclick="handleStripeUpgrade('MONTHLY')">Get unlimited</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FREE PROFILE -->
+<section class="profile-section">
+  <div class="profile-inner">
+    <div class="profile-left">
+      <span class="section-tag">Optional add-on</span>
+      <h2>Add a free profile.<br>Get found for <span>off-market roles.</span></h2>
+      <p>Once your video cover letter is done, you can choose to add your profile to the vett.work candidate database. Employers on the platform can discover you and reach out — without you having to apply for anything.</p>
+      <div class="profile-features">
+        <div class="pf-item">
+          <div class="pf-icon"><svg viewBox="0 0 16 16"><path d="M8 1a4 4 0 1 0 0 8A4 4 0 0 0 8 1zM2 14s-1 0-1-1 1-4 7-4 7 3 7 4-1 1-1 1H2z"/></svg></div>
+          <div class="pf-text"><strong>Completely optional</strong><span>Default is private. You opt in — we never add you without asking.</span></div>
+        </div>
+        <div class="pf-item">
+          <div class="pf-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8,4 8,8 11,10"/></svg></div>
+          <div class="pf-text"><strong>Passive visibility</strong><span>You don't have to apply for anything. Employers find you when a role matches your profile.</span></div>
+        </div>
+        <div class="pf-item">
+          <div class="pf-icon"><svg viewBox="0 0 16 16"><rect x="2" y="5" width="12" height="8" rx="1"/><path d="M5 5V4a3 3 0 0 1 6 0v1"/></svg></div>
+          <div class="pf-text"><strong>Remove yourself anytime</strong><span>Full control. Delete your profile whenever you want.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-mockup">
+      <div class="mock-top">
+        <div class="mock-av">
+          <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zM4 20s-1 0-1-1 1-5 9-5 9 4 9 5-1 1-1 1H4z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="mock-name-bar"></div>
+          <div class="mock-tag-bar"></div>
+          <div class="mock-badges">
+            <span class="mock-badge">Verified</span>
+            <span class="mock-badge">6 clips</span>
+            <span class="mock-badge">Open</span>
+          </div>
+        </div>
+      </div>
+      <div class="mock-clips">
+        <div class="mock-clip">
+          <div class="mock-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div>
+          <div class="mock-clip-lbl">Cover Letter</div>
+        </div>
+        <div class="mock-clip">
+          <div class="mock-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div>
+          <div class="mock-clip-lbl">Work History</div>
+        </div>
+        <div class="mock-clip">
+          <div class="mock-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div>
+          <div class="mock-clip-lbl">Highlight</div>
+        </div>
+      </div>
+      <div class="mock-prompts">
+        <div class="mock-prompt">
+          <div class="mock-prompt-label">Ideal next role</div>
+          <div class="mock-prompt-bar"></div>
+          <div class="mock-prompt-bar short"></div>
+        </div>
+        <div class="mock-prompt">
+          <div class="mock-prompt-label">Works best when</div>
+          <div class="mock-prompt-bar"></div>
+          <div class="mock-prompt-bar short"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section class="privacy-section">
+  <div class="privacy-inner">
+    <span class="section-tag">Privacy</span>
+    <h2>Your videos are yours.<br>Full stop.</h2>
+    <p>You pay $19.99, you get your video files. We don't share or do anything with your data without your explicit permission.</p>
+    <div class="opt-card">
+      <h3>Database opt-in</h3>
+      <p>After your videos are done, choose whether you want to be visible to employers on vett.work. Default is private — you tick the box if you want in.</p>
+      <div class="checkbox-row" id="optIn" onclick="toggleOpt('optIn')">
+        <div class="cb" id="cbIn"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>
+        <div class="cb-label">
+          <strong>Add me to the candidate database</strong>
+          <span>Employers can discover my profile and reach out. I can remove myself at any time.</span>
+        </div>
+      </div>
+      <div class="checkbox-row" id="optOut" onclick="toggleOpt('optOut')">
+        <div class="cb" id="cbOut"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>
+        <div class="cb-label">
+          <strong>Keep my profile private</strong>
+          <span>My videos are for my own use only.</span>
+        </div>
+      </div>
+      <div class="opt-note">Default is private. We never share your data without your explicit permission. <a href="#">Privacy policy</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<section class="bottom-cta">
+  <h2>Your video cover letter.<br><span>Because nobody reads the other kind.</span></h2>
+  <p>One payment. Six clips. Your story, on camera. Works everywhere.</p>
+  <div class="bottom-price">
+    <div class="bp-amount">$19.99</div>
+    <div class="bp-info">
+      <strong>One-time payment</strong>
+      <span>No subscription · MP4 download · 1 free role-specific interview</span>
+    </div>
+  </div>
+  <div>
+    <button class="bottom-btn" onclick="handlePurchase()">Get my video cover letter</button>
+    <div class="bottom-note">Secure payment · You record yourself · Ready in about 15 minutes</div>
+  </div>
+</section>
+
+<footer>
+  <a href="index.html" class="logo" style="color:white;text-decoration:none;font-size:16px">vett<span style="color:#10b981">.</span>work</a>
+  <p>For the people who do the lot · Brisbane, Australia · 2025</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+let selectedOpt = null;
+function toggleOpt(id) {
+  ['optIn','optOut'].forEach(r => {
+    document.getElementById(r).classList.remove('selected');
+  });
+  if (selectedOpt !== id) {
+    document.getElementById(id).classList.add('selected');
+    selectedOpt = id;
+  } else {
+    selectedOpt = null;
+  }
+}
+
+async function handlePurchase() {
+  if (!CONFIG.STRIPE_PUBLISHABLE_KEY || CONFIG.STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') {
+    showToast('Payment coming soon — check back shortly');
+    return;
+  }
+  const stripe = Stripe(CONFIG.STRIPE_PUBLISHABLE_KEY);
+  const { error } = await stripe.redirectToCheckout({
+    lineItems: [{ price: CONFIG.STRIPE_PRICE_ID_INTERVIEW, quantity: 1 }],
+    mode: 'payment',
+    successUrl: window.location.origin + '/success.html?product=interview&opt=' + (selectedOpt || 'private'),
+    cancelUrl: window.location.href,
+  });
+  if (error) showToast('Something went wrong — please try again');
+}
+
+async function handleStripeUpgrade(tier) {
+  if (!CONFIG.STRIPE_PUBLISHABLE_KEY || CONFIG.STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') {
+    showToast('Coming soon');
+    return;
+  }
+  const priceMap = { ADHOC: CONFIG.STRIPE_PRICE_ID_ADHOC, MONTHLY: CONFIG.STRIPE_PRICE_ID_MONTHLY };
+  const stripe = Stripe(CONFIG.STRIPE_PUBLISHABLE_KEY);
+  const { error } = await stripe.redirectToCheckout({
+    lineItems: [{ price: priceMap[tier], quantity: 1 }],
+    mode: tier === 'MONTHLY' ? 'subscription' : 'payment',
+    successUrl: window.location.origin + '/success.html?product=' + tier.toLowerCase(),
+    cancelUrl: window.location.href,
+  });
+  if (error) showToast('Something went wrong — please try again');
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.clip-card, .step-row, .q-card, .role-card, .pf-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(16px)';
+  el.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>

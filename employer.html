@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vett.work — For Employers · Post a Role, Find the Right Person</title>
+<meta name="description" content="Post a role from $99. Watch video cover letters before you shortlist. Browse candidates off-market. Built for Australian startups and small businesses.">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0c1445;
+  --emerald: #10b981;
+  --emerald-light: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  --emerald-dark: #059669;
+  --white: #ffffff;
+  --off: #f8fafc;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --text: #0f172a;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background: var(--white);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* NAV */
+nav {
+  background: var(--navy);
+  padding: 0 48px;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
+.logo-dot { color: var(--emerald); }
+
+.nav-back { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+.nav-back:hover { color: white; }
+.nav-back svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+.nav-cta { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; }
+.nav-cta:hover { background: var(--emerald-dark); }
+
+/* HERO */
+.hero {
+  background: var(--navy);
+  padding: 88px 48px 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  width: 700px; height: 700px;
+  background: radial-gradient(circle, rgba(16,185,129,0.07) 0%, transparent 65%);
+  top: 50%; left: -100px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.hero-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.hero-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--emerald);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-tag::before { content: ''; width: 24px; height: 2px; background: var(--emerald); }
+
+.hero h1 { font-size: clamp(36px, 4.5vw, 56px); font-weight: 800; line-height: 1.0; letter-spacing: -2.5px; color: white; margin-bottom: 20px; }
+.hero h1 em { font-style: normal; color: var(--emerald); }
+
+.hero-sub { font-size: 16px; color: rgba(255,255,255,0.5); line-height: 1.7; margin-bottom: 40px; max-width: 440px; }
+
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.btn-primary { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; padding: 14px 28px; border-radius: 10px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: all 0.15s; box-shadow: 0 4px 20px rgba(16,185,129,0.2); }
+.btn-primary:hover { background: var(--emerald-dark); transform: translateY(-1px); }
+
+.btn-outline { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 600; padding: 14px 28px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.15); background: transparent; color: rgba(255,255,255,0.7); cursor: pointer; transition: all 0.15s; }
+.btn-outline:hover { color: white; border-color: rgba(255,255,255,0.35); }
+
+/* Hero right - candidate profile preview */
+.profile-preview {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 28px;
+}
+
+.pp-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+
+.pp-av {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.pp-av svg { width: 18px; height: 18px; stroke: white; stroke-width: 2; fill: none; }
+
+.pp-name-bar { height: 15px; background: rgba(255,255,255,0.12); border-radius: 4px; width: 130px; margin-bottom: 7px; }
+.pp-tag-bar { height: 11px; background: rgba(255,255,255,0.06); border-radius: 4px; width: 180px; margin-bottom: 10px; }
+
+.pp-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.pp-badge { font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 5px; background: rgba(16,185,129,0.12); color: var(--emerald); border: 1px solid rgba(16,185,129,0.2); }
+
+.pp-clips { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+
+.pp-clip {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 8px;
+  aspect-ratio: 16/9;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.pp-clip:hover { border-color: rgba(16,185,129,0.3); }
+
+.pp-play { width: 22px; height: 22px; background: var(--emerald); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+.pp-play svg { width: 8px; height: 8px; fill: white; margin-left: 1px; }
+
+.pp-clip-lbl { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.35); text-align: center; padding: 0 4px; }
+
+.pp-prompts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+
+.pp-prompt {
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  padding: 12px;
+  border-left: 2px solid var(--emerald);
+}
+
+.pp-prompt-label { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--emerald); margin-bottom: 5px; }
+.pp-prompt-bar { height: 9px; background: rgba(255,255,255,0.07); border-radius: 3px; margin-bottom: 4px; }
+.pp-prompt-bar.short { width: 65%; }
+
+.pp-unlock {
+  background: var(--emerald);
+  border: none;
+  border-radius: 8px;
+  padding: 11px;
+  width: 100%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.pp-unlock:hover { background: var(--emerald-dark); }
+
+/* SECTION STYLES */
+.section-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--emerald-dark);
+  background: var(--emerald-light);
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.section-h {
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
+  color: var(--navy);
+  margin-bottom: 48px;
+}
+
+/* HOW IT WORKS FOR EMPLOYERS */
+.how-section { padding: 88px 48px; }
+.how-inner { max-width: 1100px; margin: 0 auto; }
+
+.how-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+.how-card {
+  position: relative;
+}
+
+.how-num {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--emerald);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.how-num::after { content: ''; flex: 1; height: 1px; background: var(--emerald-border); }
+
+.how-icon {
+  width: 40px; height: 40px;
+  background: var(--emerald-light);
+  border: 1px solid var(--emerald-border);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+}
+
+.how-icon svg { width: 18px; height: 18px; stroke: var(--emerald-dark); stroke-width: 2; fill: none; }
+
+.how-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 8px; letter-spacing: -0.3px; }
+.how-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+/* WHY DIFFERENT */
+.why-section {
+  background: var(--off);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 88px 48px;
+}
+
+.why-inner { max-width: 1100px; margin: 0 auto; }
+
+.why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.why-card {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.why-card:hover { box-shadow: 0 6px 28px rgba(12,20,69,0.07); border-color: var(--emerald-border); }
+
+.why-icon { width: 40px; height: 40px; background: var(--emerald-light); border: 1px solid var(--emerald-border); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+.why-icon svg { width: 18px; height: 18px; stroke: var(--emerald-dark); stroke-width: 2; fill: none; }
+
+.why-title { font-size: 17px; font-weight: 800; color: var(--navy); letter-spacing: -0.3px; margin-bottom: 10px; }
+.why-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+/* PRICING */
+.pricing-section { padding: 88px 48px; }
+.pricing-inner { max-width: 1100px; margin: 0 auto; }
+
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+.price-card {
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  background: white;
+  transition: box-shadow 0.2s;
+  position: relative;
+}
+
+.price-card:hover { box-shadow: 0 8px 32px rgba(12,20,69,0.08); }
+
+.price-card.featured { border-color: var(--emerald); background: var(--navy); }
+
+.featured-label {
+  position: absolute;
+  top: -12px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--emerald);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 14px;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.price-tier { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted2); margin-bottom: 12px; }
+.price-card.featured .price-tier { color: rgba(255,255,255,0.3); }
+
+.price-amount { font-size: 44px; font-weight: 800; letter-spacing: -2px; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+.price-card.featured .price-amount { color: white; }
+.price-period { font-size: 14px; font-weight: 400; color: var(--muted2); }
+
+.price-desc { font-size: 13px; color: var(--muted); margin: 12px 0 24px; line-height: 1.55; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.price-card.featured .price-desc { color: rgba(255,255,255,0.38); border-color: rgba(255,255,255,0.1); }
+
+.price-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 28px; }
+
+.price-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text); }
+.price-card.featured .price-item { color: rgba(255,255,255,0.72); }
+
+.p-check { width: 18px; height: 18px; background: var(--emerald-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.p-check svg { width: 9px; height: 9px; stroke: var(--emerald-dark); stroke-width: 2.5; fill: none; }
+.price-card.featured .p-check { background: rgba(16,185,129,0.18); }
+.price-card.featured .p-check svg { stroke: var(--emerald); }
+
+.price-btn { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; padding: 13px; border-radius: 10px; border: 1.5px solid var(--border); background: transparent; color: var(--navy); cursor: pointer; transition: all 0.15s; }
+.price-btn:hover { background: var(--off); }
+.price-btn.featured-btn { background: var(--emerald); border-color: var(--emerald); color: white; }
+.price-btn.featured-btn:hover { background: var(--emerald-dark); border-color: var(--emerald-dark); }
+
+/* PARTNER SECTION */
+.partner-section {
+  background: var(--navy);
+  padding: 88px 48px;
+}
+
+.partner-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.partner-left h2 { font-size: clamp(26px, 3.5vw, 42px); font-weight: 800; letter-spacing: -1.5px; color: white; line-height: 1.05; margin-bottom: 16px; }
+.partner-left h2 span { color: var(--emerald); }
+.partner-left p { font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 28px; }
+
+.partner-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+
+.partner-item { display: flex; align-items: center; gap: 12px; font-size: 14px; color: rgba(255,255,255,0.6); }
+
+.p-dot { width: 6px; height: 6px; background: var(--emerald); border-radius: 50%; flex-shrink: 0; }
+
+.partner-cta {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.partner-cta:hover { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.3); }
+
+/* Partner right - API callout */
+.api-card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 18px;
+  padding: 32px;
+}
+
+.api-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25); margin-bottom: 20px; }
+
+.api-title { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; margin-bottom: 10px; }
+.api-title span { color: var(--emerald); }
+
+.api-desc { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.65; margin-bottom: 24px; }
+
+.code-block {
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 18px 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  color: var(--emerald);
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.code-comment { color: rgba(255,255,255,0.2); }
+
+.api-note { font-size: 12px; color: rgba(255,255,255,0.25); line-height: 1.5; }
+
+/* WAITLIST / POST FORM */
+.post-section {
+  padding: 88px 48px;
+  background: var(--off);
+  border-top: 1px solid var(--border);
+}
+
+.post-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.post-left h2 { font-size: clamp(26px, 3vw, 38px); font-weight: 800; letter-spacing: -1.5px; color: var(--navy); line-height: 1.05; margin-bottom: 14px; }
+.post-left h2 span { color: var(--emerald); }
+.post-left p { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 28px; }
+
+.what-you-get { display: flex; flex-direction: column; gap: 12px; }
+
+.wyg-item { display: flex; align-items: flex-start; gap: 14px; }
+.wyg-icon { width: 32px; height: 32px; background: var(--emerald-light); border: 1px solid var(--emerald-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.wyg-icon svg { width: 14px; height: 14px; stroke: var(--emerald-dark); stroke-width: 2; fill: none; }
+.wyg-text strong { font-size: 13px; font-weight: 700; color: var(--navy); display: block; margin-bottom: 2px; }
+.wyg-text span { font-size: 12px; color: var(--muted); }
+
+/* Form */
+.post-form {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 36px;
+}
+
+.post-form h3 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; color: var(--navy); margin-bottom: 6px; }
+.post-form p { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+
+.form-field { margin-bottom: 12px; }
+
+.form-field label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.03em; }
+
+.form-field input, .form-field select, .form-field textarea {
+  width: 100%;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--off);
+  border: 1.5px solid var(--border);
+  border-radius: 9px;
+  padding: 12px 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-color: var(--emerald); }
+.form-field input::placeholder, .form-field textarea::placeholder { color: var(--muted2); }
+.form-field textarea { resize: vertical; min-height: 80px; }
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.form-submit { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; padding: 14px; border-radius: 10px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; margin-top: 4px; }
+.form-submit:hover { background: var(--emerald-dark); }
+
+.form-note { font-size: 11px; color: var(--muted2); text-align: center; margin-top: 10px; line-height: 1.5; }
+
+/* FOOTER */
+footer { background: #060a1e; border-top: 1px solid rgba(255,255,255,0.05); padding: 32px 48px; display: flex; justify-content: space-between; align-items: center; }
+footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
+
+/* TOAST */
+.toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: white; font-size: 14px; font-weight: 600; padding: 14px 24px; border-radius: 10px; border: 1px solid var(--emerald); box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s ease; z-index: 999; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 900px) {
+  nav { padding: 0 20px; }
+  .hero { padding: 60px 20px 80px; }
+  .hero-inner, .partner-inner, .post-inner { grid-template-columns: 1fr; gap: 48px; }
+  .how-section, .why-section, .pricing-section, .partner-section, .post-section { padding: 60px 20px; }
+  .how-grid, .why-grid, .pricing-grid { grid-template-columns: 1fr; }
+  footer { flex-direction: column; gap: 10px; text-align: center; padding: 24px 20px; }
+}
+
+/* AGENCY SECTION */
+.agency-section {
+  background: var(--navy);
+  padding: 88px 48px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.agency-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+}
+
+.agency-left h2 {
+  font-size: clamp(28px, 3.5vw, 42px);
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: white;
+  line-height: 1.05;
+  margin-bottom: 16px;
+}
+
+.agency-left h2 span { color: var(--emerald); }
+
+.agency-left > p {
+  font-size: 15px;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.agency-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.agency-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.6;
+}
+
+.a-dot {
+  width: 6px; height: 6px;
+  background: var(--emerald);
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+
+.agency-item strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 3px;
+}
+
+/* Agency form */
+.agency-form {
+  background: white;
+  border-radius: 20px;
+  padding: 36px;
+}
+
+.af-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--emerald-dark);
+  background: var(--emerald-light);
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+}
+
+.agency-form h3 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--navy);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.agency-form > p {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .agency-section { padding: 60px 20px; }
+  .agency-inner { grid-template-columns: 1fr; gap: 48px; }
+}
+
+</style>
+</head>
+<body>
+
+<script>
+const CONFIG = {
+  STRIPE_PUBLISHABLE_KEY: 'YOUR_STRIPE_PUBLISHABLE_KEY',
+  STRIPE_PRICE_ID_BASE: 'YOUR_STRIPE_PRICE_ID_BASE',
+  STRIPE_PRICE_ID_MID: 'YOUR_STRIPE_PRICE_ID_MID',
+  STRIPE_PRICE_ID_PRO: 'YOUR_STRIPE_PRICE_ID_PRO',
+};
+</script>
+<script src="https://js.stripe.com/v3/"></script>
+
+<nav>
+  <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
+  <a href="index.html" class="nav-back">
+    <svg viewBox="0 0 14 14"><line x1="12" y1="7" x2="2" y2="7"/><polyline points="6,3 2,7 6,11"/></svg>
+    Back
+  </a>
+  <a href="contact.html" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;padding:7px 14px;border-radius:7px;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Contact</a><button class="nav-cta" onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">Post a role</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-tag">For employers</div>
+      <h1>Post a role.<br>Find the right<br><em>person.</em></h1>
+      <p class="hero-sub">Built for Australian startups and small businesses. Watch video cover letters before you shortlist. No more sifting through 80 PDFs.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">Post a role from $99</button>
+        <button class="btn-outline" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">View pricing</button>
+      </div>
+    </div>
+
+    <div>
+      <div class="profile-preview">
+        <div class="pp-header">
+          <div class="pp-av">
+            <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zM4 20s-1 0-1-1 1-5 9-5 9 4 9 5-1 1-1 1H4z"/></svg>
+          </div>
+          <div style="flex:1">
+            <div class="pp-name-bar"></div>
+            <div class="pp-tag-bar"></div>
+            <div class="pp-badges">
+              <span class="pp-badge">Verified</span>
+              <span class="pp-badge">6 clips</span>
+              <span class="pp-badge">Brisbane</span>
+            </div>
+          </div>
+        </div>
+        <div class="pp-clips">
+          <div class="pp-clip"><div class="pp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div><div class="pp-clip-lbl">Cover Letter</div></div>
+          <div class="pp-clip"><div class="pp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div><div class="pp-clip-lbl">Work History</div></div>
+          <div class="pp-clip"><div class="pp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div><div class="pp-clip-lbl">Highlight</div></div>
+        </div>
+        <div class="pp-prompts">
+          <div class="pp-prompt">
+            <div class="pp-prompt-label">Ideal next role</div>
+            <div class="pp-prompt-bar"></div>
+            <div class="pp-prompt-bar short"></div>
+          </div>
+          <div class="pp-prompt">
+            <div class="pp-prompt-label">Works best when</div>
+            <div class="pp-prompt-bar"></div>
+            <div class="pp-prompt-bar short"></div>
+          </div>
+        </div>
+        <button class="pp-unlock">Unlock full profile — $29</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <span class="section-tag">How it works</span>
+    <div class="section-h">Post a role.<br>Watch videos.<br>Hire the right person.</div>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <div class="how-icon"><svg viewBox="0 0 18 18"><rect x="2" y="3" width="14" height="12" rx="1.5"/><line x1="6" y1="7" x2="12" y2="7"/><line x1="6" y1="10" x2="10" y2="10"/></svg></div>
+        <div class="how-title">Post your role</div>
+        <div class="how-body">Fill in your role details — title, location, type, salary range, what you're actually looking for. No 4-page position description required.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <div class="how-icon"><svg viewBox="0 0 18 18"><circle cx="9" cy="7" r="4"/><path d="M3 16s-1 0-1-1 1-4 7-4 7 3 7 4-1 1-1 1H3z"/></svg></div>
+        <div class="how-title">Applications come in</div>
+        <div class="how-body">Candidates apply with their vett.work profile — video cover letter, work history, prompts. You see who they actually are before you schedule anything.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <div class="how-icon"><svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg></div>
+        <div class="how-title">Watch their videos</div>
+        <div class="how-body">A free preview of each candidate's video cover letter comes with every application. Unlock the full profile — all 6 clips, references, and checks — when you want more.</div>
+      </div>
+      <div class="how-card">
+        <div class="how-num">04</div>
+        <div class="how-icon"><svg viewBox="0 0 18 18"><path d="M15 8A7 7 0 1 1 8 1"/><polyline points="11,1 15,1 15,5"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="6" y1="12" x2="10" y2="12"/></svg></div>
+        <div class="how-title">Shortlist and hire</div>
+        <div class="how-body">Shortlist who you want to meet. Send follow-up video questions if you need more. Book interviews only with people you already know are worth your time.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY DIFFERENT -->
+<section class="why-section">
+  <div class="why-inner">
+    <span class="section-tag">Why vett.work</span>
+    <div class="section-h">Built for small teams.<br>Not HR departments.</div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon"><svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg></div>
+        <div class="why-title">Video before you commit</div>
+        <div class="why-body">Watch a candidate's video cover letter before you even read their CV. Know if they can communicate, how they carry themselves, whether they get what you're building — in 2 minutes.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/><line x1="9" y1="5" x2="9" y2="9"/><line x1="9" y1="9" x2="12" y2="11"/></svg></div>
+        <div class="why-title">No more CV theatre</div>
+        <div class="why-body">Candidates who just get it done are terrible at writing CVs. vett.work profiles show you how someone thinks and works — not how well they formatted a Word document.</div>
+      </div>
+      <div class="why-card">
+        <div class="why-icon"><svg viewBox="0 0 18 18"><path d="M9 2L11 7H16L12 10L14 15L9 12L4 15L6 10L2 7H7Z"/></svg></div>
+        <div class="why-title">Actually startup-appropriate</div>
+        <div class="why-body">Seek and LinkedIn are built for corporates. vett.work is built for founder-led teams, small businesses, and startups — the people who need someone who can own it, not just fill a role.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <span class="section-tag">Pricing</span>
+    <div class="section-h">Simple pricing.<br>No surprises.</div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Base</div>
+        <div class="price-amount">$99<span class="price-period">/listing</span></div>
+        <div class="price-desc">Post a role, receive applications with video profiles. Unlock individual candidate profiles as you go.</div>
+        <div class="price-items">
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Role listed publicly for 30 days</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Free preview of each applicant's video cover letter</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>$29 to unlock full profile per candidate</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Standard applicant management</div>
+        </div>
+        <button class="price-btn" onclick="handleStripe('BASE')">Post a role</button>
+      </div>
+
+      <div class="price-card featured">
+        <div class="featured-label">Most popular</div>
+        <div class="price-tier">Mid</div>
+        <div class="price-amount">$199<span class="price-period">/listing</span></div>
+        <div class="price-desc">Everything in Base plus unlimited profile unlocks and AI matching included.</div>
+        <div class="price-items">
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Everything in Base</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Unlimited full profile unlocks</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>AI matching against your requirements</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Send follow-up video questions to candidates</div>
+        </div>
+        <button class="price-btn featured-btn" onclick="handleStripe('MID')">Post a role</button>
+      </div>
+
+      <div class="price-card">
+        <div class="price-tier">Pro</div>
+        <div class="price-amount">$299<span class="price-period">/mo</span></div>
+        <div class="price-desc">Browse and reach out to candidates without posting a role. For teams that are always hiring.</div>
+        <div class="price-items">
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>No listing required</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Browse the full candidate database</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Reach out directly for off-market roles</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>AI matching always on</div>
+        </div>
+        <button class="price-btn" onclick="handleStripe('PRO')">Get Pro</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNER / API -->
+<section class="partner-section">
+  <div class="partner-inner">
+    <div class="partner-left">
+      <span class="section-tag" style="background:rgba(16,185,129,0.1);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)">For recruitment networks</span>
+      <h2>Posting at volume?<br>Let's talk about a <span>partner deal.</span></h2>
+      <p>For recruitment agencies and networks posting multiple roles regularly. Volume pricing, free base listings, and a jobs upload API so your team can post directly without touching the platform.</p>
+      <div class="partner-list">
+        <div class="partner-item"><div class="p-dot"></div>Volume discount on all listing tiers</div>
+        <div class="partner-item"><div class="p-dot"></div>Free base listings for partner agencies</div>
+        <div class="partner-item"><div class="p-dot"></div>Reduced candidate profile unlock rates</div>
+        <div class="partner-item"><div class="p-dot"></div>Jobs upload API — POST listings directly</div>
+        <div class="partner-item"><div class="p-dot"></div>White-label option available</div>
+      </div>
+      <button class="partner-cta" onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">Get in touch about a partner deal</button>
+    </div>
+
+    <div>
+      <div class="api-card">
+        <div class="api-label">Jobs upload API · Phase 1</div>
+        <div class="api-title">Post listings <span>programmatically.</span></div>
+        <div class="api-desc">Partner agencies can POST job listings directly to vett.work via authenticated API. Simple, documented, rate-limited per key. Free for partner tier accounts.</div>
+        <div class="code-block"><span class="code-comment">// POST a new listing</span>
+POST /api/v1/jobs
+Authorization: Bearer YOUR_API_KEY
+
+{
+  "title": "Head of Operations",
+  "company": "NorthStack",
+  "location": "Brisbane",
+  "type": "full-time"
+}</div>
+        <div class="api-note">Phase 1 covers job upload only. Deeper API access — candidate data, AI matching — available by custom quote. <a href="#" style="color:rgba(255,255,255,0.35)">API docs coming soon</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- POST A ROLE FORM -->
+<section class="post-section" id="post">
+  <div class="post-inner">
+    <div class="post-left">
+      <span class="section-tag">Get started</span>
+      <h2>Post your role.<br>Or <span>get in touch.</span></h2>
+      <p>We're in early access. Submit your role details and we'll get your listing live, or reach out to discuss a partner arrangement.</p>
+      <div class="what-you-get">
+        <div class="wyg-item">
+          <div class="wyg-icon"><svg viewBox="0 0 14 14"><polygon points="2,2 12,7 2,12"/></svg></div>
+          <div class="wyg-text"><strong>Video cover letters with every application</strong><span>Free preview of each candidate's video cover letter included</span></div>
+        </div>
+        <div class="wyg-item">
+          <div class="wyg-icon"><svg viewBox="0 0 14 14"><circle cx="7" cy="5" r="3"/><path d="M2 13s-.5 0-.5-.5 .5-3.5 5.5-3.5 5.5 3 5.5 3.5-.5.5-.5.5H2z"/></svg></div>
+          <div class="wyg-text"><strong>Real candidates, not just CVs</strong><span>Profiles built for people who actually get things done</span></div>
+        </div>
+        <div class="wyg-item">
+          <div class="wyg-icon"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="9" rx="1"/><line x1="4" y1="6" x2="10" y2="6"/><line x1="4" y1="9" x2="8" y2="9"/></svg></div>
+          <div class="wyg-text"><strong>No corporate BS</strong><span>Built for startups and small businesses, not HR departments</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-form">
+      <h3>Post a role or get in touch</h3>
+      <p>We'll be back to you within one business day.</p>
+
+      <div class="form-row">
+        <div class="form-field">
+          <label>Your name</label>
+          <input type="text" id="empName" placeholder="[Your name]">
+        </div>
+        <div class="form-field">
+          <label>Company name</label>
+          <input type="text" id="empCompany" placeholder="[Company]">
+        </div>
+      </div>
+      <div class="form-field">
+        <label>Email address</label>
+        <input type="email" id="empEmail" placeholder="[Your email]">
+      </div>
+      <div class="form-field">
+        <label>Role title (if posting)</label>
+        <input type="text" id="empRole" placeholder="e.g. Head of Operations, Right Hand to Founder">
+      </div>
+      <div class="form-field">
+        <label>What are you looking for?</label>
+        <textarea id="empMessage" placeholder="Tell us about the role or what you need — we'll be in touch to get it live."></textarea>
+      </div>
+      <div class="form-field">
+        <label>I'm interested in</label>
+        <select id="empType">
+          <option value="">Select...</option>
+          <option value="base">Base listing — $99</option>
+          <option value="mid">Mid listing — $199</option>
+          <option value="pro">Pro subscription — $299/mo</option>
+          <option value="partner">Partner / agency deal</option>
+          <option value="browse">Just browsing candidates</option>
+        </select>
+      </div>
+      <button class="form-submit" onclick="handleEmployerSubmit()">Send enquiry</button>
+      <div class="form-note">We'll be in touch within one business day.</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- AGENCY COMING SOON -->
+<section class="agency-section">
+  <div class="agency-inner">
+    <div class="agency-left">
+      <span class="section-tag" style="background:rgba(16,185,129,0.1);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)">Coming 2027</span>
+      <h2>Built for recruitment<br>agencies. <span>Properly.</span></h2>
+      <p>We're building a lite CRM and payroll integration layer designed specifically for small Australian and New Zealand recruitment agencies. Up to 5,000 active candidates, full video profiling, and direct integration with the payroll systems you already use.</p>
+
+      <div class="agency-list">
+        <div class="agency-item">
+          <div class="a-dot"></div>
+          <div>
+            <strong>Lite CRM</strong>
+            Manage up to 5,000 active candidates with status tracking, notes, tags, and video profiles built in.
+          </div>
+        </div>
+        <div class="agency-item">
+          <div class="a-dot"></div>
+          <div>
+            <strong>Astute Payroll integration</strong>
+            Push candidate and placement data directly into Astute — no double entry.
+          </div>
+        </div>
+        <div class="agency-item">
+          <div class="a-dot"></div>
+          <div>
+            <strong>FastTrack integration</strong>
+            Sync candidates, placements, and timesheets with FastTrack payroll.
+          </div>
+        </div>
+        <div class="agency-item">
+          <div class="a-dot"></div>
+          <div>
+            <strong>Other AU/NZ payroll systems</strong>
+            We're mapping the full landscape. If you use a system not listed here, tell us — it helps us prioritise.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agency-form">
+      <div class="af-tag">Register your interest</div>
+      <h3>Be first in line<br>when we launch.</h3>
+      <p>We'll reach out directly when agency features are ready — no spam, just a heads up when it's live.</p>
+      <div class="form-field">
+        <label>Your name</label>
+        <input type="text" id="agencyName" placeholder="Your name">
+      </div>
+      <div class="form-field">
+        <label>Agency name</label>
+        <input type="text" id="agencyCompany" placeholder="Agency name">
+      </div>
+      <div class="form-field">
+        <label>Email address</label>
+        <input type="email" id="agencyEmail" placeholder="your@agency.com.au">
+      </div>
+      <div class="form-field">
+        <label>Payroll system you currently use</label>
+        <select id="agencyPayroll">
+          <option value="">Select...</option>
+          <option value="astute">Astute Payroll</option>
+          <option value="fasttrack">FastTrack</option>
+          <option value="keypay">KeyPay / Employment Hero</option>
+          <option value="xero">Xero Payroll</option>
+          <option value="myob">MYOB</option>
+          <option value="other">Other — I'll tell you below</option>
+          <option value="none">We don't use one yet</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Anything else we should know <span style="color:var(--muted2);font-weight:400">(optional)</span></label>
+        <textarea id="agencyNote" placeholder="Current candidate database size, systems you use, what matters most to you..."></textarea>
+      </div>
+      <button class="form-submit" onclick="handleAgencySignup()">Register my interest</button>
+      <div class="form-note">No commitment. Just a heads up when 2027 rolls around.</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <a href="index.html" class="logo" style="color:white;text-decoration:none;font-size:16px">vett<span style="color:#10b981">.</span>work</a>
+  <p>For the people who do the lot · Brisbane, Australia · 2025</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+async function handleStripe(tier) {
+  if (!CONFIG.STRIPE_PUBLISHABLE_KEY || CONFIG.STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') {
+    showToast('Payment not configured yet — use the form below to get in touch');
+    document.getElementById('post').scrollIntoView({ behavior: 'smooth' });
+    return;
+  }
+  const priceMap = { BASE: CONFIG.STRIPE_PRICE_ID_BASE, MID: CONFIG.STRIPE_PRICE_ID_MID, PRO: CONFIG.STRIPE_PRICE_ID_PRO };
+  const stripe = Stripe(CONFIG.STRIPE_PUBLISHABLE_KEY);
+  const { error } = await stripe.redirectToCheckout({
+    lineItems: [{ price: priceMap[tier], quantity: 1 }],
+    mode: tier === 'PRO' ? 'subscription' : 'payment',
+    successUrl: window.location.origin + '/success.html',
+    cancelUrl: window.location.href,
+  });
+  if (error) showToast('Something went wrong — please try again');
+}
+
+async function handleEmployerSubmit() {
+  const name = document.getElementById('empName').value.trim();
+  const company = document.getElementById('empCompany').value.trim();
+  const email = document.getElementById('empEmail').value.trim();
+  const role = document.getElementById('empRole').value.trim();
+  const message = document.getElementById('empMessage').value.trim();
+  const type = document.getElementById('empType').value;
+
+  if (!name || !email) { showToast('Please fill in your name and email'); return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showToast('Please enter a valid email'); return; }
+
+  const btn = document.querySelector('.form-submit');
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+
+  if (!CONFIG.RESEND_API_KEY || CONFIG.RESEND_API_KEY === 'YOUR_RESEND_API_KEY') {
+    showToast(`Got it, ${name} — we'll be in touch shortly`);
+    btn.textContent = 'Sent — we\'ll be in touch';
+    return;
+  }
+
+  try {
+    await fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        type: 'employer_enquiry',
+        name, company, email,
+        role: document.getElementById('empRole').value.trim(),
+        message: document.getElementById('empMessage').value.trim(),
+        tier: document.getElementById('empType').value,
+      }),
+    });
+
+    showToast(`Got it, ${name} — we'll be in touch within one business day`);
+    btn.textContent = 'Sent';
+  } catch (e) {
+    showToast('Something went wrong — please try again');
+    btn.textContent = 'Send enquiry';
+    btn.disabled = false;
+  }
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.style.opacity = '1'; e.target.style.transform = 'translateY(0)'; }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.how-card, .why-card, .price-card, .wyg-item').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(16px)';
+  el.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
