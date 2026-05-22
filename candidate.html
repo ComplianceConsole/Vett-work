@@ -657,7 +657,7 @@ const CONFIG = {
     <button class="cta-btn" style="max-width:320px;margin:0 auto 12px" onclick="handlePurchase()">Get my video CV — $19.99</button>
     <div class="cta-note">
       <svg viewBox="0 0 12 12"><rect x="2" y="5" width="8" height="6" rx="1"/><path d="M4 5V4a2 2 0 0 1 4 0v1"/></svg>
-      Secure payment · You record yourself · Ready in 15–30 minutes (max 5 min per clip, we recommend 3)
+      Secure payment · You record yourself · Ready in 15–30 minutes
     </div>
   </div>
 </section>
@@ -710,7 +710,7 @@ const CONFIG = {
 <section class="how-section">
   <div class="how-inner">
     <span class="section-tag">How it works</span>
-    <div class="section-h">Done in about 15 minutes.<br>Useful forever.</div>
+    <div class="section-h">Done in about 30 minutes.<br>Useful forever.</div>
     <div class="steps-list">
       <div class="step-row">
         <div class="step-n">01</div>
@@ -788,6 +788,74 @@ const CONFIG = {
   </div>
 </section>
 
+<!-- FREE PROFILE -->
+<section class="profile-section">
+  <div class="profile-inner">
+    <div class="profile-left">
+      <span class="section-tag">Optional add-on</span>
+      <h2>Add a free profile.<br>Get found for <span>off-market roles.</span></h2>
+      <p>Once your video CV is done, you can choose to add your profile to the vett.work candidate database. Employers on the platform can discover you and reach out — without you having to apply for anything.</p>
+      <div class="profile-features">
+        <div class="pf-item">
+          <div class="pf-icon"><svg viewBox="0 0 16 16"><path d="M8 1a4 4 0 1 0 0 8A4 4 0 0 0 8 1zM2 14s-1 0-1-1 1-4 7-4 7 3 7 4-1 1-1 1H2z"/></svg></div>
+          <div class="pf-text"><strong>Completely optional</strong><span>Default is private. You opt in — we never add you without asking.</span></div>
+        </div>
+        <div class="pf-item">
+          <div class="pf-icon"><svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><polyline points="8,4 8,8 11,10"/></svg></div>
+          <div class="pf-text"><strong>Passive visibility</strong><span>You don't have to apply for anything. Employers find you when a role matches your profile.</span></div>
+        </div>
+        <div class="pf-item">
+          <div class="pf-icon"><svg viewBox="0 0 16 16"><rect x="2" y="5" width="12" height="8" rx="1"/><path d="M5 5V4a3 3 0 0 1 6 0v1"/></svg></div>
+          <div class="pf-text"><strong>Remove yourself anytime</strong><span>Full control. Delete your profile whenever you want.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-mockup">
+      <div class="mock-top">
+        <div class="mock-av">
+          <svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 1 0 0 10A5 5 0 0 0 12 2zM4 20s-1 0-1-1 1-5 9-5 9 4 9 5-1 1-1 1H4z"/></svg>
+        </div>
+        <div style="flex:1">
+          <div class="mock-name-bar"></div>
+          <div class="mock-tag-bar"></div>
+          <div class="mock-badges">
+            <span class="mock-badge">Verified</span>
+            <span class="mock-badge">6 clips</span>
+            <span class="mock-badge">Open</span>
+          </div>
+        </div>
+      </div>
+      <div class="mock-clips">
+        <div class="mock-clip">
+          <div class="mock-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div>
+          <div class="mock-clip-lbl">Video CV</div>
+        </div>
+        <div class="mock-clip">
+          <div class="mock-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div>
+          <div class="mock-clip-lbl">Work History</div>
+        </div>
+        <div class="mock-clip">
+          <div class="mock-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div>
+          <div class="mock-clip-lbl">Highlight</div>
+        </div>
+      </div>
+      <div class="mock-prompts">
+        <div class="mock-prompt">
+          <div class="mock-prompt-label">Ideal next role</div>
+          <div class="mock-prompt-bar"></div>
+          <div class="mock-prompt-bar short"></div>
+        </div>
+        <div class="mock-prompt">
+          <div class="mock-prompt-label">Works best when</div>
+          <div class="mock-prompt-bar"></div>
+          <div class="mock-prompt-bar short"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ROLE-SPECIFIC UPGRADE -->
 <section class="role-section">
   <div class="role-inner">
@@ -795,7 +863,7 @@ const CONFIG = {
     <div class="section-h">Want to go further?<br>Your first one is <span style="color:var(--emerald-dark)">included free.</span></div>
     <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:40px;max-width:560px">Paste any job ad URL. AI matches it against your CV and writes 3 questions tailored to that specific role. After your free one, go ad hoc or get a full month of unlimited.</p>
     <div class="role-grid">
-      <div class="role-card">
+      <div class="role-card featured">
         <div class="role-tier">Included</div>
         <div class="role-price">Free<span class="role-period"> with purchase</span></div>
         <div class="role-desc">One role-specific interview included with your $19.99 purchase.</div>
@@ -804,9 +872,9 @@ const CONFIG = {
           <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>AI matches job ad vs your CV</div>
           <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>3 tailored questions for that role</div>
         </div>
-        <button class="role-btn" onclick="handlePurchase()">Get started</button>
+        <button class="role-btn featured-btn" onclick="handlePurchase()">Get started</button>
       </div>
-      <div class="role-card featured">
+      <div class="role-card">
         <div class="role-tier">Ad hoc</div>
         <div class="role-price">$29.99<span class="role-period">/interview</span></div>
         <div class="role-desc">Pay per role-specific interview after your free one. Good for occasional use.</div>
@@ -815,7 +883,7 @@ const CONFIG = {
           <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>MP4 clips included</div>
           <div class="role-item"><div class="r-check"><svg viewBox="0 0 8 8"><polyline points="1,4 3,6.5 7,1.5"/></svg></div>No subscription</div>
         </div>
-        <button class="role-btn featured-btn" onclick="handleStripeUpgrade('ADHOC')">Buy now</button>
+        <button class="role-btn" onclick="handleStripeUpgrade('ADHOC')">Buy now</button>
       </div>
       <div class="role-card">
         <div class="role-tier">Unlimited</div>
