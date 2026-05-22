@@ -296,6 +296,18 @@ nav {
 }
 
 /* 6 CLIPS */
+.clips-ai-note {
+  background: var(--emerald-light);
+  border: 1px solid var(--emerald-border);
+  border-radius: 10px;
+  padding: 14px 20px;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.clips-ai-note em { color: var(--emerald-dark); font-style: normal; font-weight: 600; }
 .clips-section {
   background: var(--off);
   border-top: 1px solid var(--border);
@@ -629,62 +641,23 @@ const CONFIG = {
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-inner">
-    <div>
-      <div class="hero-tag">For candidates</div>
-      <h1>Your video CV.<br>Because nobody reads<br><em>the other kind.</em></h1>
-      <p class="hero-sub">Upload your CV or paste your LinkedIn. AI writes personalised prompts for 6 video clips. You record yourself. Download and attach to any application — anywhere.</p>
+  <div style="max-width:1100px;margin:0 auto;text-align:center;padding:0 24px">
+    <div class="hero-tag">For candidates</div>
+    <h1>Your video CV.<br><em>Because nobody reads the other kind.</em></h1>
+    <p class="hero-sub">One payment. Six clips. Your story, on camera. Works everywhere.</p>
 
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:28px">
+      <div class="price-main" style="font-size:56px;font-weight:800;letter-spacing:-2px;color:white;line-height:1">$19.99</div>
+      <div style="text-align:left">
+        <div style="font-size:15px;font-weight:700;color:white">One-time payment</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.35)">No subscription · MP4 download · 1 free role-specific interview</div>
+      </div>
     </div>
 
-    <div>
-      <div class="price-block">
-        <div class="price-row">
-          <div class="price-main">$19.99</div>
-          <div class="price-period">one-time</div>
-        </div>
-        <div class="price-note">Your videos forever · No subscription</div>
-        <div class="includes">
-          <div class="inc-item"><div class="inc-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>6 personalised video clips that video-fy your CV</div>
-          <div class="inc-item"><div class="inc-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>MP4 download + shareable profile link</div>
-          <div class="inc-item"><div class="inc-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Works with Seek, LinkedIn, any job board</div>
-          <div class="inc-item"><div class="inc-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>1 free role-specific interview <span class="inc-badge">Included</span></div>
-        </div>
-      </div>
-
-      <button class="cta-btn" onclick="handlePurchase()">Get my video CV — $19.99</button>
-      <div class="cta-note">
-        <svg viewBox="0 0 12 12"><rect x="2" y="5" width="8" height="6" rx="1"/><path d="M4 5V4a2 2 0 0 1 4 0v1"/></svg>
-        Secure checkout · Instant access · Ready in about 15 minutes
-      </div>
-
-      <div class="process-card" style="margin-top:20px">
-        <div class="pc-label">What the AI does vs what you do</div>
-        <div class="pc-steps">
-          <div class="pc-step">
-            <div class="pc-badge ai">The AI</div>
-            <div class="pc-text">Reads your CV or LinkedIn and writes personalised prompts for each of your 6 clips — based on your actual roles and experience.</div>
-          </div>
-          <div class="pc-step">
-            <div class="pc-badge you">You</div>
-            <div class="pc-text">Record yourself answering each prompt on camera, in your browser, in your own time. Redo any clip as many times as you need.</div>
-          </div>
-          <div class="pc-step">
-            <div class="pc-badge ai">The AI</div>
-            <div class="pc-text">Packages your 6 clips with a shareable link and MP4 files ready to attach to any application.</div>
-          </div>
-          <div class="pc-step">
-            <div class="pc-badge you">You</div>
-            <div class="pc-text">Attach to Seek, drop in an email, share the link on LinkedIn — your videos, your story, everywhere.</div>
-          </div>
-        </div>
-
-        <div class="pc-disclaimer">
-          <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="5" r="0.5" fill="currentColor"/></svg>
-          <p>This is <strong>you, on camera</strong> — not an AI-generated avatar. The AI reads your CV and writes the questions. You record yourself answering them. What employers see is the real you.</p>
-        </div>
-
-      </div>
+    <button class="cta-btn" style="max-width:320px;margin:0 auto 12px" onclick="handlePurchase()">Get my video CV — $19.99</button>
+    <div class="cta-note">
+      <svg viewBox="0 0 12 12"><rect x="2" y="5" width="8" height="6" rx="1"/><path d="M4 5V4a2 2 0 0 1 4 0v1"/></svg>
+      Secure payment · You record yourself · Ready in about 15 minutes
     </div>
   </div>
 </section>
@@ -694,36 +667,40 @@ const CONFIG = {
   <div class="clips-inner">
     <span class="section-tag">The 6 clips</span>
     <div class="section-h">Six videos that<br>video-fy your CV.</div>
+    <div class="clips-ai-note">
+      Every question is generated by AI based on your CV — no two video profiles are the same. The examples below show the <em>type</em> of question you'll get, not the exact wording.
+    </div>
+
     <div class="clips-grid">
       <div class="clip-card">
         <div class="clip-num">Clip 01</div>
-        <div class="clip-title">Video CV</div>
-        <div class="clip-desc">Why you, why this kind of role, what you bring. Replaces the written CV nobody reads properly.</div>
+        <div class="clip-title">Your Passion &amp; Direction</div>
+        <div class="clip-desc">e.g. <em>"Tell us about your professional passions and what you're genuinely looking for in your next role."</em></div>
       </div>
       <div class="clip-card">
         <div class="clip-num">Clip 02</div>
         <div class="clip-title">Work History</div>
-        <div class="clip-desc">Walk the employer through your career. AI references your actual roles and asks you to connect the dots.</div>
+        <div class="clip-desc">e.g. <em>"You've worked across X and Y — walk us through your career and what connects it all."</em> References your actual roles.</div>
       </div>
       <div class="clip-card">
         <div class="clip-num">Clip 03</div>
         <div class="clip-title">Career Highlight</div>
-        <div class="clip-desc">AI picks something specific from your CV and asks you to tell the real story behind it.</div>
+        <div class="clip-desc">e.g. <em>"Tell us about [specific project or achievement from your CV] — what happened and what was the result?"</em></div>
       </div>
       <div class="clip-card">
         <div class="clip-num">Clip 04</div>
         <div class="clip-title">Ideal Next Role</div>
-        <div class="clip-desc">Not the title — what you'd actually be doing day to day, what kind of team, and why.</div>
+        <div class="clip-desc">e.g. <em>"Describe your ideal next role — not the title, but what you'd actually be doing and what kind of team you'd thrive in."</em></div>
       </div>
       <div class="clip-card">
         <div class="clip-num">Clip 05</div>
         <div class="clip-title">Strengths</div>
-        <div class="clip-desc">What you genuinely do better than most people around you — a real example, not a bullet point.</div>
+        <div class="clip-desc">e.g. <em>"What do you do better than most people around you? Give us a real example."</em></div>
       </div>
       <div class="clip-card">
         <div class="clip-num">Clip 06</div>
-        <div class="clip-title">Honest Weakness</div>
-        <div class="clip-desc">What you're working on and what you're doing about it. Answer it on your terms before they ask in an interview.</div>
+        <div class="clip-title">Growth Area</div>
+        <div class="clip-desc">e.g. <em>"What's something you're actively working on improving — and what are you doing about it?"</em></div>
       </div>
     </div>
   </div>
@@ -951,22 +928,6 @@ const CONFIG = {
   </div>
 </section>
 
-<!-- BOTTOM CTA -->
-<section class="bottom-cta">
-  <h2>Your video CV.<br><span>Because nobody reads the other kind.</span></h2>
-  <p>One payment. Six clips. Your story, on camera. Works everywhere.</p>
-  <div class="bottom-price">
-    <div class="bp-amount">$19.99</div>
-    <div class="bp-info">
-      <strong>One-time payment</strong>
-      <span>No subscription · MP4 download · 1 free role-specific interview</span>
-    </div>
-  </div>
-  <div>
-    <button class="bottom-btn" onclick="handlePurchase()">Get my video CV</button>
-    <div class="bottom-note">Secure payment · You record yourself · Ready in about 15 minutes</div>
-  </div>
-</section>
 
 <footer>
   <a href="index.html" class="logo" style="color:white;text-decoration:none;font-size:16px">vett<span style="color:#10b981">.</span>work</a>
