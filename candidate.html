@@ -241,6 +241,33 @@ nav {
 .pc-badge.ai { background: rgba(16,185,129,0.15); color: var(--emerald); border: 1px solid rgba(16,185,129,0.2); }
 .pc-badge.you { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.08); }
 
+.pc-disclaimer {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.pc-disclaimer svg {
+  width: 16px; height: 16px;
+  stroke: var(--emerald);
+  stroke-width: 1.5;
+  fill: none;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pc-disclaimer p {
+  font-size: 12px;
+  color: rgba(255,255,255,0.4);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pc-disclaimer p strong { color: var(--emerald); }
+
 .pc-text { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.55; }
 
 /* SECTION STYLES */
@@ -608,13 +635,9 @@ const CONFIG = {
       <h1>Your video CV.<br>Because nobody reads<br><em>the other kind.</em></h1>
       <p class="hero-sub">Upload your CV or paste your LinkedIn. AI writes personalised prompts for 6 video clips. You record yourself. Download and attach to any application — anywhere.</p>
 
-      <div class="notice">
-        <div class="notice-icon">
-          <svg viewBox="0 0 20 20"><circle cx="10" cy="10" r="8"/><line x1="10" y1="9" x2="10" y2="14"/><circle cx="10" cy="6.5" r="0.5" fill="currentColor"/></svg>
-        </div>
-        <p>This is <strong>you, on camera</strong> — not an AI-generated avatar. The AI reads your CV and writes the questions. You record yourself answering them. What employers see is the real you.</p>
-      </div>
+    </div>
 
+    <div>
       <div class="price-block">
         <div class="price-row">
           <div class="price-main">$19.99</div>
@@ -634,10 +657,8 @@ const CONFIG = {
         <svg viewBox="0 0 12 12"><rect x="2" y="5" width="8" height="6" rx="1"/><path d="M4 5V4a2 2 0 0 1 4 0v1"/></svg>
         Secure checkout · Instant access · Ready in about 15 minutes
       </div>
-    </div>
 
-    <div>
-      <div class="process-card">
+      <div class="process-card" style="margin-top:20px">
         <div class="pc-label">What the AI does vs what you do</div>
         <div class="pc-steps">
           <div class="pc-step">
@@ -657,6 +678,12 @@ const CONFIG = {
             <div class="pc-text">Attach to Seek, drop in an email, share the link on LinkedIn — your videos, your story, everywhere.</div>
           </div>
         </div>
+
+        <div class="pc-disclaimer">
+          <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="5" r="0.5" fill="currentColor"/></svg>
+          <p>This is <strong>you, on camera</strong> — not an AI-generated avatar. The AI reads your CV and writes the questions. You record yourself answering them. What employers see is the real you.</p>
+        </div>
+
       </div>
     </div>
   </div>
