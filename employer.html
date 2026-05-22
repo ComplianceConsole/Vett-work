@@ -282,6 +282,34 @@ nav {
 .why-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
 
 /* PRICING */
+.pricing-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--emerald-light);
+  border: 1px solid var(--emerald-border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+}
+
+.pricing-note svg {
+  width: 16px; height: 16px;
+  stroke: var(--emerald-dark);
+  stroke-width: 1.5;
+  fill: none;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.pricing-note p {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.pricing-note p strong { color: var(--emerald-dark); }
 .pricing-section { padding: 88px 48px; }
 .pricing-inner { max-width: 1100px; margin: 0 auto; }
 
@@ -735,93 +763,6 @@ const CONFIG = {
   </div>
 </section>
 
-<!-- PRICING -->
-<section class="pricing-section" id="pricing">
-  <div class="pricing-inner">
-    <span class="section-tag">Pricing</span>
-    <div class="section-h">Simple pricing.<br>No surprises.</div>
-    <div class="pricing-grid">
-      <div class="price-card">
-        <div class="price-tier">Base</div>
-        <div class="price-amount">$99<span class="price-period">/listing</span></div>
-        <div class="price-desc">Post a role, receive applications with video profiles. Unlock individual candidate profiles as you go.</div>
-        <div class="price-items">
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Role listed publicly for 30 days</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Free preview of each applicant's video cover letter</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>$29 to unlock full profile per candidate</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Standard applicant management</div>
-        </div>
-        <button class="price-btn" onclick="handleStripe('BASE')">Post a role</button>
-      </div>
-
-      <div class="price-card featured">
-        <div class="featured-label">Most popular</div>
-        <div class="price-tier">Mid</div>
-        <div class="price-amount">$199<span class="price-period">/listing</span></div>
-        <div class="price-desc">Everything in Base plus unlimited profile unlocks and AI matching included.</div>
-        <div class="price-items">
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Everything in Base</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Unlimited full profile unlocks</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>AI matching against your requirements</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Send follow-up video questions to candidates</div>
-        </div>
-        <button class="price-btn featured-btn" onclick="handleStripe('MID')">Post a role</button>
-      </div>
-
-      <div class="price-card">
-        <div class="price-tier">Pro</div>
-        <div class="price-amount">$299<span class="price-period">/mo</span></div>
-        <div class="price-desc">Browse and reach out to candidates without posting a role. For teams that are always hiring.</div>
-        <div class="price-items">
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>No listing required</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Browse the full candidate database</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Reach out directly for off-market roles</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>AI matching always on</div>
-        </div>
-        <button class="price-btn" onclick="handleStripe('PRO')">Get Pro</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PARTNER / API -->
-<section class="partner-section">
-  <div class="partner-inner">
-    <div class="partner-left">
-      <span class="section-tag" style="background:rgba(16,185,129,0.1);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)">For recruitment networks</span>
-      <h2>Posting at volume?<br>Let's talk about a <span>partner deal.</span></h2>
-      <p>For recruitment agencies and networks posting multiple roles regularly. Volume pricing, free base listings, and a jobs upload API so your team can post directly without touching the platform.</p>
-      <div class="partner-list">
-        <div class="partner-item"><div class="p-dot"></div>Volume discount on all listing tiers</div>
-        <div class="partner-item"><div class="p-dot"></div>Free base listings for partner agencies</div>
-        <div class="partner-item"><div class="p-dot"></div>Reduced candidate profile unlock rates</div>
-        <div class="partner-item"><div class="p-dot"></div>Jobs upload API — POST listings directly</div>
-        <div class="partner-item"><div class="p-dot"></div>White-label option available</div>
-      </div>
-      <button class="partner-cta" onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">Get in touch about a partner deal</button>
-    </div>
-
-    <div>
-      <div class="api-card">
-        <div class="api-label">Jobs upload API · Phase 1</div>
-        <div class="api-title">Post listings <span>programmatically.</span></div>
-        <div class="api-desc">Partner agencies can POST job listings directly to vett.work via authenticated API. Simple, documented, rate-limited per key. Free for partner tier accounts.</div>
-        <div class="code-block"><span class="code-comment">// POST a new listing</span>
-POST /api/v1/jobs
-Authorization: Bearer YOUR_API_KEY
-
-{
-  "title": "Head of Operations",
-  "company": "NorthStack",
-  "location": "Brisbane",
-  "type": "full-time"
-}</div>
-        <div class="api-note">Phase 1 covers job upload only. Deeper API access — candidate data, AI matching — available by custom quote. <a href="#" style="color:rgba(255,255,255,0.35)">API docs coming soon</a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- POST A ROLE FORM -->
 <section class="post-section" id="post">
   <div class="post-inner">
@@ -888,6 +829,101 @@ Authorization: Bearer YOUR_API_KEY
   </div>
 </section>
 
+
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-inner">
+    <span class="section-tag">Pricing</span>
+    <div class="section-h">Simple pricing.<br>No surprises.</div>
+    <!-- Pricing explanation -->
+    <div class="pricing-note">
+      <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="5" r="0.5" fill="currentColor"/></svg>
+      <p>When a candidate has paid for their video CV and applies for your role, you get their full profile <strong>for free</strong> — they paid, not you. Unlocks are for AI-matched candidates from our database who haven't applied yet.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="price-tier">Base</div>
+        <div class="price-amount">$99<span class="price-period">/listing</span></div>
+        <div class="price-desc">Post a role and receive applications. Applicant video CVs are free. Pay only to unlock AI-matched candidates.</div>
+        <div class="price-items">
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>1 role listed publicly for 30 days</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Applicant video CVs included free</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>$29 per AI match unlock</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Standard applicant management</div>
+        </div>
+        <button class="price-btn" onclick="handleStripe('BASE')">Post a role</button>
+      </div>
+
+      <div class="price-card featured">
+        <div class="featured-label">Most popular</div>
+        <div class="price-tier">Mid</div>
+        <div class="price-amount">$199<span class="price-period">/listing</span></div>
+        <div class="price-desc">Everything in Base plus 10 AI match unlocks and follow-up video questions included.</div>
+        <div class="price-items">
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>1 role listed publicly for 30 days</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Applicant video CVs included free</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>10 AI match unlocks included</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Send follow-up video questions to candidates</div>
+        </div>
+        <button class="price-btn featured-btn" onclick="handleStripe('MID')">Post a role</button>
+      </div>
+
+      <div class="price-card">
+        <div class="price-tier">Pro</div>
+        <div class="price-amount">$299<span class="price-period">/mo</span></div>
+        <div class="price-desc">For teams that hire regularly. Five listings and 25 AI match unlocks every month.</div>
+        <div class="price-items">
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>5 active listings per month</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Applicant video CVs always free</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>25 AI match unlocks per month</div>
+          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Browse off-market candidates</div>
+        </div>
+        <button class="price-btn" onclick="handleStripe('PRO')">Get Pro</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- PARTNER / API -->
+<section class="partner-section">
+  <div class="partner-inner">
+    <div class="partner-left">
+      <span class="section-tag" style="background:rgba(16,185,129,0.1);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)">For recruitment networks</span>
+      <h2>Posting at volume?<br>Let's talk about a <span>partner deal.</span></h2>
+      <p>For recruitment agencies and networks posting multiple roles regularly. Volume pricing, free base listings, and a jobs upload API so your team can post directly without touching the platform.</p>
+      <div class="partner-list">
+        <div class="partner-item"><div class="p-dot"></div>Volume discount on all listing tiers</div>
+        <div class="partner-item"><div class="p-dot"></div>Free base listings for partner agencies</div>
+        <div class="partner-item"><div class="p-dot"></div>Reduced candidate profile unlock rates</div>
+        <div class="partner-item"><div class="p-dot"></div>Jobs upload API — POST listings directly</div>
+        <div class="partner-item"><div class="p-dot"></div>White-label option available</div>
+      </div>
+      <button class="partner-cta" onclick="document.getElementById('post').scrollIntoView({behavior:'smooth'})">Get in touch about a partner deal</button>
+    </div>
+
+    <div>
+      <div class="api-card">
+        <div class="api-label">Jobs upload API · Phase 1</div>
+        <div class="api-title">Post listings <span>programmatically.</span></div>
+        <div class="api-desc">Partner agencies can POST job listings directly to vett.work via authenticated API. Simple, documented, rate-limited per key. Free for partner tier accounts.</div>
+        <div class="code-block"><span class="code-comment">// POST a new listing</span>
+POST /api/v1/jobs
+Authorization: Bearer YOUR_API_KEY
+
+{
+  "title": "Head of Operations",
+  "company": "NorthStack",
+  "location": "Brisbane",
+  "type": "full-time"
+}</div>
+        <div class="api-note">Phase 1 covers job upload only. Deeper API access — candidate data, AI matching — available by custom quote. <a href="#" style="color:rgba(255,255,255,0.35)">API docs coming soon</a></div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- AGENCY COMING SOON -->
 <section class="agency-section">
