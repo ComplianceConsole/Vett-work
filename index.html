@@ -904,6 +904,27 @@ footer p { font-size: 12px; color: var(--muted2); }
       </label>
     </div>
 
+    <!-- Employment type -->
+    <div class="emp-type-row">
+      <span class="filter-label">Employment type</span>
+      <label class="check-opt">
+        <input type="checkbox" name="empTypeWork" value="fulltime" checked onchange="filterJobs()">
+        <span>Full-time</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="empTypeWork" value="parttime" checked onchange="filterJobs()">
+        <span>Part-time</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="empTypeWork" value="casual" checked onchange="filterJobs()">
+        <span>Casual</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="empTypeWork" value="contractor" checked onchange="filterJobs()">
+        <span>Contractor</span>
+      </label>
+    </div>
+
     <!-- Categories -->
     <div class="filter-cats">
       <span class="filter-label">Category</span>
@@ -1127,6 +1148,7 @@ function filterJobs() {
   const location = document.getElementById('jobLocation').value.toLowerCase();
   const empTypes = [...document.querySelectorAll('input[name="empType"]:checked')].map(i => i.value);
   const workTypes = [...document.querySelectorAll('input[name="workType"]:checked')].map(i => i.value);
+  const empWorkTypes = [...document.querySelectorAll('input[name="empTypeWork"]:checked')].map(i => i.value);
   const cards = document.querySelectorAll('.job-card');
   let visible = 0;
   cards.forEach(card => {
@@ -1140,7 +1162,9 @@ function filterJobs() {
     const matchLoc = !location || loc.includes(location) || text.includes(location);
     const matchType = empTypes.length === 0 || empTypes.includes(type);
     const matchWork = workTypes.length === 0 || workTypes.includes(work);
-    const show = matchCat && matchSearch && matchLoc && matchType && matchWork;
+    const empWork = card.dataset.empworktype || 'fulltime';
+    const matchEmpWork = empWorkTypes.length === 0 || empWorkTypes.includes(empWork);
+    const show = matchCat && matchSearch && matchLoc && matchType && matchWork && matchEmpWork;
     card.style.display = show ? '' : 'none';
     if (show) visible++;
   });
