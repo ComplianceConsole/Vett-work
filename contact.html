@@ -312,7 +312,7 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
           </div>
           <div>
             <div class="contact-option-title">Looking for work?</div>
-            <div class="contact-option-desc">Create your video cover letter and get seen by the right employers.</div>
+            <div class="contact-option-desc">Create your video profile and get seen by the right employers.</div>
           </div>
         </a>
 
@@ -322,7 +322,7 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
           </div>
           <div>
             <div class="contact-option-title">Looking to hire?</div>
-            <div class="contact-option-desc">Post a role or browse candidates with video cover letters.</div>
+            <div class="contact-option-desc">Post a role or browse candidates with video profiles.</div>
           </div>
         </a>
 
@@ -413,17 +413,13 @@ async function handleContact() {
   btn.disabled = true;
 
   try {
-    await fetch('/api/send-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
+    await sendToFormspree({
         type: 'contact',
         name: first + ' ' + last,
         email,
         contactType: type,
         message,
-      }),
-    });
+      });
     showToast('Message sent — we\'ll be in touch soon');
     btn.textContent = 'Message sent';
   } catch (e) {
