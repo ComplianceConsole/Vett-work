@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>vett.work — Candidate Login</title>
+<title>vett.work — Create your account</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -287,7 +287,7 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
   <div class="auth-card">
     <div class="auth-logo"><span>vett<em>.</em>work</span></div>
     <div class="auth-title">Candidate account</div>
-    <div class="auth-sub">Create your video profile or sign in to manage your existing one.</div>
+    <div class="auth-sub">Create your virtual interview or sign in to manage your existing one.</div>
 
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('signup')">Create account</button>
@@ -323,10 +323,10 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
       <div class="form-field">
         <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;text-transform:none;font-size:13px;font-weight:400;color:var(--muted)">
           <input type="checkbox" id="candidateTerms" style="margin-top:3px;flex-shrink:0;accent-color:var(--emerald)">
-          <span>I agree to the <a href="terms.html" target="_blank" style="color:var(--emerald-dark)">Terms of Use</a> and <a href="privacy.html" target="_blank" style="color:var(--emerald-dark)">Privacy Policy</a>. I understand my video profile and documents will be stored securely and only shared with employers according to my privacy settings.</span>
+          <span>I agree to the <a href="terms.html" target="_blank" style="color:var(--emerald-dark)">Terms of Use</a> and <a href="privacy.html" target="_blank" style="color:var(--emerald-dark)">Privacy Policy</a>. I understand my virtual interview and documents will be stored securely and only shared with employers according to my privacy settings.</span>
         </label>
       </div>
-      <button class="submit-btn" onclick="handleSignup()" id="signupBtn">Create my account</button>
+      <button class="submit-btn" onclick="handleSignup()" id="signupBtn">Get started — it's free</button>
     </div>
 
     <!-- LOGIN FORM -->
@@ -436,7 +436,7 @@ async function handleSignup() {
 
   } catch (err) {
     showError('signupError', err.message || 'Something went wrong — please try again');
-    btn.textContent = 'Create my account';
+    btn.textContent = 'Get started — it's free';
     btn.disabled = false;
   }
 }

@@ -248,27 +248,13 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
     <div class="step-pill" id="step7"><div class="step-pill-num">7</div><div class="step-pill-label">Go live</div></div>
   </div>
 
-  <!-- 1: PAYMENT -->
-  <div class="section" id="paymentSection">
-    <div class="section-header">
-      <div class="section-title">Your video profile</div>
-      <span class="section-badge badge-pending">Payment required</span>
+  <!-- 1: PAYMENT NUDGE -->
+  <div id="paymentSection" style="background:var(--navy);border-radius:14px;padding:18px 24px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+    <div>
+      <div style="font-size:14px;font-weight:700;color:white;margin-bottom:3px">Ready to record your virtual interview?</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.5">6 personalised answers · MP4 download · shareable link · 1 free role-specific interview included</div>
     </div>
-    <div class="payment-hero">
-      <h2>Your video CV.<br><span>Because nobody reads the other kind.</span></h2>
-      <p>Upload your CV. AI writes your personalised questions. You record yourself. Six clips that replace the cover letter nobody reads — works with Seek, LinkedIn, or any application.</p>
-      <div class="price-display">
-        <div class="price-big">$19.99</div>
-        <div class="price-info"><strong>One-time payment</strong><span>No subscription · Your videos forever</span></div>
-      </div>
-      <button class="pay-btn" onclick="handlePayment()">Unlock my video profile — $19.99</button>
-      <div class="payment-includes">
-        <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>6 personalised clips</div>
-        <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>MP4 download</div>
-        <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>1 free role-specific interview</div>
-        <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>Shareable profile link</div>
-      </div>
-    </div>
+    <button onclick="handlePayment()" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:11px 22px;border-radius:9px;border:none;background:var(--emerald);color:white;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='var(--emerald)'">Unlock — $19.99</button>
   </div>
 
   <!-- 2: CV -->
@@ -313,14 +299,14 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
   <!-- 4: CLIPS -->
   <div class="section" id="clipsSection">
     <div class="section-header">
-      <div class="section-title">Record your 6 clips</div>
+      <div class="section-title">Your virtual interview</div>
       <span class="section-badge badge-locked" id="clipsBadge">Locked</span>
     </div>
     <div id="clipsContent">
       <div class="locked-msg">
         <div class="locked-icon"><svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg></div>
-        <div class="locked-title">Complete the steps above first</div>
-        <div class="locked-sub">Pay and generate your questions — then you'll be ready to record.</div>
+        <div class="locked-title">Almost ready to record</div>
+        <div class="locked-sub">Upload your CV and generate your questions first — then you'll record your 6 interview answers.</div>
       </div>
     </div>
   </div>
@@ -331,7 +317,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
       <div class="section-title">Supporting documents <span style="font-size:12px;font-weight:400;color:var(--muted2)">(optional)</span></div>
       <button class="save-btn" onclick="document.getElementById('addDocForm').classList.toggle('show')" style="margin-top:0;font-size:12px;padding:7px 14px">Add document</button>
     </div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Police checks, licences, certifications, qualifications. Expired documents show in red.</p>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Strengthen your profile with police checks, licences, certifications and qualifications. Expired documents show in red so employers know the status.</p>
     <div id="documentsList"><div style="text-align:center;padding:20px;color:var(--muted2);font-size:13px">No documents uploaded yet.</div></div>
     <div class="add-doc-form" id="addDocForm">
       <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px">Add a document</div>
@@ -376,13 +362,13 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
   <div class="section" id="roleInterviewSection">
     <div class="section-header">
       <div class="section-title">Role-specific interviews</div>
-      <span class="section-badge badge-locked" id="roleInterviewBadge">Complete your 6 clips first</span>
+      <span class="section-badge badge-locked" id="roleInterviewBadge">Complete your 6 answers first</span>
     </div>
     <div id="roleInterviewContent">
       <div class="locked-msg">
         <div class="locked-icon"><svg viewBox="0 0 18 18"><rect x="2" y="5" width="14" height="10" rx="1.5"/><path d="M6 5V4a2 2 0 0 1 6 0v1"/></svg></div>
-        <div class="locked-title">Complete your 6 clips first</div>
-        <div class="locked-sub">Once you've recorded all 6 clips you'll unlock a free role-specific interview. Paste any job ad and get 3 questions tailored to that exact role.</div>
+        <div class="locked-title">Complete your 6 answers first</div>
+        <div class="locked-sub">Once you've recorded all 6 answers you'll unlock a free role-specific interview. Paste any job ad and get 3 questions tailored to that exact role.</div>
       </div>
     </div>
   </div>
@@ -480,7 +466,7 @@ async function init() {
     if (refreshed) candidate = refreshed;
     candidate.has_paid = true;
     history.replaceState({}, '', window.location.pathname);
-    showToast('Payment successful! Your video profile is unlocked.');
+    showToast('Payment successful! Your virtual interview is unlocked.');
   } else if (urlParams.get('payment') === 'cancelled') {
     history.replaceState({}, '', window.location.pathname);
     showToast('Payment cancelled.');
@@ -538,8 +524,8 @@ function renderDashboard() {
   const doneClips = clips.filter(c => c.is_complete).length;
   if (candidate.has_paid && candidate.ai_prompts && candidate.ai_prompts.length > 0) {
     renderClips();
-    if (doneClips === 6) { document.getElementById('step4').classList.add('done'); document.getElementById('clipsBadge').textContent = 'All 6 recorded'; document.getElementById('clipsBadge').className = 'section-badge badge-complete'; }
-    else { document.getElementById('step4').classList.add('active'); document.getElementById('clipsBadge').textContent = `${doneClips}/6 recorded`; document.getElementById('clipsBadge').className = 'section-badge badge-pending'; }
+    if (doneClips === 6) { document.getElementById('step4').classList.add('done'); document.getElementById('clipsBadge').textContent = 'All 6 answers recorded'; document.getElementById('clipsBadge').className = 'section-badge badge-complete'; }
+    else { document.getElementById('step4').classList.add('active'); document.getElementById('clipsBadge').textContent = `${doneClips}/6 answers recorded`; document.getElementById('clipsBadge').className = 'section-badge badge-pending'; }
   }
 
   // Step 5 always active
@@ -669,7 +655,7 @@ function goBackPrompt(clipIndex) {
 
 function renderClips() {
   const doneClips = clips.filter(c => c.is_complete).length;
-  document.getElementById('clipsBadge').textContent = `${doneClips}/6 recorded`;
+  document.getElementById('clipsBadge').textContent = `${doneClips}/6 answers recorded`;
   document.getElementById('clipsBadge').className = doneClips === 6 ? 'section-badge badge-complete' : 'section-badge badge-pending';
 
   document.getElementById('clipsContent').innerHTML = `
@@ -679,7 +665,7 @@ function renderClips() {
       return `<div class="clip-item">
         <div class="clip-thumb" onclick="${done ? '' : `recordClip(${i + 1})`}">
           ${done ? `<div class="clip-status"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><div class="clip-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg></div>` : `<div class="clip-record-icon"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6"/><circle cx="9" cy="9" r="3" fill="rgba(255,255,255,0.4)"/></svg></div>`}
-          <div class="clip-lbl">${done ? 'Recorded' : 'Not recorded'}</div>
+          <div class="clip-lbl">${done ? 'Recorded ✓' : 'Not recorded'}</div>
         </div>
         <div class="clip-footer">
           <div class="clip-name">${title}</div>
@@ -695,8 +681,8 @@ function renderRoleInterviews() {
   document.getElementById('roleInterviewContent').innerHTML = `
     <div class="role-hero">
       <div class="free-badge"><svg viewBox="0 0 10 10" width="9" height="9" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg>${freeLeft > 0 ? `${freeLeft} free interview remaining` : 'Free interview used'}</div>
-      <h3>Apply to a specific role.<br><span>Nail it before the interview starts.</span></h3>
-      <p>Paste a job ad URL. AI reads the role, matches it against your CV, and generates 3 questions tailored to that exact job. Record your answers and attach to your application.</p>
+      <h3>Apply to a specific role.<br><span>Record a tailored interview in minutes.</span></h3>
+      <p>Paste any Seek, LinkedIn or company job ad URL. AI reads the role, matches it to your background, and writes 3 tailored questions. Record your answers and attach directly to your application — no cover letter needed.</p>
       ${freeLeft > 0 || true ? `<div class="role-url-wrap"><input type="url" id="roleAdUrl" placeholder="Paste a Seek, LinkedIn or any job ad URL..."><button class="role-url-btn" onclick="startRoleInterview()">Generate questions</button></div>` : ''}
     </div>
     <div id="roleInterviewsList"></div>
