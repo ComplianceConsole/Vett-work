@@ -18,7 +18,7 @@ serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-    const { candidate_id } = await req.json()
+    const { candidate_id, regen_clip, current_question } = await req.json()
 
     if (!candidate_id) {
       return new Response(
@@ -39,19 +39,77 @@ serve(async (req) => {
 
     const cvContext = candidate.cv_text || `LinkedIn: ${candidate.linkedin_url}` || 'No CV provided'
 
-    const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: `You are helping generate personalised video interview questions for a job candidate based on their CV or LinkedIn profile.
+    const clipTitles = [
+      'Your Passion & Direction',
+      'Work History',
+      'Career Highlight',
+      'Ideal Next Role',
+      'Strengths',
+      'Growth Area'
+    ]
+
+    const clipDescriptions = [
+      'ask about their professional passions and what they are looking for in their next role',
+      'reference their actual roles and career journey specifically',
+      'pick ONE specific achievement, project or role from their CV and ask them to tell the story behind it',
+      'ask what they would actually be doing day to day in their ideal role',
+      'ask for a real example of what they do better than most people',
+      'ask what they are actively working on improving and what they are doing about it'
+    ]
+
+    if (regen_clip !== undefined && regen_clip !== null) {
+      const clipIndex = parseInt(regen_clip)
+      const prompt = `You are generating a personalised video interview question for a job candidate.
+
+Here is their background:
+${cvContext}
+
+You need to generate ONE new question for section ${clipIndex + 1}: "${clipTitles[clipIndex]}"
+The question should: ${clipDescriptions[clipIndex]}
+
+The previous question was: "${current_question}"
+Generate a DIFFERENT question that covers the same theme but approaches it from a different angle.
+
+Rules:
+- Must be personalised to their actual background where possible
+- Warm, conversational tone — not corporate
+- 1-2 sentences max
+- Must be different from the previous question
+- Stay on the same theme as the section title
+
+Return ONLY the question text, no quotes, no other text.`
+
+      const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': ANTHROPIC_API_KEY,
+          'anthropic-version': '2023-06-01',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 200,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      })
+
+      const anthropicData = await anthropicResponse.json()
+      if (!anthropicResponse.ok) throw new Error(anthropicData.error?.message || 'Anthropic API error')
+
+      const newQuestion = anthropicData.content[0].text.trim()
+      const updatedPrompts = [...(candidate.ai_prompts || [])]
+      updatedPrompts[clipIndex] = newQuestion
+
+      await supabase.from('candidates').update({ ai_prompts: updatedPrompts }).eq('id', candidate_id)
+      await supabase.from('candidate_clips').update({ ai_prompt: newQuestion }).eq('candidate_id', candidate_id).eq('clip_number', clipIndex + 1)
+
+      return new Response(
+        JSON.stringify({ success: true, prompts: updatedPrompts }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      )
+    }
+
+    const prompt = `You are helping generate personalised video interview questions for a job candidate based on their CV or LinkedIn profile.
 
 Here is their background:
 ${cvContext}
@@ -72,15 +130,23 @@ Rules:
 
 Example format:
 ["Question 1", "Question 2", "Question 3", "Question 4", "Question 5", "Question 6"]`
-        }]
+
+    const anthropicResponse = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
       })
     })
 
     const anthropicData = await anthropicResponse.json()
-
-    if (!anthropicResponse.ok) {
-      throw new Error(anthropicData.error?.message || 'Anthropic API error')
-    }
+    if (!anthropicResponse.ok) throw new Error(anthropicData.error?.message || 'Anthropic API error')
 
     const responseText = anthropicData.content[0].text.trim()
     const prompts = JSON.parse(responseText)
@@ -89,30 +155,17 @@ Example format:
       throw new Error('Invalid prompts format returned')
     }
 
-    await supabase
-      .from('candidates')
-      .update({ ai_prompts: prompts })
-      .eq('id', candidate_id)
-
-    const clipTitles = [
-      'Your Passion & Direction',
-      'Work History',
-      'Career Highlight',
-      'Ideal Next Role',
-      'Strengths',
-      'Growth Area'
-    ]
-
-    const clips = prompts.map((prompt, i) => ({
-      candidate_id,
-      clip_number: i + 1,
-      clip_title: clipTitles[i],
-      ai_prompt: prompt,
-      is_complete: false,
-    }))
-
+    await supabase.from('candidates').update({ ai_prompts: prompts }).eq('id', candidate_id)
     await supabase.from('candidate_clips').delete().eq('candidate_id', candidate_id)
-    await supabase.from('candidate_clips').insert(clips)
+    await supabase.from('candidate_clips').insert(
+      prompts.map((p, i) => ({
+        candidate_id,
+        clip_number: i + 1,
+        clip_title: clipTitles[i],
+        ai_prompt: p,
+        is_complete: false,
+      }))
+    )
 
     return new Response(
       JSON.stringify({ success: true, prompts }),
