@@ -865,7 +865,7 @@ async function init() {
 
   // If no candidate row exists, create one
   if (error || !data) {
-    const { data: newCandidate, error: insertError } = await supabase
+    const { data: newCandidate, error: insertError } = await supabaseClient
       .from('candidates')
       .insert({
         user_id: session.user.id,
