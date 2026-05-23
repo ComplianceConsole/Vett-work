@@ -933,96 +933,35 @@ footer p { font-size: 12px; color: var(--muted2); }
       <span class="filter-label">Category</span>
       <div class="cats-row">
         <button class="cat-btn active" data-filter="all" onclick="setFilter('all', this)">All roles</button>
-
-        <div class="cat-group">
-          <button class="cat-btn group-btn" onclick="toggleGroup('grp-ops', this)">
-            Operations &amp; Management
-            <svg viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
-          </button>
-          <div class="cat-subs" id="grp-ops">
-            <button class="cat-sub" data-filter="operations" onclick="setFilter('operations', this)">General Operations</button>
-            <button class="cat-sub" data-filter="general-manager" onclick="setFilter('general-manager', this)">General Manager</button>
-            <button class="cat-sub" data-filter="right-hand" onclick="setFilter('right-hand', this)">Right Hand to Founder</button>
-            <button class="cat-sub" data-filter="project" onclick="setFilter('project', this)">Project Management</button>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <button class="cat-btn group-btn" onclick="toggleGroup('grp-sales', this)">
-            Sales &amp; Growth
-            <svg viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
-          </button>
-          <div class="cat-subs" id="grp-sales">
-            <button class="cat-sub" data-filter="sales" onclick="setFilter('sales', this)">Sales</button>
-            <button class="cat-sub" data-filter="bd" onclick="setFilter('bd', this)">Business Development</button>
-            <button class="cat-sub" data-filter="partnerships" onclick="setFilter('partnerships', this)">Partnerships</button>
-            <button class="cat-sub" data-filter="account" onclick="setFilter('account', this)">Account Management</button>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <button class="cat-btn group-btn" onclick="toggleGroup('grp-mkt', this)">
-            Marketing &amp; Comms
-            <svg viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
-          </button>
-          <div class="cat-subs" id="grp-mkt">
-            <button class="cat-sub" data-filter="marketing" onclick="setFilter('marketing', this)">Marketing</button>
-            <button class="cat-sub" data-filter="content" onclick="setFilter('content', this)">Content</button>
-            <button class="cat-sub" data-filter="social" onclick="setFilter('social', this)">Social Media</button>
-            <button class="cat-sub" data-filter="brand" onclick="setFilter('brand', this)">Brand</button>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <button class="cat-btn group-btn" onclick="toggleGroup('grp-people', this)">
-            People &amp; Culture
-            <svg viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
-          </button>
-          <div class="cat-subs" id="grp-people">
-            <button class="cat-sub" data-filter="people" onclick="setFilter('people', this)">People &amp; Culture</button>
-            <button class="cat-sub" data-filter="hr" onclick="setFilter('hr', this)">HR</button>
-            <button class="cat-sub" data-filter="recruiting" onclick="setFilter('recruiting', this)">In-house Recruiting</button>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <button class="cat-btn group-btn" onclick="toggleGroup('grp-fin', this)">
-            Finance &amp; Admin
-            <svg viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
-          </button>
-          <div class="cat-subs" id="grp-fin">
-            <button class="cat-sub" data-filter="finance" onclick="setFilter('finance', this)">Finance</button>
-            <button class="cat-sub" data-filter="admin" onclick="setFilter('admin', this)">Administration</button>
-            <button class="cat-sub" data-filter="bookkeeping" onclick="setFilter('bookkeeping', this)">Bookkeeping</button>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <button class="cat-btn group-btn" onclick="toggleGroup('grp-tech', this)">
-            Tech &amp; Product
-            <svg viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
-          </button>
-          <div class="cat-subs" id="grp-tech">
-            <button class="cat-sub" data-filter="engineering" onclick="setFilter('engineering', this)">Engineering</button>
-            <button class="cat-sub" data-filter="product" onclick="setFilter('product', this)">Product</button>
-            <button class="cat-sub" data-filter="design" onclick="setFilter('design', this)">Design</button>
-            <button class="cat-sub" data-filter="data" onclick="setFilter('data', this)">Data</button>
-          </div>
-        </div>
-
-        <div class="cat-group">
-          <button class="cat-btn group-btn" onclick="toggleGroup('grp-trade', this)">
-            Trade &amp; Field
-            <svg viewBox="0 0 10 10"><polyline points="2,3 5,7 8,3"/></svg>
-          </button>
-          <div class="cat-subs" id="grp-trade">
-            <button class="cat-sub" data-filter="trade" onclick="setFilter('trade', this)">Trades</button>
-            <button class="cat-sub" data-filter="hospitality" onclick="setFilter('hospitality', this)">Hospitality</button>
-            <button class="cat-sub" data-filter="health" onclick="setFilter('health', this)">Health &amp; Care</button>
-            <button class="cat-sub" data-filter="logistics" onclick="setFilter('logistics', this)">Logistics</button>
-          </div>
-        </div>
-
+        <button class="cat-btn" data-filter="accounting" onclick="setFilter('accounting', this)">Accounting</button>
+        <button class="cat-btn" data-filter="administration" onclick="setFilter('administration', this)">Administration &amp; Office Support</button>
+        <button class="cat-btn" data-filter="advertising" onclick="setFilter('advertising', this)">Advertising, Arts &amp; Media</button>
+        <button class="cat-btn" data-filter="banking" onclick="setFilter('banking', this)">Banking &amp; Financial Services</button>
+        <button class="cat-btn" data-filter="callcentre" onclick="setFilter('callcentre', this)">Call Centre &amp; Customer Service</button>
+        <button class="cat-btn" data-filter="ceo" onclick="setFilter('ceo', this)">CEO &amp; General Management</button>
+        <button class="cat-btn" data-filter="community" onclick="setFilter('community', this)">Community Services &amp; Development</button>
+        <button class="cat-btn" data-filter="construction" onclick="setFilter('construction', this)">Construction</button>
+        <button class="cat-btn" data-filter="consulting" onclick="setFilter('consulting', this)">Consulting &amp; Strategy</button>
+        <button class="cat-btn" data-filter="design" onclick="setFilter('design', this)">Design &amp; Architecture</button>
+        <button class="cat-btn" data-filter="education" onclick="setFilter('education', this)">Education &amp; Training</button>
+        <button class="cat-btn" data-filter="engineering" onclick="setFilter('engineering', this)">Engineering</button>
+        <button class="cat-btn" data-filter="farming" onclick="setFilter('farming', this)">Farming, Animals &amp; Conservation</button>
+        <button class="cat-btn" data-filter="government" onclick="setFilter('government', this)">Government &amp; Defence</button>
+        <button class="cat-btn" data-filter="healthcare" onclick="setFilter('healthcare', this)">Healthcare &amp; Medical</button>
+        <button class="cat-btn" data-filter="hospitality" onclick="setFilter('hospitality', this)">Hospitality &amp; Tourism</button>
+        <button class="cat-btn" data-filter="hr" onclick="setFilter('hr', this)">Human Resources &amp; Recruitment</button>
+        <button class="cat-btn" data-filter="ict" onclick="setFilter('ict', this)">Information &amp; Communication Technology</button>
+        <button class="cat-btn" data-filter="insurance" onclick="setFilter('insurance', this)">Insurance &amp; Superannuation</button>
+        <button class="cat-btn" data-filter="legal" onclick="setFilter('legal', this)">Legal</button>
+        <button class="cat-btn" data-filter="manufacturing" onclick="setFilter('manufacturing', this)">Manufacturing, Transport &amp; Logistics</button>
+        <button class="cat-btn" data-filter="marketing" onclick="setFilter('marketing', this)">Marketing &amp; Communications</button>
+        <button class="cat-btn" data-filter="mining" onclick="setFilter('mining', this)">Mining, Resources &amp; Energy</button>
+        <button class="cat-btn" data-filter="realestate" onclick="setFilter('realestate', this)">Real Estate &amp; Property</button>
+        <button class="cat-btn" data-filter="retail" onclick="setFilter('retail', this)">Retail &amp; Consumer Products</button>
+        <button class="cat-btn" data-filter="sales" onclick="setFilter('sales', this)">Sales</button>
+        <button class="cat-btn" data-filter="science" onclick="setFilter('science', this)">Science &amp; Technology</button>
+        <button class="cat-btn" data-filter="sport" onclick="setFilter('sport', this)">Sport &amp; Recreation</button>
+        <button class="cat-btn" data-filter="trades" onclick="setFilter('trades', this)">Trades &amp; Services</button>
       </div>
     </div>
 
@@ -1137,17 +1076,6 @@ function setFilter(filter, el) {
   document.querySelectorAll('.cat-btn, .cat-sub').forEach(c => c.classList.remove('active'));
   el.classList.add('active');
   filterJobs();
-}
-
-function toggleGroup(groupId, btn) {
-  const group = document.getElementById(groupId);
-  const isOpen = group.classList.contains('open');
-  document.querySelectorAll('.cat-subs').forEach(g => g.classList.remove('open'));
-  document.querySelectorAll('.cat-btn.group-btn').forEach(b => b.classList.remove('open'));
-  if (!isOpen) {
-    group.classList.add('open');
-    btn.classList.add('open');
-  }
 }
 
 function filterJobs() {

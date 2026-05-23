@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vett.work — Employer Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --navy: #0c1445;
+  --navy2: #111d5e;
+  --emerald: #10b981;
+  --emerald-light: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  --emerald-dark: #059669;
+  --white: #ffffff;
+  --off: #f8fafc;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --text: #0f172a;
+  --error: #ef4444;
+  --error-light: #fef2f2;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off); color: var(--text); min-height: 100vh; }
+
+nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
+.logo-dot { color: var(--emerald); }
+.nav-right { display: flex; align-items: center; gap: 16px; }
+.nav-user { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(255,255,255,0.6); }
+.nav-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--emerald); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+.nav-signout { font-size: 13px; color: rgba(255,255,255,0.4); background: none; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; padding: 7px 14px; border-radius: 7px; transition: color 0.15s; }
+.nav-signout:hover { color: white; }
+
+.page { max-width: 1000px; margin: 0 auto; padding: 40px 24px 80px; }
+
+/* HEADER ROW */
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; }
+.page-title { font-size: 26px; font-weight: 800; letter-spacing: -1px; color: var(--navy); }
+.page-sub { font-size: 14px; color: var(--muted); margin-top: 4px; }
+.post-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; padding: 12px 24px; border-radius: 10px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; gap: 8px; }
+.post-btn:hover { background: var(--emerald-dark); }
+.post-btn svg { width: 14px; height: 14px; stroke: white; stroke-width: 2.5; fill: none; }
+
+/* STATS ROW */
+.stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+.stat-card { background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 20px; }
+.stat-num { font-size: 28px; font-weight: 800; letter-spacing: -1px; color: var(--navy); line-height: 1; margin-bottom: 4px; }
+.stat-label { font-size: 12px; color: var(--muted); font-weight: 500; }
+
+/* TABS */
+.tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 24px; }
+.tab { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 600; padding: 12px 20px; border: none; background: transparent; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+.tab:hover { color: var(--navy); }
+.tab.active { color: var(--navy); border-bottom-color: var(--navy); font-weight: 700; }
+
+/* LISTINGS */
+.listings-list { display: flex; flex-direction: column; gap: 14px; }
+
+.listing-card { background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 24px; transition: box-shadow 0.2s; }
+.listing-card:hover { box-shadow: 0 4px 16px rgba(12,20,69,0.07); }
+.listing-card.expired { opacity: 0.6; }
+
+.listing-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+.listing-title { font-size: 18px; font-weight: 800; color: var(--navy); letter-spacing: -0.3px; margin-bottom: 4px; }
+.listing-meta { font-size: 13px; color: var(--muted); }
+.listing-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+.ltag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 4px; background: var(--off); border: 1px solid var(--border); color: var(--muted); }
+.ltag.active { background: var(--emerald-light); color: var(--emerald-dark); border-color: var(--emerald-border); }
+.ltag.expired { background: var(--error-light); color: var(--error); border-color: #fecaca; }
+
+.listing-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.lbtn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 8px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.lbtn-outline { border: 1.5px solid var(--border); background: white; color: var(--navy); }
+.lbtn-outline:hover { background: var(--navy); color: white; border-color: var(--navy); }
+.lbtn-green { border: none; background: var(--emerald); color: white; }
+.lbtn-green:hover { background: var(--emerald-dark); }
+
+.listing-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding-top: 14px; border-top: 1px solid var(--border); }
+.lst { text-align: center; }
+.lst-num { font-size: 20px; font-weight: 800; color: var(--navy); letter-spacing: -0.5px; }
+.lst-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* APPLICATIONS */
+.applications-list { display: flex; flex-direction: column; gap: 10px; }
+
+.app-card { background: white; border: 1.5px solid var(--border); border-radius: 12px; padding: 18px 20px; display: flex; align-items: center; gap: 16px; transition: box-shadow 0.15s; cursor: pointer; }
+.app-card:hover { box-shadow: 0 4px 16px rgba(12,20,69,0.07); border-color: var(--emerald-border); }
+
+.app-av { width: 44px; height: 44px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: white; flex-shrink: 0; }
+.app-info { flex: 1; min-width: 0; }
+.app-name { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.app-role { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+.app-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.app-tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; }
+.app-tag.video { background: var(--emerald-light); color: var(--emerald-dark); border: 1px solid var(--emerald-border); }
+.app-tag.no-video { background: var(--off); color: var(--muted2); border: 1px solid var(--border); }
+.app-tag.new { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+
+.app-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+.app-time { font-size: 11px; color: var(--muted2); }
+.app-actions { display: flex; gap: 6px; }
+
+/* EMPTY STATE */
+.empty { text-align: center; padding: 64px 24px; }
+.empty-icon { width: 52px; height: 52px; background: var(--off); border: 1px solid var(--border); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+.empty-icon svg { width: 22px; height: 22px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
+.empty-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.empty-sub { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 360px; margin: 0 auto 24px; }
+
+/* POST JOB MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(12,20,69,0.6); backdrop-filter: blur(4px); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal { background: white; border-radius: 20px; width: 100%; max-width: 640px; max-height: 90vh; overflow-y: auto; position: relative; transform: translateY(16px); transition: transform 0.2s; box-shadow: 0 24px 80px rgba(12,20,69,0.2); }
+.modal-overlay.open .modal { transform: translateY(0); }
+.modal-header { padding: 28px 32px 0; display: flex; justify-content: space-between; align-items: flex-start; }
+.modal-title { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--navy); }
+.modal-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.modal-close { width: 32px; height: 32px; background: var(--off); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; margin-top: 2px; }
+.modal-close:hover { background: var(--border); }
+.modal-close svg { width: 12px; height: 12px; stroke: var(--muted); stroke-width: 2; fill: none; }
+.modal-body { padding: 24px 32px 32px; }
+
+.form-section { margin-bottom: 24px; }
+.form-section-title { font-size: 13px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 11px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.05em; }
+.field input, .field select, .field textarea { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 10px 14px; outline: none; transition: border-color 0.2s; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--emerald); }
+.field input::placeholder, .field textarea::placeholder { color: var(--muted2); }
+.field textarea { resize: vertical; min-height: 100px; }
+.field-full { grid-column: 1 / -1; }
+
+/* PRICING TIERS */
+.tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.tier-card { border: 2px solid var(--border); border-radius: 12px; padding: 16px; cursor: pointer; transition: all 0.15s; position: relative; }
+.tier-card:hover { border-color: var(--emerald-border); }
+.tier-card.selected { border-color: var(--emerald); background: var(--emerald-light); }
+.tier-card input { position: absolute; opacity: 0; pointer-events: none; }
+.tier-name { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted2); margin-bottom: 6px; }
+.tier-card.selected .tier-name { color: var(--emerald-dark); }
+.tier-price { font-size: 22px; font-weight: 800; letter-spacing: -1px; color: var(--navy); margin-bottom: 8px; }
+.tier-features { display: flex; flex-direction: column; gap: 4px; }
+.tier-feature { font-size: 11px; color: var(--muted); display: flex; align-items: flex-start; gap: 5px; line-height: 1.4; }
+.tier-feature svg { width: 10px; height: 10px; stroke: var(--emerald); stroke-width: 2.5; fill: none; flex-shrink: 0; margin-top: 2px; }
+
+.modal-footer { padding: 0 32px 28px; display: flex; gap: 10px; }
+.submit-btn { flex: 1; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; padding: 14px; border-radius: 10px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; }
+.submit-btn:hover { background: var(--emerald-dark); }
+.submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.cancel-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 600; padding: 14px 20px; border-radius: 10px; border: 1.5px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; }
+.cancel-btn:hover { background: var(--off); }
+
+/* VIEW APPLICATION MODAL */
+.view-modal { max-width: 700px; }
+.clips-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+.clip-prev { background: var(--navy); border-radius: 10px; aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; position: relative; overflow: hidden; }
+.clip-prev::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(16,185,129,0.08), transparent); }
+.cp-play { width: 28px; height: 28px; background: var(--emerald); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+.cp-play svg { width: 9px; height: 9px; fill: white; margin-left: 2px; }
+.cp-label { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.5); text-align: center; position: relative; z-index: 1; padding: 0 6px; text-transform: uppercase; }
+.status-select { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 10px 14px; outline: none; }
+.notes-area { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 12px 14px; outline: none; resize: vertical; min-height: 80px; margin-top: 12px; transition: border-color 0.2s; }
+.notes-area:focus { border-color: var(--emerald); }
+
+.toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: white; font-size: 14px; font-weight: 600; padding: 14px 24px; border-radius: 10px; border: 1px solid var(--emerald); box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s ease; z-index: 999; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+.loading { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 64px); font-size: 14px; color: var(--muted); }
+
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .page { padding: 24px 16px 60px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .form-grid { grid-template-columns: 1fr; }
+  .tier-grid { grid-template-columns: 1fr; }
+  .page-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .listing-top { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
+  <div class="nav-right">
+    <div class="nav-user">
+      <div class="nav-avatar" id="navAvatar">?</div>
+      <span id="navName">Loading...</span>
+    </div>
+    <button class="nav-signout" onclick="handleSignOut()">Sign out</button>
+  </div>
+</nav>
+
+<div id="loadingState" class="loading">Loading your dashboard...</div>
+
+<div id="dashboardContent" style="display:none">
+<div class="page">
+
+  <div class="page-header">
+    <div>
+      <div class="page-title" id="companyName">Your dashboard</div>
+      <div class="page-sub">Manage your listings and review applications</div>
+    </div>
+    <button class="post-btn" onclick="openPostModal()">
+      <svg viewBox="0 0 14 14"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+      Post a role
+    </button>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num" id="statListings">0</div>
+      <div class="stat-label">Active listings</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statApplications">0</div>
+      <div class="stat-label">Total applications</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statVideos">0</div>
+      <div class="stat-label">Video profiles received</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="statUnlocks">0</div>
+      <div class="stat-label">AI match unlocks remaining</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('listings', this)">My listings</button>
+    <button class="tab" onclick="switchTab('applications', this)">All applications</button>
+  </div>
+
+  <!-- LISTINGS TAB -->
+  <div id="tabListings">
+    <div class="listings-list" id="listingsList"></div>
+  </div>
+
+  <!-- APPLICATIONS TAB -->
+  <div id="tabApplications" style="display:none">
+    <div class="applications-list" id="applicationsList"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- POST JOB MODAL -->
+<div class="modal-overlay" id="postModal" onclick="closePostModal(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Post a role</div>
+        <div class="modal-sub">Your listing will go live immediately after payment</div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('postModal').classList.remove('open')">
+        <svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <!-- Role details -->
+      <div class="form-section">
+        <div class="form-section-title">Role details</div>
+        <div class="form-grid">
+          <div class="field field-full">
+            <label>Job title</label>
+            <input type="text" id="jobTitle" placeholder="e.g. Head of Operations, Right Hand to Founder">
+          </div>
+          <div class="field">
+            <label>Location</label>
+            <input type="text" id="jobLocation" placeholder="e.g. Brisbane QLD, Remote">
+          </div>
+          <div class="field">
+            <label>Salary range <span style="font-weight:400;text-transform:none;font-size:10px;color:var(--muted2)">(optional)</span></label>
+            <input type="text" id="jobSalary" placeholder="e.g. $80,000 – $100,000">
+          </div>
+          <div class="field">
+            <label>Work type</label>
+            <select id="jobWorkType">
+              <option value="office">In office</option>
+              <option value="hybrid">Hybrid</option>
+              <option value="remote">Remote</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Employment type</label>
+            <select id="jobEmpType">
+              <option value="fulltime">Full-time</option>
+              <option value="parttime">Part-time</option>
+              <option value="casual">Casual</option>
+              <option value="contractor">Contractor</option>
+            </select>
+          </div>
+          <div class="field field-full">
+            <label>Category</label>
+            <select id="jobCategory">
+              <option value="accounting">Accounting</option>
+              <option value="administration">Administration & Office Support</option>
+              <option value="advertising">Advertising, Arts & Media</option>
+              <option value="banking">Banking & Financial Services</option>
+              <option value="callcentre">Call Centre & Customer Service</option>
+              <option value="ceo">CEO & General Management</option>
+              <option value="community">Community Services & Development</option>
+              <option value="construction">Construction</option>
+              <option value="consulting">Consulting & Strategy</option>
+              <option value="design">Design & Architecture</option>
+              <option value="education">Education & Training</option>
+              <option value="engineering">Engineering</option>
+              <option value="farming">Farming, Animals & Conservation</option>
+              <option value="government">Government & Defence</option>
+              <option value="healthcare">Healthcare & Medical</option>
+              <option value="hospitality">Hospitality & Tourism</option>
+              <option value="hr">Human Resources & Recruitment</option>
+              <option value="ict">Information & Communication Technology</option>
+              <option value="insurance">Insurance & Superannuation</option>
+              <option value="legal">Legal</option>
+              <option value="manufacturing">Manufacturing, Transport & Logistics</option>
+              <option value="marketing">Marketing & Communications</option>
+              <option value="mining">Mining, Resources & Energy</option>
+              <option value="realestate">Real Estate & Property</option>
+              <option value="retail">Retail & Consumer Products</option>
+              <option value="sales">Sales</option>
+              <option value="science">Science & Technology</option>
+              <option value="sport">Sport & Recreation</option>
+              <option value="trades">Trades & Services</option>
+            </select>
+          </div>
+          <div class="field field-full">
+            <label>What you're looking for</label>
+            <textarea id="jobDescription" placeholder="Describe the role, what the person will be doing day to day, what kind of person you're after. Keep it real — candidates respond better to honest descriptions than corporate job ads."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pricing -->
+      <div class="form-section">
+        <div class="form-section-title">Choose your listing tier</div>
+        <div class="tier-grid">
+          <label class="tier-card" onclick="selectTier('base', this)">
+            <input type="radio" name="tier" value="base">
+            <div class="tier-name">Base</div>
+            <div class="tier-price">$99</div>
+            <div class="tier-features">
+              <div class="tier-feature"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>30 day listing</div>
+              <div class="tier-feature"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>Applicant video profiles free</div>
+              <div class="tier-feature"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>$29 per AI match unlock</div>
+            </div>
+          </label>
+          <label class="tier-card selected" onclick="selectTier('mid', this)">
+            <input type="radio" name="tier" value="mid" checked>
+            <div class="tier-name">Mid ★</div>
+            <div class="tier-price">$199</div>
+            <div class="tier-features">
+              <div class="tier-feature"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>30 day listing</div>
+              <div class="tier-feature"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>Applicant video profiles free</div>
+              <div class="tier-feature"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>10 AI match unlocks included</div>
+            </div>
+          </label>
+          <label class="tier-card" onclick="selectTier('pro', this)">
+            <input type="radio" name="tier" value="pro">
+            <div class="tier-name">Pro</div>
+            <div class="tier-price">$299<span style="font-size:14px;font-weight:400">/mo</span></div>
+            <div class="tier-features">
+              <div class="tier-feature"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>5 listings/month</div>
+              <div class="tier-feature"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>Applicant video profiles free</div>
+              <div class="tier-feature"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>25 AI match unlocks/month</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" onclick="document.getElementById('postModal').classList.remove('open')">Cancel</button>
+      <button class="submit-btn" id="postSubmitBtn" onclick="submitPost()">Post role & pay</button>
+    </div>
+  </div>
+</div>
+
+<!-- VIEW APPLICATION MODAL -->
+<div class="modal-overlay" id="viewModal" onclick="closeViewModal(event)">
+  <div class="modal view-modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="viewAppName">Applicant</div>
+        <div class="modal-sub" id="viewAppRole"></div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('viewModal').classList.remove('open')">
+        <svg viewBox="0 0 14 14"><line x1="2" y1="2" x2="12" y2="12"/><line x1="12" y1="2" x2="2" y2="12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div id="viewAppContent"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" onclick="document.getElementById('viewModal').classList.remove('open')">Close</button>
+      <button class="submit-btn" id="saveAppBtn" onclick="saveApplicationUpdate()">Save notes & status</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+const STRIPE_PUBLISHABLE_KEY = 'YOUR_STRIPE_PUBLISHABLE_KEY';
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let employer = null;
+let jobs = [];
+let applications = [];
+let selectedTier = 'mid';
+let currentAppId = null;
+
+const SEEK_CATEGORIES = {
+  accounting: 'Accounting', administration: 'Administration & Office Support', advertising: 'Advertising, Arts & Media',
+  banking: 'Banking & Financial Services', callcentre: 'Call Centre & Customer Service', ceo: 'CEO & General Management',
+  community: 'Community Services & Development', construction: 'Construction', consulting: 'Consulting & Strategy',
+  design: 'Design & Architecture', education: 'Education & Training', engineering: 'Engineering',
+  farming: 'Farming, Animals & Conservation', government: 'Government & Defence', healthcare: 'Healthcare & Medical',
+  hospitality: 'Hospitality & Tourism', hr: 'Human Resources & Recruitment', ict: 'Information & Communication Technology',
+  insurance: 'Insurance & Superannuation', legal: 'Legal', manufacturing: 'Manufacturing, Transport & Logistics',
+  marketing: 'Marketing & Communications', mining: 'Mining, Resources & Energy', realestate: 'Real Estate & Property',
+  retail: 'Retail & Consumer Products', sales: 'Sales', science: 'Science & Technology',
+  sport: 'Sport & Recreation', trades: 'Trades & Services'
+};
+
+async function init() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'employer-auth.html'; return; }
+
+  let { data, error } = await supabaseClient.from('employers').select('*').eq('user_id', session.user.id).single();
+
+  if (error || !data) {
+    const { data: ne, error: ie } = await supabaseClient.from('employers').insert({
+      user_id: session.user.id,
+      email: session.user.email,
+    }).select().single();
+    if (ie) { window.location.href = 'employer-auth.html'; return; }
+    data = ne;
+  }
+
+  employer = data;
+
+  // Load jobs
+  const { data: jobData } = await supabaseClient.from('jobs').select('*').eq('employer_id', employer.id).order('created_at', { ascending: false });
+  jobs = jobData || [];
+
+  // Load applications for employer's jobs
+  if (jobs.length > 0) {
+    const jobIds = jobs.map(j => j.id);
+    const { data: appData } = await supabaseClient.from('applications').select('*, jobs(title)').in('job_id', jobIds).order('created_at', { ascending: false });
+    applications = appData || [];
+  }
+
+  renderDashboard();
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('dashboardContent').style.display = 'block';
+}
+
+function renderDashboard() {
+  const initials = ((employer.email || '?')[0]).toUpperCase();
+  document.getElementById('navAvatar').textContent = initials;
+  document.getElementById('navName').textContent = employer.company_name || employer.email;
+  document.getElementById('companyName').textContent = employer.company_name ? `${employer.company_name}` : 'Your dashboard';
+
+  const activeJobs = jobs.filter(j => j.is_active);
+  const videoApps = applications.filter(a => a.candidate_id);
+
+  document.getElementById('statListings').textContent = activeJobs.length;
+  document.getElementById('statApplications').textContent = applications.length;
+  document.getElementById('statVideos').textContent = videoApps.length;
+  document.getElementById('statUnlocks').textContent = employer.ai_match_unlocks_remaining || 0;
+
+  renderListings();
+  renderApplications();
+}
+
+function renderListings() {
+  const list = document.getElementById('listingsList');
+
+  if (jobs.length === 0) {
+    list.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="1.5"/><path d="M8 6V5a2 2 0 0 1 8 0v1"/></svg></div>
+        <div class="empty-title">No listings yet</div>
+        <div class="empty-sub">Post your first role and start receiving video profile applications.</div>
+        <button class="post-btn" onclick="openPostModal()" style="margin:0 auto">Post your first role</button>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = jobs.map(job => {
+    const jobApps = applications.filter(a => a.job_id === job.id);
+    const videoApps = jobApps.filter(a => a.candidate_id);
+    const newApps = jobApps.filter(a => a.status === 'pending');
+    const expires = job.expires_at ? new Date(job.expires_at) : null;
+    const isExpired = expires && expires < new Date();
+
+    return `
+      <div class="listing-card ${isExpired ? 'expired' : ''}">
+        <div class="listing-top">
+          <div>
+            <div class="listing-title">${job.title}</div>
+            <div class="listing-meta">${job.location || 'Location not specified'} · ${SEEK_CATEGORIES[job.category] || job.category || 'Uncategorised'}</div>
+            <div class="listing-tags">
+              <span class="ltag ${isExpired ? 'expired' : 'active'}">${isExpired ? 'Expired' : 'Active'}</span>
+              <span class="ltag">${job.work_type || 'office'}</span>
+              <span class="ltag">${job.employment_type || 'fulltime'}</span>
+              ${job.salary_range ? `<span class="ltag">${job.salary_range}</span>` : ''}
+              ${expires ? `<span class="ltag">Expires ${expires.toLocaleDateString('en-AU', { day: 'numeric', month: 'short' })}</span>` : ''}
+            </div>
+          </div>
+          <div class="listing-actions">
+            <button class="lbtn lbtn-outline" onclick="toggleListingStatus('${job.id}', ${job.is_active})">${job.is_active ? 'Pause' : 'Reactivate'}</button>
+            <button class="lbtn lbtn-green" onclick="viewListingApplications('${job.id}')">View applications ${newApps.length > 0 ? `(${newApps.length} new)` : ''}</button>
+          </div>
+        </div>
+        <div class="listing-stats">
+          <div class="lst"><div class="lst-num">${jobApps.length}</div><div class="lst-label">Applications</div></div>
+          <div class="lst"><div class="lst-num">${videoApps.length}</div><div class="lst-label">With video profile</div></div>
+          <div class="lst"><div class="lst-num">${newApps.length}</div><div class="lst-label">Unreviewed</div></div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderApplications(jobId = null) {
+  const list = document.getElementById('applicationsList');
+  const filtered = jobId ? applications.filter(a => a.job_id === jobId) : applications;
+
+  if (filtered.length === 0) {
+    list.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 20s1-5 9-5 9 5 9 5"/></svg></div>
+        <div class="empty-title">No applications yet</div>
+        <div class="empty-sub">Applications will appear here as candidates apply for your roles.</div>
+      </div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(app => {
+    const hasVideo = !!app.candidate_id;
+    const initials = (app.applicant_name || '?')[0].toUpperCase();
+    const jobTitle = app.jobs?.title || 'Unknown role';
+    const time = new Date(app.created_at).toLocaleDateString('en-AU', { day: 'numeric', month: 'short' });
+
+    return `
+      <div class="app-card" onclick="viewApplication('${app.id}')">
+        <div class="app-av">${initials}</div>
+        <div class="app-info">
+          <div class="app-name">${app.applicant_name || 'Anonymous'}</div>
+          <div class="app-role">Applied for: ${jobTitle}</div>
+          <div class="app-tags">
+            ${hasVideo ? '<span class="app-tag video">Video profile</span>' : '<span class="app-tag no-video">No video</span>'}
+            ${app.status === 'pending' ? '<span class="app-tag new">New</span>' : ''}
+            ${app.status === 'shortlisted' ? '<span class="app-tag video">Shortlisted</span>' : ''}
+          </div>
+        </div>
+        <div class="app-right">
+          <div class="app-time">${time}</div>
+          <div class="app-actions">
+            <button class="lbtn lbtn-outline" onclick="event.stopPropagation(); viewApplication('${app.id}')">Review</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function viewListingApplications(jobId) {
+  switchTab('applications', document.querySelectorAll('.tab')[1]);
+  renderApplications(jobId);
+}
+
+function viewApplication(appId) {
+  const app = applications.find(a => a.id === appId);
+  if (!app) return;
+  currentAppId = appId;
+
+  document.getElementById('viewAppName').textContent = app.applicant_name || 'Applicant';
+  document.getElementById('viewAppRole').textContent = `Applied for: ${app.jobs?.title || 'Unknown role'}`;
+
+  const hasVideo = !!app.candidate_id;
+
+  document.getElementById('viewAppContent').innerHTML = `
+    <div style="margin-bottom:20px">
+      ${app.applicant_email ? `<p style="font-size:14px;color:var(--muted);margin-bottom:6px"><strong style="color:var(--navy)">Email:</strong> <a href="mailto:${app.applicant_email}" style="color:var(--emerald-dark)">${app.applicant_email}</a></p>` : ''}
+      ${app.applicant_link ? `<p style="font-size:14px;color:var(--muted);margin-bottom:6px"><strong style="color:var(--navy)">CV / LinkedIn:</strong> <a href="${app.applicant_link}" target="_blank" style="color:var(--emerald-dark)">${app.applicant_link}</a></p>` : ''}
+      ${app.applicant_note ? `<p style="font-size:14px;color:var(--muted);margin-top:12px;line-height:1.65;padding:14px;background:var(--off);border-radius:10px">${app.applicant_note}</p>` : ''}
+    </div>
+
+    ${hasVideo ? `
+      <div style="margin-bottom:20px">
+        <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px">Video profile</div>
+        <div class="clips-preview">
+          <div class="clip-prev"><div class="cp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg></div><div class="cp-label">Passion & Direction</div></div>
+          <div class="clip-prev"><div class="cp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg></div><div class="cp-label">Work History</div></div>
+          <div class="clip-prev"><div class="cp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg></div><div class="cp-label">Career Highlight</div></div>
+        </div>
+        <p style="font-size:12px;color:var(--muted2);margin-top:8px">Full video playback coming soon — Mux integration in progress</p>
+      </div>
+    ` : `<div style="background:var(--off);border:1.5px solid var(--border);border-radius:10px;padding:16px;text-align:center;margin-bottom:20px;font-size:13px;color:var(--muted)">This candidate applied without a video profile. <a href="candidate.html" style="color:var(--emerald-dark)">Learn about video profiles →</a></div>`}
+
+    <div style="margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:8px">Status</div>
+      <select class="status-select" id="appStatus">
+        <option value="pending" ${app.status === 'pending' ? 'selected' : ''}>Pending review</option>
+        <option value="viewed" ${app.status === 'viewed' ? 'selected' : ''}>Viewed</option>
+        <option value="shortlisted" ${app.status === 'shortlisted' ? 'selected' : ''}>Shortlisted</option>
+        <option value="rejected" ${app.status === 'rejected' ? 'selected' : ''}>Not progressing</option>
+        <option value="hired" ${app.status === 'hired' ? 'selected' : ''}>Hired</option>
+      </select>
+      <textarea class="notes-area" id="appNotes" placeholder="Add notes about this candidate...">${app.employer_notes || ''}</textarea>
+    </div>
+  `;
+
+  document.getElementById('viewModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Mark as viewed
+  if (app.status === 'pending') {
+    supabaseClient.from('applications').update({ status: 'viewed' }).eq('id', appId);
+    app.status = 'viewed';
+    renderApplications();
+  }
+}
+
+async function saveApplicationUpdate() {
+  if (!currentAppId) return;
+  const status = document.getElementById('appStatus').value;
+  const notes = document.getElementById('appNotes').value;
+
+  const { error } = await supabaseClient.from('applications').update({ status, employer_notes: notes }).eq('id', currentAppId);
+  if (error) { showToast('Error saving'); return; }
+
+  const app = applications.find(a => a.id === currentAppId);
+  if (app) { app.status = status; app.employer_notes = notes; }
+
+  document.getElementById('viewModal').classList.remove('open');
+  document.body.style.overflow = '';
+  renderApplications();
+  showToast('Saved');
+}
+
+// POST MODAL
+function openPostModal() {
+  document.getElementById('postModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closePostModal(e) {
+  if (e.target === document.getElementById('postModal')) {
+    document.getElementById('postModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function closeViewModal(e) {
+  if (e.target === document.getElementById('viewModal')) {
+    document.getElementById('viewModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function selectTier(tier, el) {
+  selectedTier = tier;
+  document.querySelectorAll('.tier-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+async function submitPost() {
+  const title = document.getElementById('jobTitle').value.trim();
+  const location = document.getElementById('jobLocation').value.trim();
+  const salary = document.getElementById('jobSalary').value.trim();
+  const workType = document.getElementById('jobWorkType').value;
+  const empType = document.getElementById('jobEmpType').value;
+  const category = document.getElementById('jobCategory').value;
+  const description = document.getElementById('jobDescription').value.trim();
+
+  if (!title) { showToast('Please enter a job title'); return; }
+  if (!location) { showToast('Please enter a location'); return; }
+  if (!description) { showToast('Please describe the role'); return; }
+
+  const btn = document.getElementById('postSubmitBtn');
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+
+  try {
+    // Calculate expiry (30 days for base/mid, ongoing for pro)
+    const expiresAt = selectedTier !== 'pro' ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : null;
+
+    const { data: newJob, error } = await supabaseClient.from('jobs').insert({
+      employer_id: employer.id,
+      title,
+      location,
+      salary_range: salary || null,
+      work_type: workType,
+      employment_type: empType,
+      category,
+      description,
+      is_active: true,
+      expires_at: expiresAt,
+    }).select().single();
+
+    if (error) throw error;
+
+    jobs.unshift(newJob);
+    renderListings();
+
+    document.getElementById('postModal').classList.remove('open');
+    document.body.style.overflow = '';
+    document.getElementById('statListings').textContent = jobs.filter(j => j.is_active).length;
+
+    // Reset form
+    ['jobTitle', 'jobLocation', 'jobSalary', 'jobDescription'].forEach(id => document.getElementById(id).value = '');
+
+    // TODO: redirect to Stripe for payment
+    if (STRIPE_PUBLISHABLE_KEY && STRIPE_PUBLISHABLE_KEY !== 'YOUR_STRIPE_PUBLISHABLE_KEY') {
+      showToast('Role saved — redirecting to payment...');
+    } else {
+      showToast('Role posted! (Payment coming soon — Stripe not configured yet)');
+    }
+
+  } catch (err) {
+    console.error(err);
+    showToast('Something went wrong — please try again');
+  }
+
+  btn.textContent = 'Post role & pay';
+  btn.disabled = false;
+}
+
+async function toggleListingStatus(jobId, currentStatus) {
+  const { error } = await supabaseClient.from('jobs').update({ is_active: !currentStatus }).eq('id', jobId);
+  if (error) { showToast('Error updating'); return; }
+  const job = jobs.find(j => j.id === jobId);
+  if (job) job.is_active = !currentStatus;
+  renderListings();
+  showToast(!currentStatus ? 'Listing reactivated' : 'Listing paused');
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tabListings').style.display = tab === 'listings' ? 'block' : 'none';
+  document.getElementById('tabApplications').style.display = tab === 'applications' ? 'block' : 'none';
+}
+
+async function handleSignOut() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
