@@ -723,11 +723,13 @@ footer p { font-size: 12px; color: var(--muted2); }
 }
 
 .cats-row {
-  display: flex;
+  display: none;
   flex-wrap: wrap;
   gap: 8px;
   align-items: flex-start;
+  margin-top: 10px;
 }
+.cats-row.open { display: flex; }
 
 .cat-btn {
   font-family: 'Plus Jakarta Sans', sans-serif;
@@ -930,12 +932,9 @@ footer p { font-size: 12px; color: var(--muted2); }
 
     <!-- Categories -->
     <div class="filter-cats">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span class="filter-label">Category</span>
-        <button class="cats-toggle" id="catsToggle" onclick="toggleCats()">
-          Browse categories
-          <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
-        </button>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:0">
+        <span class="filter-label" style="margin-bottom:0">Category</span>
+        <button onclick="toggleCats()" id="catsToggle" style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:4px;text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--border)">Browse categories <svg id="catsArrow" viewBox="0 0 10 10" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" style="transition:transform 0.2s"><polyline points="1,3 5,7 9,3"/></svg></button>
       </div>
       <div class="cats-row" id="catsRow">
         <button class="cat-btn active" data-filter="all" onclick="setFilter('all', this)">All roles</button>
@@ -1162,10 +1161,11 @@ loadJobs();
 
 function toggleCats() {
   const row = document.getElementById('catsRow');
+  const arrow = document.getElementById('catsArrow');
   const toggle = document.getElementById('catsToggle');
-  row.classList.toggle('open');
-  toggle.classList.toggle('open');
-  toggle.childNodes[0].textContent = row.classList.contains('open') ? 'Hide categories ' : 'Browse categories ';
+  const isOpen = row.classList.toggle('open');
+  arrow.style.transform = isOpen ? 'rotate(180deg)' : '';
+  toggle.childNodes[0].textContent = isOpen ? 'Hide categories ' : 'Browse categories ';
 }
 
 function showToast(msg) {
