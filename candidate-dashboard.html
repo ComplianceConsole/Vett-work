@@ -987,10 +987,11 @@ function renderDashboard() {
     document.getElementById('profileBadge').className = 'section-badge badge-complete';
   }
 
-  // Payment section
-  if (!candidate.has_paid) {
-    document.getElementById('paymentSection').style.display = 'block';
-  }
+  // Payment section — TEMP: bypassed for testing, re-enable when Stripe is ready
+  // if (!candidate.has_paid) {
+  //   document.getElementById('paymentSection').style.display = 'block';
+  // }
+  candidate.has_paid = true; // TEMP bypass — remove when Stripe configured
 
   // Prompts
   if (candidate.ai_prompts && candidate.ai_prompts.length > 0) {
