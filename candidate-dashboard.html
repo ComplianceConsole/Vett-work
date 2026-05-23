@@ -1137,22 +1137,17 @@ async function handleCVUpload(event) {
       return;
     }
 
-    // Upload file to Supabase Storage
-    const fileName = `${candidate.id}/${Date.now()}-${file.name}`;
-    const { error: uploadError } = await supabaseClient.storage
-      .from('candidate-cvs')
-      .upload(fileName, file, { upsert: true });
-
-    if (uploadError) {
-      console.error('Storage upload error:', uploadError);
-      // Continue anyway — we have the text
-    }
-
-    // Save extracted text to Supabase
-    await supabaseClient.from('candidates').update({
-      cv_url: fileName,
-      cv_text: cvText.trim().substring(0, 10000), // cap at 10k chars
+    // Save extracted text directly to Supabase — no file storage needed
+    const { error: updateError } = await supabaseClient.from('candidates').update({
+      cv_url: file.name,
+      cv_text: cvText.trim().substring(0, 10000),
     }).eq('id', candidate.id);
+
+    if (updateError) {
+      console.error('Save error:', updateError);
+      showToast('Error saving CV text — please try again');
+      return;
+    }
 
     candidate.cv_text = cvText.trim();
 
