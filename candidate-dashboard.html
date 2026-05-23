@@ -567,24 +567,24 @@ function renderDashboard() {
 }
 
 function updateProgress() {
+  // Update step pill indicators
   const doneClips = clips.filter(c => c.is_complete).length;
-  let steps = 0;
-  if (candidate.has_paid) steps++;
-  if (candidate.cv_text || candidate.linkedin_url) steps++;
-  if (candidate.ai_prompts && candidate.ai_prompts.length > 0) steps++;
-  if (doneClips === 6) steps++;
-  if (candidate.is_public) steps++;
-
-  const pct = Math.round((steps / 5) * 100);
-  document.getElementById('progressFill').style.width = pct + '%';
-  document.getElementById('progressPct').textContent = pct + '% complete';
-
-  if (pct === 100) { document.getElementById('progressTitle').textContent = 'Profile complete!'; document.getElementById('progressSub').textContent = 'Your video profile is live.'; document.getElementById('progressCta').textContent = 'Share my profile'; }
-  else if (!candidate.has_paid) { document.getElementById('progressTitle').textContent = 'Start your video profile'; document.getElementById('progressSub').textContent = 'Pay $19.99 to unlock everything.'; document.getElementById('progressCta').textContent = 'Unlock — $19.99'; }
-  else if (!candidate.cv_text && !candidate.linkedin_url) { document.getElementById('progressTitle').textContent = 'Upload your CV'; document.getElementById('progressSub').textContent = 'We need your CV to personalise your questions.'; document.getElementById('progressCta').textContent = 'Upload CV'; }
-  else if (!candidate.ai_prompts) { document.getElementById('progressTitle').textContent = 'Generate your questions'; document.getElementById('progressSub').textContent = 'AI will personalise 6 questions based on your background.'; document.getElementById('progressCta').textContent = 'Generate questions'; }
-  else if (doneClips < 6) { document.getElementById('progressTitle').textContent = 'Record your clips'; document.getElementById('progressSub').textContent = `${doneClips} of 6 clips recorded.`; document.getElementById('progressCta').textContent = 'Record now'; }
-  else { document.getElementById('progressTitle').textContent = 'Almost there!'; document.getElementById('progressSub').textContent = 'Go live so employers can find you.'; document.getElementById('progressCta').textContent = 'Go live'; }
+  const stepStates = [
+    candidate.has_paid,
+    !!(candidate.cv_text || candidate.linkedin_url),
+    !!(candidate.ai_prompts && candidate.ai_prompts.length > 0),
+    doneClips === 6,
+    true,
+    doneClips === 6,
+    candidate.is_public,
+  ];
+  stepStates.forEach((done, i) => {
+    const el = document.getElementById(`step${i + 1}`);
+    if (!el) return;
+    el.className = 'step-pill';
+    if (done) el.classList.add('done');
+    else if (i === 0 || stepStates.slice(0, i).every(Boolean)) el.classList.add('active');
+  });
 }
 
 function renderPrompts(prompts) {
