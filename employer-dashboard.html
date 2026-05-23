@@ -609,6 +609,13 @@ function viewListingApplications(jobId) {
 function viewApplication(appId) {
   const app = applications.find(a => a.id === appId);
   if (!app) return;
+
+  // If candidate has a video profile open the full profile page
+  if (app.candidate_id) {
+    window.location.href = `candidate-profile.html?candidate_id=${app.candidate_id}&app_id=${appId}&job_id=${app.job_id}`;
+    return;
+  }
+
   currentAppId = appId;
 
   document.getElementById('viewAppName').textContent = app.applicant_name || 'Applicant';

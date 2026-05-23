@@ -550,7 +550,7 @@ function renderDashboard() {
     document.getElementById('visibilityToggle').classList.add('on');
     document.getElementById('visibilityLabel').textContent = 'Visible to employers';
     document.getElementById('shareRow').style.display = 'flex';
-    document.getElementById('shareUrl').value = window.location.origin + '/profile/' + candidate.id;
+    document.getElementById('shareUrl').value = window.location.origin + '/candidate-profile.html?candidate_id=' + candidate.id;
     document.getElementById('step7').classList.add('done');
   } else { document.getElementById('step7').classList.add('active'); }
 
@@ -855,7 +855,7 @@ async function toggleVisibility() {
   document.getElementById('visibilityToggle').classList.toggle('on', newState);
   document.getElementById('visibilityLabel').textContent = newState ? 'Visible to employers' : 'Private';
   document.getElementById('shareRow').style.display = newState ? 'flex' : 'none';
-  if (newState) { document.getElementById('shareUrl').value = window.location.origin + '/profile/' + candidate.id; document.getElementById('step7').className = 'step-pill done'; }
+  if (newState) { document.getElementById('shareUrl').value = window.location.origin + '/candidate-profile.html?candidate_id=' + candidate.id; document.getElementById('step7').className = 'step-pill done'; }
   showToast(newState ? 'Profile now visible to employers' : 'Profile set to private');
   updateProgress();
 }
