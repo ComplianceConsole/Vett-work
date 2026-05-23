@@ -828,7 +828,6 @@ footer p { font-size: 12px; color: var(--muted2); }
       <div class="btn-label">For candidates</div>
       <div class="btn-title">I'm looking for my next role</div>
       <div class="btn-desc">Create a free profile and get seen by the right employers.</div>
-      <a href="interview.html" style="font-size:12px;color:rgba(255,255,255,0.4);text-decoration:none;display:inline-block;margin-top:8px;transition:color 0.15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.4)'">How the virtual interview works →</a>
       <div class="btn-arrow">
         Get started
         <svg viewBox="0 0 14 14"><line x1="2" y1="7" x2="12" y2="7"/><polyline points="8,3 12,7 8,11"/></svg>
@@ -936,44 +935,45 @@ footer p { font-size: 12px; color: var(--muted2); }
 
     <!-- Categories -->
     <div class="filter-cats">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:0">
-        <span class="filter-label" style="margin-bottom:0">Category</span>
-        <button onclick="toggleCats()" id="catsToggle" style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;font-weight:600;color:var(--muted);background:none;border:none;cursor:pointer;padding:0;display:inline-flex;align-items:center;gap:4px;text-decoration:underline;text-underline-offset:2px;text-decoration-color:var(--border)">Browse categories <svg id="catsArrow" viewBox="0 0 10 10" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" style="transition:transform 0.2s"><polyline points="1,3 5,7 9,3"/></svg></button>
-      </div>
-      <div class="cats-row" id="catsRow">
-        <button class="cat-btn active" data-filter="all" onclick="setFilter('all', this)">All roles</button>
-        <button class="cat-btn" data-filter="accounting" onclick="setFilter('accounting', this)">Accounting</button>
-        <button class="cat-btn" data-filter="administration" onclick="setFilter('administration', this)">Administration &amp; Office Support</button>
-        <button class="cat-btn" data-filter="advertising" onclick="setFilter('advertising', this)">Advertising, Arts &amp; Media</button>
-        <button class="cat-btn" data-filter="banking" onclick="setFilter('banking', this)">Banking &amp; Financial Services</button>
-        <button class="cat-btn" data-filter="callcentre" onclick="setFilter('callcentre', this)">Call Centre &amp; Customer Service</button>
-        <button class="cat-btn" data-filter="ceo" onclick="setFilter('ceo', this)">CEO &amp; General Management</button>
-        <button class="cat-btn" data-filter="community" onclick="setFilter('community', this)">Community Services &amp; Development</button>
-        <button class="cat-btn" data-filter="construction" onclick="setFilter('construction', this)">Construction</button>
-        <button class="cat-btn" data-filter="consulting" onclick="setFilter('consulting', this)">Consulting &amp; Strategy</button>
-        <button class="cat-btn" data-filter="design" onclick="setFilter('design', this)">Design &amp; Architecture</button>
-        <button class="cat-btn" data-filter="education" onclick="setFilter('education', this)">Education &amp; Training</button>
-        <button class="cat-btn" data-filter="engineering" onclick="setFilter('engineering', this)">Engineering</button>
-        <button class="cat-btn" data-filter="farming" onclick="setFilter('farming', this)">Farming, Animals &amp; Conservation</button>
-        <button class="cat-btn" data-filter="government" onclick="setFilter('government', this)">Government &amp; Defence</button>
-        <button class="cat-btn" data-filter="healthcare" onclick="setFilter('healthcare', this)">Healthcare &amp; Medical</button>
-        <button class="cat-btn" data-filter="hospitality" onclick="setFilter('hospitality', this)">Hospitality &amp; Tourism</button>
-        <button class="cat-btn" data-filter="hr" onclick="setFilter('hr', this)">Human Resources &amp; Recruitment</button>
-        <button class="cat-btn" data-filter="ict" onclick="setFilter('ict', this)">Information &amp; Communication Technology</button>
-        <button class="cat-btn" data-filter="insurance" onclick="setFilter('insurance', this)">Insurance &amp; Superannuation</button>
-        <button class="cat-btn" data-filter="legal" onclick="setFilter('legal', this)">Legal</button>
-        <button class="cat-btn" data-filter="manufacturing" onclick="setFilter('manufacturing', this)">Manufacturing, Transport &amp; Logistics</button>
-        <button class="cat-btn" data-filter="marketing" onclick="setFilter('marketing', this)">Marketing &amp; Communications</button>
-        <button class="cat-btn" data-filter="mining" onclick="setFilter('mining', this)">Mining, Resources &amp; Energy</button>
-        <button class="cat-btn" data-filter="realestate" onclick="setFilter('realestate', this)">Real Estate &amp; Property</button>
-        <button class="cat-btn" data-filter="retail" onclick="setFilter('retail', this)">Retail &amp; Consumer Products</button>
-        <button class="cat-btn" data-filter="sales" onclick="setFilter('sales', this)">Sales</button>
-        <button class="cat-btn" data-filter="science" onclick="setFilter('science', this)">Science &amp; Technology</button>
-        <button class="cat-btn" data-filter="sport" onclick="setFilter('sport', this)">Sport &amp; Recreation</button>
-        <button class="cat-btn" data-filter="trades" onclick="setFilter('trades', this)">Trades &amp; Services</button>
-      </div>
+      <span class="filter-label">Category</span>
+      <select id="categorySelect" onchange="setFilter(this.value)" style="width:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);background:white;border:1.5px solid var(--page-border);border-radius:9px;padding:9px 14px;outline:none;cursor:pointer;transition:border-color 0.2s;margin-top:4px">
+        <option value="all">All categories</option>
+        <option value="accounting" id="opt-accounting">Accounting</option>
+        <option value="administration" id="opt-administration">Administration &amp; Office Support</option>
+        <option value="advertising" id="opt-advertising">Advertising, Arts &amp; Media</option>
+        <option value="banking" id="opt-banking">Banking &amp; Financial Services</option>
+        <option value="callcentre" id="opt-callcentre">Call Centre &amp; Customer Service</option>
+        <option value="ceo" id="opt-ceo">CEO &amp; General Management</option>
+        <option value="community" id="opt-community">Community Services &amp; Development</option>
+        <option value="construction" id="opt-construction">Construction</option>
+        <option value="consulting" id="opt-consulting">Consulting &amp; Strategy</option>
+        <option value="design" id="opt-design">Design &amp; Architecture</option>
+        <option value="education" id="opt-education">Education &amp; Training</option>
+        <option value="engineering" id="opt-engineering">Engineering</option>
+        <option value="farming" id="opt-farming">Farming, Animals &amp; Conservation</option>
+        <option value="government" id="opt-government">Government &amp; Defence</option>
+        <option value="healthcare" id="opt-healthcare">Healthcare &amp; Medical</option>
+        <option value="hospitality" id="opt-hospitality">Hospitality &amp; Tourism</option>
+        <option value="hr" id="opt-hr">Human Resources &amp; Recruitment</option>
+        <option value="ict" id="opt-ict">Information &amp; Communication Technology</option>
+        <option value="insurance" id="opt-insurance">Insurance &amp; Superannuation</option>
+        <option value="legal" id="opt-legal">Legal</option>
+        <option value="manufacturing" id="opt-manufacturing">Manufacturing, Transport &amp; Logistics</option>
+        <option value="marketing" id="opt-marketing">Marketing &amp; Communications</option>
+        <option value="mining" id="opt-mining">Mining, Resources &amp; Energy</option>
+        <option value="realestate" id="opt-realestate">Real Estate &amp; Property</option>
+        <option value="retail" id="opt-retail">Retail &amp; Consumer Products</option>
+        <option value="sales" id="opt-sales">Sales</option>
+        <option value="science" id="opt-science">Science &amp; Technology</option>
+        <option value="sport" id="opt-sport">Sport &amp; Recreation</option>
+        <option value="trades" id="opt-trades">Trades &amp; Services</option>
+      </select>
     </div>
 
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div id="resultsCount" style="font-size:13px;color:var(--text-muted)">Loading...</div>
+      <button onclick="clearAllFilters()" id="clearFiltersBtn" style="display:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:2px">Clear filters</button>
+    </div>
     <div class="jobs-list" id="jobsList">
       <div class="empty-state" id="emptyState">
         <div class="empty-icon">
@@ -1077,6 +1077,7 @@ async function loadJobs() {
 
     allJobs = jobs || [];
     renderJobs(allJobs);
+  updateCategoryCounts();
   } catch (err) {
     console.error('Failed to load jobs:', err);
     showEmptyState('Could not load listings — please refresh');
@@ -1163,14 +1164,7 @@ function escapeHtml(str) {
 // Load jobs on page load
 loadJobs();
 
-function toggleCats() {
-  const row = document.getElementById('catsRow');
-  const arrow = document.getElementById('catsArrow');
-  const toggle = document.getElementById('catsToggle');
-  const isOpen = row.classList.toggle('open');
-  arrow.style.transform = isOpen ? 'rotate(180deg)' : '';
-  toggle.childNodes[0].textContent = isOpen ? 'Hide categories ' : 'Browse categories ';
-}
+// toggleCats removed — now using select dropdown
 
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1188,11 +1182,44 @@ function setFilter(filter, el) {
   filterJobs();
 }
 
+function updateCategoryCounts() {
+  const cards = document.querySelectorAll('.job-card');
+  const counts = {};
+  cards.forEach(card => {
+    const cat = card.dataset.category || 'other';
+    counts[cat] = (counts[cat] || 0) + 1;
+  });
+  const select = document.getElementById('categorySelect');
+  if (!select) return;
+  Array.from(select.options).forEach(opt => {
+    if (opt.value === 'all') {
+      opt.text = `All categories (${cards.length})`;
+    } else {
+      const count = counts[opt.value] || 0;
+      const label = opt.text.replace(/ \(\d+\)$/, '');
+      opt.text = count > 0 ? `${label} (${count})` : label;
+      opt.disabled = count === 0;
+      opt.style.color = count === 0 ? '#94a3b8' : '';
+    }
+  });
+}
+
+function clearAllFilters() {
+  document.getElementById('jobSearch').value = '';
+  document.getElementById('jobLocation').value = '';
+  document.querySelectorAll('input[name="empType"]').forEach(cb => cb.checked = true);
+  document.querySelectorAll('input[name="workType"]').forEach(cb => cb.checked = true);
+  document.getElementById('categorySelect').value = 'all';
+  activeFilter = 'all';
+  filterJobs();
+}
+
 function filterJobs() {
   const query = document.getElementById('jobSearch').value.toLowerCase();
   const location = document.getElementById('jobLocation').value.toLowerCase();
   const empTypes = [...document.querySelectorAll('input[name="empType"]:checked')].map(i => i.value);
   const workTypes = [...document.querySelectorAll('input[name="workType"]:checked')].map(i => i.value);
+  activeFilter = document.getElementById('categorySelect')?.value || activeFilter;
   const cards = document.querySelectorAll('.job-card');
   let visible = 0;
   cards.forEach(card => {
