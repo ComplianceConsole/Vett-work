@@ -930,8 +930,14 @@ footer p { font-size: 12px; color: var(--muted2); }
 
     <!-- Categories -->
     <div class="filter-cats">
-      <span class="filter-label">Category</span>
-      <div class="cats-row">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="filter-label">Category</span>
+        <button class="cats-toggle" id="catsToggle" onclick="toggleCats()">
+          Browse categories
+          <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
+        </button>
+      </div>
+      <div class="cats-row" id="catsRow">
         <button class="cat-btn active" data-filter="all" onclick="setFilter('all', this)">All roles</button>
         <button class="cat-btn" data-filter="accounting" onclick="setFilter('accounting', this)">Accounting</button>
         <button class="cat-btn" data-filter="administration" onclick="setFilter('administration', this)">Administration &amp; Office Support</button>
@@ -1153,6 +1159,14 @@ function escapeHtml(str) {
 
 // Load jobs on page load
 loadJobs();
+
+function toggleCats() {
+  const row = document.getElementById('catsRow');
+  const toggle = document.getElementById('catsToggle');
+  row.classList.toggle('open');
+  toggle.classList.toggle('open');
+  toggle.childNodes[0].textContent = row.classList.contains('open') ? 'Hide categories ' : 'Browse categories ';
+}
 
 function showToast(msg) {
   const t = document.getElementById('toast');
