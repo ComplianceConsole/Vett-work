@@ -856,13 +856,33 @@ async function init() {
   const { data: { session } } = await supabase.auth.getSession();
   if (!session) { window.location.href = 'candidate-auth.html'; return; }
 
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from('candidates')
     .select('*')
     .eq('user_id', session.user.id)
     .single();
 
-  if (error || !data) { window.location.href = 'candidate-auth.html'; return; }
+  // If no candidate row exists, create one
+  if (error || !data) {
+    const { data: newCandidate, error: insertError } = await supabase
+      .from('candidates')
+      .insert({
+        user_id: session.user.id,
+        email: session.user.email,
+        first_name: session.user.user_metadata?.first_name || '',
+        last_name: session.user.user_metadata?.last_name || '',
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error('Failed to create candidate:', insertError);
+      window.location.href = 'candidate-auth.html';
+      return;
+    }
+
+    data = newCandidate;
+  }
 
   candidate = data;
 
