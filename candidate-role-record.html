@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vett.work — Role Interview</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --navy: #0c1445;
+  --emerald: #10b981;
+  --emerald-light: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  --emerald-dark: #059669;
+  --red: #ef4444;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --border: #e2e8f0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: #06091a; color: white; min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+nav { padding: 0 28px; height: 60px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.07); flex-shrink: 0; z-index: 10; }
+.logo { font-size: 18px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
+.logo-dot { color: var(--emerald); }
+.nav-back { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+.nav-back:hover { color: white; }
+.nav-back svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+.clip-progress { display: flex; gap: 5px; align-items: center; }
+.cp-dot { width: 28px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.12); transition: background 0.2s; }
+.cp-dot.done { background: var(--emerald); }
+.cp-dot.active { background: white; }
+
+main { flex: 1; display: grid; grid-template-columns: 1fr 360px; overflow: hidden; }
+
+.video-side { position: relative; background: #020408; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+#videoEl { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+
+.cam-overlay { position: absolute; inset: 0; background: #020408; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; z-index: 5; }
+.cam-overlay.hidden { display: none; }
+.cam-icon { width: 72px; height: 72px; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); border-radius: 18px; display: flex; align-items: center; justify-content: center; }
+.cam-icon svg { width: 30px; height: 30px; stroke: var(--emerald); stroke-width: 1.5; fill: none; }
+.cam-title { font-size: 18px; font-weight: 700; }
+.cam-sub { font-size: 14px; color: rgba(255,255,255,0.45); text-align: center; max-width: 300px; line-height: 1.6; }
+.cam-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; padding: 13px 28px; border-radius: 10px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; }
+.cam-btn:hover { background: var(--emerald-dark); }
+
+.rec-badge { position: absolute; top: 16px; left: 16px; display: none; align-items: center; gap: 8px; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); padding: 6px 14px; border-radius: 100px; z-index: 6; }
+.rec-badge.show { display: flex; }
+.rec-dot { width: 8px; height: 8px; background: var(--red); border-radius: 50%; animation: blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.rec-text { font-size: 12px; font-weight: 700; letter-spacing: 0.05em; }
+
+.timer-badge { position: absolute; top: 16px; right: 16px; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); padding: 6px 14px; border-radius: 100px; font-size: 13px; font-weight: 700; color: white; z-index: 6; display: none; }
+.timer-badge.show { display: block; }
+.timer-badge.warning { color: #f59e0b; }
+.timer-badge.danger { color: var(--red); }
+
+/* Role info badge */
+.role-badge { position: absolute; bottom: 16px; left: 16px; right: 16px; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); padding: 10px 14px; border-radius: 10px; z-index: 6; }
+.role-badge-title { font-size: 11px; font-weight: 700; color: var(--emerald); margin-bottom: 2px; }
+.role-badge-name { font-size: 13px; font-weight: 600; color: white; }
+
+.control-side { background: #0c1130; border-left: 1px solid rgba(255,255,255,0.07); display: flex; flex-direction: column; overflow-y: auto; }
+
+.state { display: none; flex-direction: column; flex: 1; }
+.state.active { display: flex; }
+
+/* READY */
+.ready-state { padding: 28px 24px; flex-direction: column; gap: 0; }
+.clip-num-label { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--emerald); margin-bottom: 6px; }
+.clip-title-text { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 20px; line-height: 1.2; }
+
+.question-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 20px; margin-bottom: 20px; position: relative; }
+.q-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--emerald); margin-bottom: 10px; }
+.q-text { font-size: 15px; line-height: 1.65; color: rgba(255,255,255,0.85); font-style: italic; }
+
+.voice-btn { position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; border: none; }
+.voice-btn:hover { background: rgba(16,185,129,0.2); }
+.voice-btn.speaking { background: var(--emerald); }
+.voice-btn svg { width: 14px; height: 14px; stroke: var(--emerald); stroke-width: 2; fill: none; }
+.voice-btn.speaking svg { stroke: white; }
+
+.tips { background: rgba(255,255,255,0.03); border-radius: 10px; padding: 14px 16px; margin-bottom: 24px; }
+.tips-title { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 10px; }
+.tip { display: flex; align-items: flex-start; gap: 8px; font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.5; margin-bottom: 6px; }
+.tip:last-child { margin-bottom: 0; }
+.tip-dot { width: 4px; height: 4px; background: var(--emerald); border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+
+.time-note { font-size: 12px; color: rgba(255,255,255,0.3); margin-bottom: 20px; display: flex; align-items: center; gap: 6px; }
+.time-note svg { width: 12px; height: 12px; stroke: rgba(255,255,255,0.3); stroke-width: 2; fill: none; flex-shrink: 0; }
+
+.start-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; padding: 16px; border-radius: 12px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: all 0.15s; width: 100%; box-shadow: 0 4px 20px rgba(16,185,129,0.2); margin-top: auto; }
+.start-btn:hover { background: var(--emerald-dark); transform: translateY(-1px); }
+.start-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* RECORDING */
+.recording-state { padding: 28px 24px; flex-direction: column; }
+.recording-clip-label { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); margin-bottom: 6px; }
+.recording-title { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 20px; }
+.recording-question { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 16px 18px; margin-bottom: 24px; font-size: 14px; line-height: 1.65; color: rgba(255,255,255,0.7); font-style: italic; flex: 1; }
+.stop-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 16px; font-weight: 700; padding: 16px; border-radius: 12px; border: none; background: var(--red); color: white; cursor: pointer; transition: all 0.15s; width: 100%; margin-top: auto; display: flex; align-items: center; justify-content: center; gap: 10px; }
+.stop-btn:hover { opacity: 0.88; }
+.stop-icon { width: 16px; height: 16px; background: white; border-radius: 3px; flex-shrink: 0; }
+
+/* REVIEW */
+.review-state { padding: 28px 24px; flex-direction: column; }
+.review-label { font-size: 10px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 6px; }
+.review-title { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+.review-sub { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 24px; line-height: 1.5; }
+.review-actions { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+.use-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; padding: 14px; border-radius: 10px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; width: 100%; }
+.use-btn:hover { background: var(--emerald-dark); }
+.redo-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 600; padding: 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: rgba(255,255,255,0.6); cursor: pointer; transition: all 0.15s; width: 100%; }
+.redo-btn:hover { color: white; border-color: rgba(255,255,255,0.3); }
+
+/* UPLOADING */
+.uploading-state { padding: 28px 24px; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; }
+.upload-spinner { width: 48px; height: 48px; border: 3px solid rgba(16,185,129,0.15); border-top-color: var(--emerald); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.uploading-title { font-size: 18px; font-weight: 700; }
+.uploading-sub { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.55; }
+.upload-progress-bar { width: 100%; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
+.upload-progress-fill { height: 100%; background: var(--emerald); border-radius: 2px; transition: width 0.3s ease; }
+
+/* DONE */
+.done-state { padding: 28px 24px; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 16px; }
+.done-icon { width: 64px; height: 64px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); border-radius: 16px; display: flex; align-items: center; justify-content: center; }
+.done-icon svg { width: 28px; height: 28px; stroke: var(--emerald); stroke-width: 2; fill: none; }
+.done-title { font-size: 20px; font-weight: 800; }
+.done-sub { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.55; max-width: 260px; }
+.next-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; padding: 14px 28px; border-radius: 10px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; }
+.next-btn:hover { background: var(--emerald-dark); }
+.back-link { font-size: 13px; color: rgba(255,255,255,0.35); text-decoration: none; cursor: pointer; background: none; border: none; font-family: 'Plus Jakarta Sans', sans-serif; transition: color 0.15s; }
+.back-link:hover { color: white; }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--navy); color: white; font-size: 13px; font-weight: 600; padding: 12px 20px; border-radius: 9px; border: 1px solid var(--emerald); box-shadow: 0 8px 32px rgba(0,0,0,0.3); transition: transform 0.3s ease; z-index: 999; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 768px) {
+  main { grid-template-columns: 1fr; grid-template-rows: 50vh 1fr; }
+  .video-side { height: 50vh; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="candidate-dashboard.html" class="logo">vett<span class="logo-dot">.</span>work</a>
+  <div class="clip-progress" id="clipProgress">
+    <div class="cp-dot active"></div>
+    <div class="cp-dot"></div>
+    <div class="cp-dot"></div>
+  </div>
+  <a href="candidate-dashboard.html" class="nav-back">
+    <svg viewBox="0 0 14 14"><line x1="12" y1="7" x2="2" y2="7"/><polyline points="6,3 2,7 6,11"/></svg>
+    Back to dashboard
+  </a>
+</nav>
+
+<main>
+  <div class="video-side">
+    <video id="videoEl" autoplay muted playsinline></video>
+
+    <div class="cam-overlay" id="camOverlay">
+      <div class="cam-icon"><svg viewBox="0 0 24 24"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+      <div class="cam-title">Camera access needed</div>
+      <div class="cam-sub">vett.work needs access to your camera and microphone to record your answer.</div>
+      <button class="cam-btn" onclick="enableCamera()">Enable camera</button>
+    </div>
+
+    <div class="rec-badge" id="recBadge"><div class="rec-dot"></div><div class="rec-text">REC</div></div>
+    <div class="timer-badge" id="timerBadge"></div>
+
+    <div class="role-badge" id="roleBadge" style="display:none">
+      <div class="role-badge-title">Role interview</div>
+      <div class="role-badge-name" id="roleBadgeName"></div>
+    </div>
+  </div>
+
+  <div class="control-side">
+
+    <!-- READY -->
+    <div class="state ready-state active" id="stateReady">
+      <div class="clip-num-label" id="readyClipNum">Question 1 of 3</div>
+      <div class="clip-title-text" id="readyClipTitle">Loading...</div>
+      <div class="question-card">
+        <div class="q-label">Your question</div>
+        <div class="q-text" id="questionText">Loading your question...</div>
+        <button class="voice-btn" id="voiceBtn" onclick="speakQuestion()" title="Hear the question">
+          <svg viewBox="0 0 16 16"><polygon points="3,4 3,12 8,12 13,16 13,0 8,4"/><path d="M15 5a5 5 0 0 1 0 6"/></svg>
+        </button>
+      </div>
+      <div class="tips">
+        <div class="tips-title">Tips</div>
+        <div class="tip"><div class="tip-dot"></div>Be specific — reference the role and company by name</div>
+        <div class="tip"><div class="tip-dot"></div>Keep it to about 2 minutes per answer</div>
+        <div class="tip"><div class="tip-dot"></div>Look at the camera, not the screen</div>
+      </div>
+      <div class="time-note">
+        <svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6"/><line x1="7" y1="4" x2="7" y2="7"/><line x1="7" y1="7" x2="9" y2="9"/></svg>
+        Max 3 minutes per answer
+      </div>
+      <button class="start-btn" id="startBtn" onclick="startRecording()" disabled>Start recording</button>
+    </div>
+
+    <!-- RECORDING -->
+    <div class="state recording-state" id="stateRecording">
+      <div class="recording-clip-label" id="recClipNum">Question 1 of 3 · Recording</div>
+      <div class="recording-title" id="recClipTitle"></div>
+      <div class="recording-question" id="recQuestion"></div>
+      <button class="stop-btn" onclick="stopRecording()">
+        <div class="stop-icon"></div>
+        Stop recording
+      </button>
+    </div>
+
+    <!-- REVIEW -->
+    <div class="state review-state" id="stateReview">
+      <div class="review-label" id="reviewClipNum">Question 1 of 3 · Review</div>
+      <div class="review-title">How did that go?</div>
+      <div class="review-sub">Watch it back. Happy with it? Use it. Not happy? Record again.</div>
+      <div class="review-actions">
+        <button class="use-btn" onclick="useClip()">Use this recording</button>
+        <button class="redo-btn" onclick="redoRecording()">Record again</button>
+      </div>
+    </div>
+
+    <!-- UPLOADING -->
+    <div class="state uploading-state" id="stateUploading">
+      <div class="upload-spinner"></div>
+      <div class="uploading-title">Saving your answer...</div>
+      <div class="uploading-sub">Uploading to our servers.</div>
+      <div class="upload-progress-bar"><div class="upload-progress-fill" id="uploadProgressFill" style="width:0%"></div></div>
+    </div>
+
+    <!-- DONE -->
+    <div class="state done-state" id="stateDone">
+      <div class="done-icon"><svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,6"/></svg></div>
+      <div class="done-title" id="doneTitle">Answer saved!</div>
+      <div class="done-sub" id="doneSub">On to the next question.</div>
+      <button class="next-btn" id="nextBtn" onclick="goNext()">Next question</button>
+      <button class="back-link" onclick="window.location.href='candidate-dashboard.html'">Back to dashboard</button>
+    </div>
+
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const params = new URLSearchParams(window.location.search);
+const interviewId = params.get('interview');
+const candidateId = params.get('candidate');
+
+let interview = null;
+let clipNumber = 1;
+let mediaStream = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+let recordedBlob = null;
+let timerInterval = null;
+let secondsElapsed = 0;
+let isSpeaking = false;
+let currentQuestion = '';
+let uploadUrl = null;
+let uploadId = null;
+
+const MAX_SECONDS = 180; // 3 minutes
+
+async function init() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'candidate-auth.html'; return; }
+
+  const { data: iv } = await supabaseClient
+    .from('role_interviews')
+    .select('*')
+    .eq('id', interviewId)
+    .single();
+
+  if (!iv) { window.location.href = 'candidate-dashboard.html'; return; }
+  interview = iv;
+
+  // Find which clip we're on
+  if (iv.clip_1_playback_id && !iv.clip_2_playback_id) clipNumber = 2;
+  else if (iv.clip_2_playback_id && !iv.clip_3_playback_id) clipNumber = 3;
+  else clipNumber = 1;
+
+  renderUI();
+  await getMuxUploadUrl();
+}
+
+function renderUI() {
+  const questions = [interview.question_1, interview.question_2, interview.question_3];
+  currentQuestion = questions[clipNumber - 1];
+
+  const titles = ['Why this role?', 'Your relevant experience', 'How you\'d approach it'];
+
+  // Progress dots
+  const prog = document.getElementById('clipProgress');
+  prog.innerHTML = [1,2,3].map(n => {
+    const done = n < clipNumber;
+    const active = n === clipNumber;
+    return `<div class="cp-dot ${done ? 'done' : active ? 'active' : ''}"></div>`;
+  }).join('');
+
+  document.getElementById('readyClipNum').textContent = `Question ${clipNumber} of 3`;
+  document.getElementById('readyClipTitle').textContent = titles[clipNumber - 1];
+  document.getElementById('questionText').textContent = `"${currentQuestion}"`;
+  document.getElementById('recClipNum').textContent = `Question ${clipNumber} of 3 · Recording`;
+  document.getElementById('recClipTitle').textContent = titles[clipNumber - 1];
+  document.getElementById('recQuestion').textContent = `"${currentQuestion}"`;
+  document.getElementById('reviewClipNum').textContent = `Question ${clipNumber} of 3 · Review`;
+
+  if (interview.job_title || interview.company_name) {
+    document.getElementById('roleBadge').style.display = 'block';
+    document.getElementById('roleBadgeName').textContent = [interview.job_title, interview.company_name].filter(Boolean).join(' · ');
+  }
+
+  setTimeout(() => speakQuestion(), 800);
+}
+
+async function getMuxUploadUrl() {
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/mux-upload`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({ candidate_id: candidateId, clip_number: clipNumber, interview_id: interviewId }),
+    });
+    const result = await res.json();
+    uploadUrl = result.upload_url;
+    uploadId = result.upload_id;
+  } catch (err) {
+    console.error('Failed to get Mux URL:', err);
+  }
+}
+
+async function enableCamera() {
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({
+      video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' },
+      audio: true,
+    });
+    const video = document.getElementById('videoEl');
+    video.srcObject = mediaStream;
+    document.getElementById('camOverlay').classList.add('hidden');
+    document.getElementById('startBtn').disabled = false;
+    showToast('Camera ready — read your question and hit record');
+  } catch (err) {
+    showToast('Could not access camera — please check permissions');
+  }
+}
+
+function speakQuestion() {
+  if (!currentQuestion) return;
+  if (isSpeaking) {
+    window.speechSynthesis.cancel();
+    isSpeaking = false;
+    document.getElementById('voiceBtn').classList.remove('speaking');
+    return;
+  }
+  const utterance = new SpeechSynthesisUtterance(currentQuestion);
+  utterance.rate = 0.9; utterance.pitch = 1; utterance.volume = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const preferred = voices.find(v => v.name.includes('Samantha') || v.name.includes('Karen') || v.lang === 'en-AU' || v.lang === 'en-GB');
+  if (preferred) utterance.voice = preferred;
+  utterance.onstart = () => { isSpeaking = true; document.getElementById('voiceBtn').classList.add('speaking'); };
+  utterance.onend = () => { isSpeaking = false; document.getElementById('voiceBtn').classList.remove('speaking'); };
+  utterance.onerror = () => { isSpeaking = false; document.getElementById('voiceBtn').classList.remove('speaking'); };
+  window.speechSynthesis.speak(utterance);
+}
+
+function startRecording() {
+  if (!mediaStream) { showToast('Please enable your camera first'); return; }
+  window.speechSynthesis.cancel();
+  recordedChunks = []; recordedBlob = null;
+  const options = { mimeType: 'video/webm;codecs=vp9,opus' };
+  try { mediaRecorder = new MediaRecorder(mediaStream, options); }
+  catch (e) { mediaRecorder = new MediaRecorder(mediaStream); }
+  mediaRecorder.ondataavailable = (e) => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
+  mediaRecorder.onstop = () => { recordedBlob = new Blob(recordedChunks, { type: 'video/webm' }); showReview(); };
+  mediaRecorder.start(1000);
+  setState('stateRecording');
+  document.getElementById('recBadge').classList.add('show');
+  secondsElapsed = 0;
+  const timerEl = document.getElementById('timerBadge');
+  timerEl.classList.add('show');
+  timerInterval = setInterval(() => {
+    secondsElapsed++;
+    const mins = Math.floor(secondsElapsed / 60);
+    const secs = secondsElapsed % 60;
+    timerEl.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+    timerEl.className = 'timer-badge show';
+    if (secondsElapsed >= MAX_SECONDS - 30) timerEl.classList.add('warning');
+    if (secondsElapsed >= MAX_SECONDS - 10) timerEl.classList.add('danger');
+    if (secondsElapsed >= MAX_SECONDS) { stopRecording(); showToast('Maximum time reached'); }
+  }, 1000);
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+  clearInterval(timerInterval);
+  document.getElementById('recBadge').classList.remove('show');
+  document.getElementById('timerBadge').classList.remove('show');
+}
+
+function showReview() {
+  const video = document.getElementById('videoEl');
+  video.srcObject = null;
+  video.src = URL.createObjectURL(recordedBlob);
+  video.muted = false; video.loop = false;
+  video.play();
+  setState('stateReview');
+}
+
+function redoRecording() {
+  const video = document.getElementById('videoEl');
+  video.src = ''; video.srcObject = mediaStream; video.muted = true; video.play();
+  recordedChunks = []; recordedBlob = null;
+  setState('stateReady');
+}
+
+async function useClip() {
+  if (!recordedBlob) { showToast('No recording found'); return; }
+  if (!uploadUrl) { showToast('Upload URL not ready — please try again'); return; }
+  setState('stateUploading');
+
+  try {
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress = Math.min(progress + Math.random() * 15, 90);
+      document.getElementById('uploadProgressFill').style.width = progress + '%';
+    }, 300);
+
+    await fetch(uploadUrl, { method: 'PUT', body: recordedBlob, headers: { 'Content-Type': 'video/webm' } });
+
+    clearInterval(progressInterval);
+    document.getElementById('uploadProgressFill').style.width = '100%';
+
+    // Save upload ID to role_interviews table
+    const field = `clip_${clipNumber}_upload_id`;
+    await supabaseClient.from('role_interviews').update({ [field]: uploadId }).eq('id', interviewId);
+
+    showDone();
+  } catch (err) {
+    console.error(err);
+    showToast('Upload failed — please try again');
+    setState('stateReview');
+  }
+}
+
+function showDone() {
+  const isLast = clipNumber === 3;
+  document.getElementById('doneTitle').textContent = isLast ? 'All 3 answers recorded!' : `Answer ${clipNumber} saved!`;
+  document.getElementById('doneSub').textContent = isLast
+    ? 'Your role-specific interview is complete. Head back to your dashboard.'
+    : `${clipNumber} of 3 answers done. Keep going!`;
+  const nextBtn = document.getElementById('nextBtn');
+  if (isLast) {
+    nextBtn.textContent = 'Go to dashboard';
+    nextBtn.onclick = () => window.location.href = 'candidate-dashboard.html';
+    // Mark interview as complete
+    supabaseClient.from('role_interviews').update({ is_complete: true }).eq('id', interviewId);
+  } else {
+    nextBtn.textContent = `Record answer ${clipNumber + 1}`;
+  }
+  setState('stateDone');
+}
+
+async function goNext() {
+  clipNumber++;
+  const video = document.getElementById('videoEl');
+  video.src = ''; video.srcObject = mediaStream; video.muted = true; video.play();
+  recordedChunks = []; recordedBlob = null;
+  renderUI();
+  await getMuxUploadUrl();
+  setState('stateReady');
+}
+
+function setState(id) {
+  document.querySelectorAll('.state').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+init();
+</script>
+</body>
+</html>

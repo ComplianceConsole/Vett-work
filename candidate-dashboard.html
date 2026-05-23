@@ -421,6 +421,15 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 </div>
 </div>
 
+<footer style="background:var(--navy);padding:20px 48px;display:flex;justify-content:space-between;align-items:center;margin-top:20px">
+  <a href="index.html" style="font-size:16px;font-weight:800;color:white;text-decoration:none;letter-spacing:-0.5px">vett<span style="color:#10b981">.</span>work</a>
+  <div style="display:flex;gap:20px;align-items:center">
+    <a href="privacy.html" style="font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none">Privacy Policy</a>
+    <a href="terms.html" style="font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none">Terms of Use</a>
+    <a href="mailto:hello@vett.work" style="font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none">Contact us</a>
+  </div>
+</footer>
+
 <div class="toast" id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -714,7 +723,34 @@ async function loadRoleInterviews() {
 async function startRoleInterview() {
   const url = document.getElementById('roleAdUrl')?.value.trim();
   if (!url) { showToast('Please paste a job ad URL'); return; }
-  showToast('Role-specific interviews coming very soon!');
+
+  const btn = document.querySelector('.role-url-btn');
+  if (btn) { btn.textContent = 'Reading job ad...'; btn.disabled = true; }
+  showToast('Reading job ad and generating questions...');
+
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/role-interview`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({ candidate_id: candidate.id, job_url: url }),
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Failed');
+
+    // Redirect to role recording page
+    window.location.href = `candidate-role-record.html?interview=${result.interview_id}&candidate=${candidate.id}`;
+
+  } catch (err) {
+    console.error(err);
+    showToast(err.message || 'Something went wrong — please try again');
+    if (btn) { btn.textContent = 'Generate questions'; btn.disabled = false; }
+  }
 }
 
 function handleRoleUpgrade(type) {
