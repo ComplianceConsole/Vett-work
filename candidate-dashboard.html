@@ -6,6 +6,13 @@
 <title>vett.work — My Profile</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  // Set pdf.js worker
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+</script>
 <style>
 :root {
   --navy: #0c1445;
@@ -1076,47 +1083,137 @@ async function handleCVUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
 
-  showToast('Uploading CV...');
-
-  const fileName = `${candidate.id}/${Date.now()}-${file.name}`;
-  const { data, error } = await supabase.storage
-    .from('candidate-cvs')
-    .upload(fileName, file, { upsert: true });
-
-  if (error) { showToast('Upload failed — please try again'); return; }
-
-  const { data: urlData } = supabase.storage.from('candidate-cvs').getPublicUrl(fileName);
-
-  await supabase.from('candidates').update({
-    cv_url: urlData.publicUrl,
-    cv_text: `CV uploaded: ${file.name}`, // placeholder — AI will process this
-  }).eq('id', candidate.id);
-
-  candidate.cv_url = urlData.publicUrl;
-  candidate.cv_text = `CV uploaded: ${file.name}`;
-
-  document.getElementById('uploadArea').classList.add('has-file');
-  document.getElementById('uploadTitle').textContent = file.name;
-  document.getElementById('uploadSub').textContent = 'Upload a new file to replace it';
-  document.getElementById('cvBadge').textContent = 'Uploaded';
-  document.getElementById('cvBadge').className = 'section-badge badge-complete';
-
-  // Show generate button in prompts section
-  if (!candidate.ai_prompts) {
-    document.getElementById('promptsContent').innerHTML = `
-      <div class="prompts-locked">
-        <div class="prompts-locked-icon">
-          <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/><line x1="9" y1="6" x2="9" y2="10"/></svg>
-        </div>
-        <div class="prompts-locked-title">Ready to generate</div>
-        <div class="prompts-locked-sub">Your CV is uploaded. Click below to generate your personalised questions.</div>
-        <button class="generate-btn" onclick="generatePrompts()">Generate my questions</button>
-      </div>
-    `;
+  // Validate file type
+  const allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+  if (!allowed.includes(file.type) && !file.name.match(/\.(pdf|doc|docx)$/i)) {
+    showToast('Please upload a PDF or Word document');
+    return;
   }
 
-  updateProgress();
-  showToast('CV uploaded successfully');
+  // Validate file size (5MB)
+  if (file.size > 5 * 1024 * 1024) {
+    showToast('File too large — maximum size is 5MB');
+    return;
+  }
+
+  showToast('Reading your CV...');
+  document.getElementById('uploadTitle').textContent = 'Reading your CV...';
+
+  try {
+    let cvText = '';
+
+    if (file.type === 'application/pdf' || file.name.match(/\.pdf$/i)) {
+      // Extract text from PDF using pdf.js
+      cvText = await extractPDFText(file);
+    } else {
+      // For Word docs — extract what we can from the raw text
+      cvText = await extractWordText(file);
+    }
+
+    if (!cvText || cvText.trim().length < 50) {
+      showToast('Could not read CV text — try a different file format');
+      document.getElementById('uploadTitle').textContent = 'Upload your CV';
+      return;
+    }
+
+    // Upload file to Supabase Storage
+    const fileName = `${candidate.id}/${Date.now()}-${file.name}`;
+    const { error: uploadError } = await supabase.storage
+      .from('candidate-cvs')
+      .upload(fileName, file, { upsert: true });
+
+    if (uploadError) {
+      console.error('Storage upload error:', uploadError);
+      // Continue anyway — we have the text
+    }
+
+    // Save extracted text to Supabase
+    await supabase.from('candidates').update({
+      cv_url: fileName,
+      cv_text: cvText.trim().substring(0, 10000), // cap at 10k chars
+    }).eq('id', candidate.id);
+
+    candidate.cv_text = cvText.trim();
+
+    document.getElementById('uploadArea').classList.add('has-file');
+    document.getElementById('uploadTitle').textContent = file.name;
+    document.getElementById('uploadSub').textContent = 'Upload a new file to replace it';
+    document.getElementById('cvBadge').textContent = 'Uploaded';
+    document.getElementById('cvBadge').className = 'section-badge badge-complete';
+
+    // Show generate prompts option
+    if (!candidate.ai_prompts) {
+      document.getElementById('promptsContent').innerHTML = `
+        <div class="prompts-locked">
+          <div class="prompts-locked-icon">
+            <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/><line x1="9" y1="6" x2="9" y2="10"/></svg>
+          </div>
+          <div class="prompts-locked-title">Ready to generate</div>
+          <div class="prompts-locked-sub">Your CV has been read. Click below to generate your personalised questions — this takes about 30 seconds.</div>
+          <button class="generate-btn" onclick="generatePrompts()">Generate my questions</button>
+        </div>
+      `;
+    }
+
+    updateProgress();
+    showToast('CV read successfully — ready to generate your questions');
+
+  } catch (err) {
+    console.error('CV upload error:', err);
+    showToast('Something went wrong — please try again');
+    document.getElementById('uploadTitle').textContent = 'Upload your CV';
+  }
+}
+
+async function extractPDFText(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const typedArray = new Uint8Array(e.target.result);
+        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
+        let fullText = '';
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map(item => item.str).join(' ');
+          fullText += pageText + '\n';
+        }
+
+        resolve(fullText);
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function extractWordText(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        // Basic text extraction from Word - strips XML tags
+        const content = e.target.result;
+        const text = content
+          .replace(/<[^>]+>/g, ' ')
+          .replace(/&amp;/g, '&')
+          .replace(/&lt;/g, '<')
+          .replace(/&gt;/g, '>')
+          .replace(/&nbsp;/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        resolve(text.length > 50 ? text : '');
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = reject;
+    reader.readAsText(file);
+  });
 }
 
 async function generatePrompts() {
