@@ -239,22 +239,13 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 
   <!-- STEPS -->
   <div class="steps-row">
-    <div class="step-pill" id="step1"><div class="step-pill-num">1</div><div class="step-pill-label">Pay</div></div>
+    <div class="step-pill" id="step1"><div class="step-pill-num">1</div><div class="step-pill-label">Your details</div></div>
     <div class="step-pill" id="step2"><div class="step-pill-num">2</div><div class="step-pill-label">Upload CV</div></div>
     <div class="step-pill" id="step3"><div class="step-pill-num">3</div><div class="step-pill-label">Questions</div></div>
     <div class="step-pill" id="step4"><div class="step-pill-num">4</div><div class="step-pill-label">Record</div></div>
     <div class="step-pill" id="step5"><div class="step-pill-num">5</div><div class="step-pill-label">Documents</div></div>
     <div class="step-pill" id="step6"><div class="step-pill-num">6</div><div class="step-pill-label">Role interviews</div></div>
     <div class="step-pill" id="step7"><div class="step-pill-num">7</div><div class="step-pill-label">Go live</div></div>
-  </div>
-
-  <!-- 1: PAYMENT NUDGE -->
-  <div id="paymentSection" style="background:var(--navy);border-radius:14px;padding:18px 24px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:20px">
-    <div>
-      <div style="font-size:14px;font-weight:700;color:white;margin-bottom:3px">Ready to record your virtual interview?</div>
-      <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.5">6 personalised answers · MP4 download · shareable link · 1 free role-specific interview included</div>
-    </div>
-    <button onclick="handlePayment()" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:11px 22px;border-radius:9px;border:none;background:var(--emerald);color:white;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='var(--emerald)'">Unlock — $19.99</button>
   </div>
 
   <!-- 2: CV -->
@@ -294,6 +285,29 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
         <div class="locked-sub">Once your CV is uploaded we'll generate 6 personalised questions based on your actual experience.</div>
       </div>
     </div>
+  </div>
+
+  <!-- PROFILE DETAILS -->
+  <div class="section" id="profileDetailsSection">
+    <div class="section-header">
+      <div class="section-title">Your details</div>
+    </div>
+    <div class="field-grid">
+      <div class="field-group"><label>First name</label><input type="text" id="firstName" placeholder="First name"></div>
+      <div class="field-group"><label>Last name</label><input type="text" id="lastName" placeholder="Last name"></div>
+      <div class="field-group"><label>Location</label><input type="text" id="location" placeholder="e.g. Brisbane, QLD"></div>
+      <div class="field-group"><label>Headline</label><input type="text" id="headline" placeholder="e.g. Operations Manager | Brisbane"></div>
+    </div>
+    <button class="save-btn" onclick="saveProfile()">Save details</button>
+  </div>
+
+  <!-- 1: PAYMENT NUDGE -->
+  <div id="paymentSection" style="background:var(--navy);border-radius:14px;padding:18px 24px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:20px">
+    <div>
+      <div style="font-size:14px;font-weight:700;color:white;margin-bottom:3px">Ready to record your virtual interview?</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.45);line-height:1.5">6 personalised answers · MP4 download · shareable link · 1 free role-specific interview included</div>
+    </div>
+    <button onclick="handlePayment()" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:11px 22px;border-radius:9px;border:none;background:var(--emerald);color:white;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='var(--emerald)'">Unlock — $19.99</button>
   </div>
 
   <!-- 4: CLIPS -->
@@ -392,16 +406,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
       <input type="text" class="share-url" id="shareUrl" readonly>
       <button class="copy-btn" onclick="copyLink()">Copy link</button>
     </div>
-    <div style="border-top:1px solid var(--border);margin-top:24px;padding-top:24px">
-      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px">Your profile details</div>
-      <div class="field-grid">
-        <div class="field-group"><label>First name</label><input type="text" id="firstName" placeholder="First name"></div>
-        <div class="field-group"><label>Last name</label><input type="text" id="lastName" placeholder="Last name"></div>
-        <div class="field-group"><label>Location</label><input type="text" id="location" placeholder="e.g. Brisbane, QLD"></div>
-        <div class="field-group"><label>Headline</label><input type="text" id="headline" placeholder="e.g. Operations Manager | Brisbane"></div>
-      </div>
-      <button class="save-btn" onclick="saveProfile()">Save details</button>
-    </div>
+
   </div>
 
 </div>
