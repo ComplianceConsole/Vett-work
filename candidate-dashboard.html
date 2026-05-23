@@ -46,16 +46,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 
 .page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
 
-/* PROGRESS */
-.progress-banner { background: var(--navy); border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; display: flex; align-items: center; gap: 24px; }
-.progress-left { flex: 1; }
-.progress-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
-.progress-sub { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 14px; }
-.progress-bar-wrap { background: rgba(255,255,255,0.1); border-radius: 100px; height: 6px; overflow: hidden; }
-.progress-bar-fill { height: 100%; background: var(--emerald); border-radius: 100px; transition: width 0.5s ease; }
-.progress-pct { font-size: 12px; color: var(--emerald); margin-top: 8px; font-weight: 600; }
-.progress-cta { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 9px; border: none; background: var(--emerald); color: white; cursor: pointer; white-space: nowrap; transition: background 0.15s; flex-shrink: 0; }
-.progress-cta:hover { background: var(--emerald-dark); }
+
 
 /* STEP PILLS */
 .steps-row { display: flex; background: white; border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 24px; }
@@ -246,11 +237,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 <div id="dashboardContent" style="display:none">
 <div class="page">
 
-  <!-- PROGRESS -->
-  <div class="progress-banner">
-    <div class="progress-left">
-      <div class="progress-title" id="progressTitle">Let's get you started</div>
-      <div class="progress-sub" id="progressSub">Complete each step to build your video profile</div>
+  <div class="progress-sub" id="progressSub">Complete each step to build your video profile</div>
       <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
       <div class="progress-pct" id="progressPct">0% complete</div>
     </div>
