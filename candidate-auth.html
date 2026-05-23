@@ -353,7 +353,7 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
 const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Check if already logged in
 supabase.auth.getSession().then(({ data: { session } }) => {
@@ -400,7 +400,7 @@ async function handleSignup() {
   btn.disabled = true;
 
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const { data, error } = await sbClient.auth.signUp({
       email,
       password,
       options: {
@@ -412,7 +412,7 @@ async function handleSignup() {
 
     // Create candidate profile
     if (data.user) {
-      await supabase.from('candidates').insert({
+      await sbClient.from('candidates').insert({
         user_id: data.user.id,
         email,
         first_name: first,
@@ -443,7 +443,7 @@ async function handleLogin() {
   btn.disabled = true;
 
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
     if (error) throw error;
     window.location.href = 'candidate-dashboard.html';
   } catch (err) {
@@ -457,7 +457,7 @@ async function handleForgotPassword() {
   const email = document.getElementById('loginEmail').value.trim();
   if (!email) { showError('loginError', 'Enter your email address first'); return; }
 
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+  const { error } = await sbClient.auth.resetPasswordForEmail(email, {
     redirectTo: window.location.origin + '/candidate-reset.html',
   });
 
