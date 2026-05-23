@@ -622,10 +622,10 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
 
 <script>
 const CONFIG = {
-  STRIPE_PUBLISHABLE_KEY: 'YOUR_STRIPE_PUBLISHABLE_KEY',
-  STRIPE_PRICE_ID_INTERVIEW: 'YOUR_STRIPE_PRICE_ID_19.99',
-  STRIPE_PRICE_ID_ADHOC: 'YOUR_STRIPE_PRICE_ID_29.99',
-  STRIPE_PRICE_ID_MONTHLY: 'YOUR_STRIPE_PRICE_ID_199',
+  STRIPE_PUBLISHABLE_KEY: 'pk_live_51Ta8AVAwK1Dmgw1KtpYWxvu9FVrage8JR1FkMnvVcppN7WICUJjssTPrYEvAit7UhdzCwOXm02q54NPiP8rmxGxz00ho08mbJ0',
+  STRIPE_PRICE_ID_INTERVIEW: 'price_1Ta8LQAwK1Dmgw1KSotVsr79',
+  STRIPE_PRICE_ID_ADHOC: 'price_1Ta8O8AwK1Dmgw1K3k8t7bfV',
+  STRIPE_PRICE_ID_MONTHLY: 'price_1Ta8QSAwK1Dmgw1KDx7y7ZV6',
 };
 
 async function sendToFormspree(data) {
@@ -1038,7 +1038,7 @@ function toggleOpt(id) {
 }
 
 async function handlePurchase() {
-  if (!CONFIG.STRIPE_PUBLISHABLE_KEY || CONFIG.STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') {
+  if (!CONFIG.STRIPE_PUBLISHABLE_KEY || CONFIG.STRIPE_PUBLISHABLE_KEY === 'pk_live_51Ta8AVAwK1Dmgw1KtpYWxvu9FVrage8JR1FkMnvVcppN7WICUJjssTPrYEvAit7UhdzCwOXm02q54NPiP8rmxGxz00ho08mbJ0') {
     showToast('Payment coming soon — check back shortly');
     return;
   }
@@ -1053,7 +1053,7 @@ async function handlePurchase() {
 }
 
 async function handleStripeUpgrade(tier) {
-  if (!CONFIG.STRIPE_PUBLISHABLE_KEY || CONFIG.STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') {
+  if (!CONFIG.STRIPE_PUBLISHABLE_KEY || CONFIG.STRIPE_PUBLISHABLE_KEY === 'pk_live_51Ta8AVAwK1Dmgw1KtpYWxvu9FVrage8JR1FkMnvVcppN7WICUJjssTPrYEvAit7UhdzCwOXm02q54NPiP8rmxGxz00ho08mbJ0') {
     showToast('Coming soon');
     return;
   }

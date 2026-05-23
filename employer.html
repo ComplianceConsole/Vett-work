@@ -635,10 +635,10 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
 
 <script>
 const CONFIG = {
-  STRIPE_PUBLISHABLE_KEY: 'YOUR_STRIPE_PUBLISHABLE_KEY',
-  STRIPE_PRICE_ID_BASE: 'YOUR_STRIPE_PRICE_ID_BASE',
-  STRIPE_PRICE_ID_MID: 'YOUR_STRIPE_PRICE_ID_MID',
-  STRIPE_PRICE_ID_PRO: 'YOUR_STRIPE_PRICE_ID_PRO',
+  STRIPE_PUBLISHABLE_KEY: 'pk_live_51Ta8AVAwK1Dmgw1KtpYWxvu9FVrage8JR1FkMnvVcppN7WICUJjssTPrYEvAit7UhdzCwOXm02q54NPiP8rmxGxz00ho08mbJ0',
+  STRIPE_PRICE_ID_BASE: 'price_1Ta8SkAwK1Dmgw1KgMHJvGgG',
+  STRIPE_PRICE_ID_MID: 'price_1Ta8TsAwK1Dmgw1KBS4wQeIe',
+  STRIPE_PRICE_ID_PRO: 'price_1Ta8VgAwK1Dmgw1K5dRBtKvd',
 };
 </script>
 <script src="https://js.stripe.com/v3/"></script>
@@ -1020,7 +1020,7 @@ function showToast(msg) {
 }
 
 async function handleStripe(tier) {
-  if (!CONFIG.STRIPE_PUBLISHABLE_KEY || CONFIG.STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') {
+  if (!CONFIG.STRIPE_PUBLISHABLE_KEY || CONFIG.STRIPE_PUBLISHABLE_KEY === 'pk_live_51Ta8AVAwK1Dmgw1KtpYWxvu9FVrage8JR1FkMnvVcppN7WICUJjssTPrYEvAit7UhdzCwOXm02q54NPiP8rmxGxz00ho08mbJ0') {
     showToast('Payment not configured yet — use the form below to get in touch');
     document.getElementById('post').scrollIntoView({ behavior: 'smooth' });
     return;
