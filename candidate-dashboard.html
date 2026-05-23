@@ -7,7 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-  // Set pdf.js worker
   if (typeof pdfjsLib !== 'undefined') {
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
   }
@@ -34,642 +33,198 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off); color: var(--text); min-height: 100vh; }
 
-body {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  background: var(--off);
-  color: var(--text);
-  min-height: 100vh;
-}
-
-/* NAV */
-nav {
-  background: var(--navy);
-  padding: 0 48px;
-  height: 64px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
+nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
 .logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
 .logo-dot { color: var(--emerald); }
-
 .nav-right { display: flex; align-items: center; gap: 16px; }
-
-.nav-user {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 13px;
-  color: rgba(255,255,255,0.6);
-}
-
-.nav-avatar {
-  width: 32px; height: 32px;
-  border-radius: 50%;
-  background: var(--emerald);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  flex-shrink: 0;
-}
-
-.nav-signout {
-  font-size: 13px;
-  color: rgba(255,255,255,0.4);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  transition: color 0.15s;
-  padding: 7px 14px;
-  border-radius: 7px;
-}
-
+.nav-user { display: flex; align-items: center; gap: 10px; font-size: 13px; color: rgba(255,255,255,0.6); }
+.nav-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--emerald); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: white; flex-shrink: 0; }
+.nav-signout { font-size: 13px; color: rgba(255,255,255,0.4); background: none; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; transition: color 0.15s; padding: 7px 14px; border-radius: 7px; }
 .nav-signout:hover { color: white; }
 
-/* LAYOUT */
-.page {
-  max-width: 960px;
-  margin: 0 auto;
-  padding: 40px 24px 80px;
-}
+.page { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
 
-/* PROGRESS BAR */
-.progress-banner {
-  background: var(--navy);
-  border-radius: 16px;
-  padding: 24px 28px;
-  margin-bottom: 28px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
+/* PROGRESS */
+.progress-banner { background: var(--navy); border-radius: 16px; padding: 24px 28px; margin-bottom: 24px; display: flex; align-items: center; gap: 24px; }
 .progress-left { flex: 1; }
-
-.progress-title {
-  font-size: 16px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 6px;
-}
-
-.progress-sub {
-  font-size: 13px;
-  color: rgba(255,255,255,0.45);
-  margin-bottom: 14px;
-}
-
-.progress-bar-wrap {
-  background: rgba(255,255,255,0.1);
-  border-radius: 100px;
-  height: 6px;
-  overflow: hidden;
-}
-
-.progress-bar-fill {
-  height: 100%;
-  background: var(--emerald);
-  border-radius: 100px;
-  transition: width 0.5s ease;
-}
-
-.progress-pct {
-  font-size: 12px;
-  color: var(--emerald);
-  margin-top: 8px;
-  font-weight: 600;
-}
-
-.progress-cta {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 10px 20px;
-  border-radius: 9px;
-  border: none;
-  background: var(--emerald);
-  color: white;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: background 0.15s;
-  flex-shrink: 0;
-}
-
+.progress-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 4px; }
+.progress-sub { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 14px; }
+.progress-bar-wrap { background: rgba(255,255,255,0.1); border-radius: 100px; height: 6px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: var(--emerald); border-radius: 100px; transition: width 0.5s ease; }
+.progress-pct { font-size: 12px; color: var(--emerald); margin-top: 8px; font-weight: 600; }
+.progress-cta { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 9px; border: none; background: var(--emerald); color: white; cursor: pointer; white-space: nowrap; transition: background 0.15s; flex-shrink: 0; }
 .progress-cta:hover { background: var(--emerald-dark); }
 
+/* STEP PILLS */
+.steps-row { display: flex; background: white; border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 24px; }
+.step-pill { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 12px 6px; border-right: 1px solid var(--border); gap: 5px; }
+.step-pill:last-child { border-right: none; }
+.step-pill-num { width: 22px; height: 22px; border-radius: 50%; background: var(--off); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: var(--muted2); }
+.step-pill.done .step-pill-num { background: var(--emerald); border-color: var(--emerald); color: white; }
+.step-pill.active .step-pill-num { background: var(--navy); border-color: var(--navy); color: white; }
+.step-pill-label { font-size: 9px; font-weight: 600; color: var(--muted2); text-align: center; line-height: 1.3; }
+.step-pill.done .step-pill-label { color: var(--emerald-dark); }
+.step-pill.active .step-pill-label { color: var(--navy); font-weight: 700; }
+
 /* SECTIONS */
-.section {
-  background: white;
-  border: 1.5px solid var(--border);
-  border-radius: 16px;
-  padding: 28px;
-  margin-bottom: 20px;
-}
-
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.section-title {
-  font-size: 17px;
-  font-weight: 800;
-  color: var(--navy);
-  letter-spacing: -0.3px;
-}
-
-.section-badge {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 4px 10px;
-  border-radius: 100px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-}
-
+.section { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 16px; }
+.section.active-step { border-color: var(--emerald); }
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.section-title { font-size: 17px; font-weight: 800; color: var(--navy); letter-spacing: -0.3px; }
+.section-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 100px; letter-spacing: 0.05em; text-transform: uppercase; }
 .badge-complete { background: var(--emerald-light); color: var(--emerald-dark); border: 1px solid var(--emerald-border); }
 .badge-pending { background: var(--warning-light); color: var(--warning); border: 1px solid #fde68a; }
 .badge-locked { background: var(--off); color: var(--muted2); border: 1px solid var(--border); }
+.badge-active { background: var(--navy); color: white; }
 
-/* PROFILE DETAILS */
-.profile-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-}
+/* PAYMENT HERO */
+.payment-hero { background: linear-gradient(135deg, var(--navy), #1a2870); border-radius: 14px; padding: 32px; text-align: center; }
+.payment-hero h2 { font-size: 26px; font-weight: 800; letter-spacing: -1px; color: white; margin-bottom: 10px; line-height: 1.1; }
+.payment-hero h2 span { color: var(--emerald); }
+.payment-hero p { font-size: 14px; color: rgba(255,255,255,0.5); line-height: 1.65; margin-bottom: 24px; max-width: 460px; margin-left: auto; margin-right: auto; }
+.price-display { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 20px; }
+.price-big { font-size: 52px; font-weight: 800; letter-spacing: -2px; color: white; line-height: 1; }
+.price-info strong { font-size: 14px; color: white; display: block; margin-bottom: 3px; }
+.price-info span { font-size: 12px; color: rgba(255,255,255,0.35); }
+.pay-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; padding: 14px 36px; border-radius: 11px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: all 0.15s; box-shadow: 0 4px 20px rgba(16,185,129,0.25); }
+.pay-btn:hover { background: var(--emerald-dark); transform: translateY(-1px); }
+.payment-includes { display: flex; justify-content: center; gap: 20px; margin-top: 16px; flex-wrap: wrap; }
+.pay-inc { display: flex; align-items: center; gap: 5px; font-size: 12px; color: rgba(255,255,255,0.4); }
+.pay-inc svg { width: 11px; height: 11px; stroke: var(--emerald); stroke-width: 2.5; fill: none; }
 
+/* FORM */
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .field-group { display: flex; flex-direction: column; gap: 5px; }
-
-.field-group label {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--muted2);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.field-group input {
-  width: 100%;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  color: var(--text);
-  background: var(--off);
-  border: 1.5px solid var(--border);
-  border-radius: 9px;
-  padding: 10px 14px;
-  outline: none;
-  transition: border-color 0.2s;
-}
-
-.field-group input:focus { border-color: var(--emerald); }
+.field-group label { font-size: 11px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.05em; }
+.field-group input, .field-group select { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 10px 14px; outline: none; transition: border-color 0.2s; }
+.field-group input:focus, .field-group select:focus { border-color: var(--emerald); }
 .field-group input::placeholder { color: var(--muted2); }
-
-.field-full { grid-column: 1 / -1; }
-
-.save-btn {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 10px 20px;
-  border-radius: 8px;
-  border: none;
-  background: var(--emerald);
-  color: white;
-  cursor: pointer;
-  transition: background 0.15s;
-  margin-top: 8px;
-}
-
+.save-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 8px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; margin-top: 8px; }
 .save-btn:hover { background: var(--emerald-dark); }
 
-/* CV UPLOAD */
-.upload-area {
-  border: 2px dashed var(--border);
-  border-radius: 12px;
-  padding: 32px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  position: relative;
-}
-
+/* CV */
+.upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 28px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
 .upload-area:hover { border-color: var(--emerald); background: var(--emerald-light); }
-.upload-area.dragover { border-color: var(--emerald); background: var(--emerald-light); }
 .upload-area.has-file { border-color: var(--emerald); background: var(--emerald-light); border-style: solid; }
-
-.upload-icon {
-  width: 40px; height: 40px;
-  background: var(--off);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 12px;
-}
-
+.upload-icon { width: 40px; height: 40px; background: var(--off); border: 1px solid var(--border); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
 .upload-icon svg { width: 18px; height: 18px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
 .upload-area.has-file .upload-icon { background: var(--emerald-light); border-color: var(--emerald-border); }
 .upload-area.has-file .upload-icon svg { stroke: var(--emerald-dark); }
-
 .upload-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
 .upload-sub { font-size: 12px; color: var(--muted); }
 .upload-sub span { color: var(--emerald-dark); font-weight: 600; }
-
 #cvInput { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-
-.or-row {
-  display: flex; align-items: center; gap: 12px;
-  color: var(--muted2); font-size: 12px; margin: 16px 0;
-}
+.or-row { display: flex; align-items: center; gap: 12px; color: var(--muted2); font-size: 12px; margin: 16px 0; }
 .or-row::before, .or-row::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-
-.li-input-wrap {
-  display: flex;
-  gap: 8px;
-  background: var(--off);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: 4px 4px 4px 14px;
-  transition: border-color 0.2s;
-}
-
+.li-input-wrap { display: flex; gap: 8px; background: var(--off); border: 1.5px solid var(--border); border-radius: 10px; padding: 4px 4px 4px 14px; transition: border-color 0.2s; }
 .li-input-wrap:focus-within { border-color: var(--emerald); }
 .li-input-wrap svg { width: 16px; height: 16px; fill: #0077b5; opacity: 0.7; align-self: center; flex-shrink: 0; }
-
-.li-input-wrap input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  color: var(--text);
-  padding: 10px 0;
-}
-
+.li-input-wrap input { flex: 1; background: transparent; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); padding: 10px 0; }
 .li-input-wrap input::placeholder { color: var(--muted2); }
-
-.li-btn {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 10px 16px;
-  border-radius: 8px;
-  border: none;
-  background: var(--navy);
-  color: white;
-  cursor: pointer;
-  transition: background 0.15s;
-  white-space: nowrap;
-}
-
+.li-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 16px; border-radius: 8px; border: none; background: var(--navy); color: white; cursor: pointer; white-space: nowrap; }
 .li-btn:hover { background: var(--navy2); }
 
-/* AI PROMPTS */
+/* PROMPTS */
 .prompts-list { display: flex; flex-direction: column; gap: 12px; }
+.prompt-item { background: var(--off); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; border-left: 3px solid var(--emerald); }
+.prompt-num { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--emerald-dark); }
+.prompt-text { font-size: 14px; color: var(--navy); line-height: 1.55; font-style: italic; margin-top: 5px; }
 
-.prompt-item {
-  background: var(--off);
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  padding: 16px 18px;
-  border-left: 3px solid var(--emerald);
-}
-
-.prompt-num {
-  font-size: 10px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--emerald-dark);
-  margin-bottom: 6px;
-}
-
-.prompt-text {
-  font-size: 14px;
-  color: var(--navy);
-  line-height: 1.55;
-  font-style: italic;
-}
-
-.prompts-locked {
-  text-align: center;
-  padding: 32px;
-}
-
-.prompts-locked-icon {
-  width: 48px; height: 48px;
-  background: var(--off);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 14px;
-}
-
-.prompts-locked-icon svg { width: 20px; height: 20px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
-.prompts-locked-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
-.prompts-locked-sub { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 20px; max-width: 360px; margin-left: auto; margin-right: auto; }
-
-.generate-btn {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 12px 24px;
-  border-radius: 10px;
-  border: none;
-  background: var(--navy);
-  color: white;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.generate-btn:hover { background: var(--navy2); }
-
-/* VIDEO CLIPS */
-.clips-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.clip-item {
-  border: 1.5px solid var(--border);
-  border-radius: 12px;
-  overflow: hidden;
-  transition: box-shadow 0.2s;
-}
-
-.clip-item:hover { box-shadow: 0 4px 16px rgba(12,20,69,0.08); }
-
-.clip-thumb {
-  background: var(--navy);
-  aspect-ratio: 16/9;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  position: relative;
-  cursor: pointer;
-}
-
-.clip-thumb.empty { cursor: default; }
-
-.clip-thumb::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, rgba(16,185,129,0.08), transparent);
-}
-
-.clip-play {
-  width: 32px; height: 32px;
-  background: var(--emerald);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  position: relative; z-index: 1;
-  transition: transform 0.15s;
-}
-
-.clip-thumb:hover .clip-play { transform: scale(1.1); }
-
-.clip-play svg { width: 11px; height: 11px; fill: white; margin-left: 2px; }
-
-.clip-record-icon {
-  width: 32px; height: 32px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  position: relative; z-index: 1;
-}
-
-.clip-record-icon svg { width: 14px; height: 14px; stroke: rgba(255,255,255,0.4); stroke-width: 1.5; fill: none; }
-
-.clip-lbl {
-  font-size: 9px;
-  font-weight: 700;
-  color: rgba(255,255,255,0.4);
-  text-align: center;
-  position: relative; z-index: 1;
-  padding: 0 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.clip-thumb.done .clip-lbl { color: rgba(255,255,255,0.6); }
-
-.clip-status {
-  position: absolute;
-  top: 8px; right: 8px;
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  z-index: 2;
-}
-
-.clip-status.done { background: var(--emerald); }
-.clip-status.done svg { width: 10px; height: 10px; stroke: white; stroke-width: 2.5; fill: none; }
-
-.clip-footer {
-  padding: 10px 12px;
-  background: white;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.clip-name {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--navy);
-  letter-spacing: -0.1px;
-}
-
-.clip-action {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 5px 10px;
-  border-radius: 6px;
-  border: 1.5px solid var(--border);
-  background: white;
-  color: var(--navy);
-  cursor: pointer;
-  transition: all 0.15s;
-  white-space: nowrap;
-}
-
+/* CLIPS */
+.clips-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.clip-item { border: 1.5px solid var(--border); border-radius: 12px; overflow: hidden; }
+.clip-thumb { background: var(--navy); aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; position: relative; cursor: pointer; }
+.clip-thumb::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(16,185,129,0.08), transparent); }
+.clip-play { width: 30px; height: 30px; background: var(--emerald); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+.clip-play svg { width: 10px; height: 10px; fill: white; margin-left: 2px; }
+.clip-record-icon { width: 30px; height: 30px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; z-index: 1; }
+.clip-record-icon svg { width: 13px; height: 13px; stroke: rgba(255,255,255,0.4); stroke-width: 1.5; fill: none; }
+.clip-lbl { font-size: 8px; font-weight: 700; color: rgba(255,255,255,0.4); position: relative; z-index: 1; text-transform: uppercase; letter-spacing: 0.05em; }
+.clip-status { position: absolute; top: 7px; right: 7px; width: 17px; height: 17px; background: var(--emerald); border-radius: 50%; display: flex; align-items: center; justify-content: center; z-index: 2; }
+.clip-status svg { width: 9px; height: 9px; stroke: white; stroke-width: 2.5; fill: none; }
+.clip-footer { padding: 10px 12px; background: white; display: flex; justify-content: space-between; align-items: center; }
+.clip-name { font-size: 11px; font-weight: 700; color: var(--navy); }
+.clip-action { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 700; padding: 5px 10px; border-radius: 6px; border: 1.5px solid var(--border); background: white; color: var(--navy); cursor: pointer; transition: all 0.15s; }
 .clip-action:hover { background: var(--navy); color: white; border-color: var(--navy); }
 .clip-action.record { background: var(--navy); color: white; border-color: var(--navy); }
 .clip-action.record:hover { background: var(--emerald); border-color: var(--emerald); }
 
-/* PAYMENT */
-.payment-banner {
-  background: linear-gradient(135deg, var(--navy), var(--navy2));
-  border-radius: 14px;
-  padding: 24px;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
+/* ROLE INTERVIEWS */
+.role-hero { background: linear-gradient(135deg, #0f1e5e, #1a2870); border-radius: 14px; padding: 26px; margin-bottom: 16px; }
+.role-hero h3 { font-size: 18px; font-weight: 800; color: white; letter-spacing: -0.3px; margin-bottom: 8px; }
+.role-hero h3 span { color: var(--emerald); }
+.role-hero p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.65; margin-bottom: 16px; }
+.free-badge { display: inline-flex; align-items: center; gap: 5px; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.25); color: var(--emerald); font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 100px; margin-bottom: 14px; }
+.role-url-wrap { display: flex; gap: 8px; background: rgba(255,255,255,0.07); border: 1.5px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 4px 4px 4px 14px; }
+.role-url-wrap:focus-within { border-color: rgba(16,185,129,0.4); }
+.role-url-wrap input { flex: 1; background: transparent; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: white; padding: 10px 0; }
+.role-url-wrap input::placeholder { color: rgba(255,255,255,0.25); }
+.role-url-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 16px; border-radius: 8px; border: none; background: var(--emerald); color: white; cursor: pointer; white-space: nowrap; }
+.role-url-btn:hover { background: var(--emerald-dark); }
+.upgrade-bar { background: var(--off); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
+.upgrade-bar p { font-size: 13px; color: var(--muted); }
+.upgrade-options { display: flex; gap: 8px; flex-shrink: 0; }
+.ubtn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 8px; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+.ubtn-adhoc { border: 1.5px solid var(--border); background: white; color: var(--navy); }
+.ubtn-adhoc:hover { background: var(--navy); color: white; border-color: var(--navy); }
+.ubtn-unlimited { border: none; background: var(--emerald); color: white; }
+.ubtn-unlimited:hover { background: var(--emerald-dark); }
+.role-item { background: var(--off); border: 1.5px solid var(--border); border-radius: 12px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 8px; }
+.role-item h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.role-item p { font-size: 12px; color: var(--muted); }
 
-.payment-icon {
-  width: 44px; height: 44px;
-  background: rgba(16,185,129,0.15);
-  border: 1px solid rgba(16,185,129,0.25);
-  border-radius: 11px;
-  display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
+/* DOCUMENTS */
+.doc-item { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+.doc-item:last-child { border-bottom: none; }
+.doc-icon { width: 34px; height: 34px; background: var(--off); border: 1px solid var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.doc-icon svg { width: 13px; height: 13px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
+.doc-name { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.doc-meta { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.doc-type-label { font-size: 11px; color: var(--muted2); }
+.exp-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.exp-valid { background: var(--emerald-light); color: var(--emerald-dark); border: 1px solid var(--emerald-border); }
+.exp-expired { background: var(--error-light); color: var(--error); border: 1px solid #fecaca; }
+.exp-none { background: var(--off); color: var(--muted2); border: 1px solid var(--border); }
+.add-doc-form { border-top: 1px solid var(--border); margin-top: 20px; padding-top: 20px; display: none; }
+.add-doc-form.show { display: block; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-.payment-icon svg { width: 18px; height: 18px; stroke: var(--emerald); stroke-width: 2; fill: none; }
-.payment-text h3 { font-size: 15px; font-weight: 700; color: white; margin-bottom: 4px; }
-.payment-text p { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.5; }
-
-.pay-btn {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 14px;
-  font-weight: 700;
-  padding: 12px 22px;
-  border-radius: 9px;
-  border: none;
-  background: var(--emerald);
-  color: white;
-  cursor: pointer;
-  transition: background 0.15s;
-  white-space: nowrap;
-  flex-shrink: 0;
-  margin-left: auto;
-}
-
-.pay-btn:hover { background: var(--emerald-dark); }
-
-/* VISIBILITY TOGGLE */
-.visibility-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-}
-
+/* VISIBILITY */
+.visibility-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; }
 .visibility-info h4 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
 .visibility-info p { font-size: 13px; color: var(--muted); line-height: 1.5; }
-
 .toggle-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-
-.toggle {
-  width: 44px; height: 24px;
-  background: var(--border);
-  border-radius: 100px;
-  position: relative;
-  cursor: pointer;
-  transition: background 0.2s;
-  border: none;
-  flex-shrink: 0;
-}
-
+.toggle { width: 44px; height: 24px; background: var(--border); border-radius: 100px; position: relative; cursor: pointer; transition: background 0.2s; border: none; flex-shrink: 0; }
 .toggle.on { background: var(--emerald); }
-
-.toggle::after {
-  content: '';
-  position: absolute;
-  width: 18px; height: 18px;
-  background: white;
-  border-radius: 50%;
-  top: 3px; left: 3px;
-  transition: transform 0.2s;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
+.toggle::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
 .toggle.on::after { transform: translateX(20px); }
-
 .toggle-label { font-size: 13px; font-weight: 600; color: var(--muted); }
 .toggle.on + .toggle-label { color: var(--emerald-dark); }
-
-/* SHARE LINK */
-.share-row {
-  display: flex;
-  gap: 8px;
-  margin-top: 16px;
-  background: var(--off);
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
-  padding: 4px 4px 4px 14px;
-}
-
-.share-url {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 13px;
-  color: var(--muted);
-  padding: 9px 0;
-}
-
-.copy-btn {
-  font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 700;
-  padding: 9px 16px;
-  border-radius: 7px;
-  border: none;
-  background: var(--navy);
-  color: white;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
+.share-row { display: flex; gap: 8px; margin-top: 16px; background: var(--off); border: 1.5px solid var(--border); border-radius: 10px; padding: 4px 4px 4px 14px; }
+.share-url { flex: 1; background: transparent; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: var(--muted); padding: 9px 0; }
+.copy-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 9px 16px; border-radius: 7px; border: none; background: var(--navy); color: white; cursor: pointer; transition: background 0.15s; }
 .copy-btn:hover { background: var(--emerald); }
 
-/* TOAST */
-.toast {
-  position: fixed;
-  bottom: 32px; left: 50%;
-  transform: translateX(-50%) translateY(80px);
-  background: var(--navy);
-  color: white;
-  font-size: 14px;
-  font-weight: 600;
-  padding: 14px 24px;
-  border-radius: 10px;
-  border: 1px solid var(--emerald);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease;
-  z-index: 999;
-  white-space: nowrap;
-}
+/* LOCKED */
+.locked-msg { text-align: center; padding: 28px; }
+.locked-icon { width: 42px; height: 42px; background: var(--off); border: 1px solid var(--border); border-radius: 11px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+.locked-icon svg { width: 17px; height: 17px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
+.locked-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.locked-sub { font-size: 13px; color: var(--muted); line-height: 1.55; max-width: 340px; margin: 0 auto; }
 
+.toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: white; font-size: 14px; font-weight: 600; padding: 14px 24px; border-radius: 10px; border: 1px solid var(--emerald); box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s ease; z-index: 999; white-space: nowrap; }
 .toast.show { transform: translateX(-50%) translateY(0); }
-
-/* LOADING */
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 64px);
-  font-size: 14px;
-  color: var(--muted);
-}
+.loading { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 64px); font-size: 14px; color: var(--muted); }
 
 @media (max-width: 768px) {
   nav { padding: 0 20px; }
   .page { padding: 24px 16px 60px; }
-  .profile-grid { grid-template-columns: 1fr; }
+  .field-grid, .form-row-2 { grid-template-columns: 1fr; }
   .clips-grid { grid-template-columns: repeat(2, 1fr); }
-  .payment-banner { flex-direction: column; }
-  .pay-btn { width: 100%; margin-left: 0; }
-  .visibility-row { flex-direction: column; align-items: flex-start; }
+  .steps-row { display: none; }
+  .visibility-row, .upgrade-bar { flex-direction: column; align-items: flex-start; }
 }
 </style>
 </head>
@@ -692,81 +247,64 @@ nav {
 <div class="page">
 
   <!-- PROGRESS -->
-  <div class="progress-banner" id="progressBanner">
+  <div class="progress-banner">
     <div class="progress-left">
-      <div class="progress-title" id="progressTitle">Complete your profile</div>
-      <div class="progress-sub" id="progressSub">Upload your CV to get started</div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
-      </div>
+      <div class="progress-title" id="progressTitle">Let's get you started</div>
+      <div class="progress-sub" id="progressSub">Complete each step to build your video profile</div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
       <div class="progress-pct" id="progressPct">0% complete</div>
     </div>
     <button class="progress-cta" id="progressCta" onclick="scrollToNext()">Get started</button>
   </div>
 
-  <!-- PAYMENT GATE -->
-  <div class="section" id="paymentSection" style="display:none">
+  <!-- STEPS -->
+  <div class="steps-row">
+    <div class="step-pill" id="step1"><div class="step-pill-num">1</div><div class="step-pill-label">Pay</div></div>
+    <div class="step-pill" id="step2"><div class="step-pill-num">2</div><div class="step-pill-label">Upload CV</div></div>
+    <div class="step-pill" id="step3"><div class="step-pill-num">3</div><div class="step-pill-label">Questions</div></div>
+    <div class="step-pill" id="step4"><div class="step-pill-num">4</div><div class="step-pill-label">Record</div></div>
+    <div class="step-pill" id="step5"><div class="step-pill-num">5</div><div class="step-pill-label">Documents</div></div>
+    <div class="step-pill" id="step6"><div class="step-pill-num">6</div><div class="step-pill-label">Role interviews</div></div>
+    <div class="step-pill" id="step7"><div class="step-pill-num">7</div><div class="step-pill-label">Go live</div></div>
+  </div>
+
+  <!-- 1: PAYMENT -->
+  <div class="section" id="paymentSection">
     <div class="section-header">
-      <div class="section-title">Unlock your video profile</div>
+      <div class="section-title">Your video profile</div>
       <span class="section-badge badge-pending">Payment required</span>
     </div>
-    <div class="payment-banner">
-      <div class="payment-icon">
-        <svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg>
+    <div class="payment-hero">
+      <h2>Your video CV.<br><span>Because nobody reads the other kind.</span></h2>
+      <p>Upload your CV. AI writes your personalised questions. You record yourself. Six clips that replace the cover letter nobody reads — works with Seek, LinkedIn, or any application.</p>
+      <div class="price-display">
+        <div class="price-big">$19.99</div>
+        <div class="price-info"><strong>One-time payment</strong><span>No subscription · Your videos forever</span></div>
       </div>
-      <div class="payment-text">
-        <h3>Get your video profile — $19.99</h3>
-        <p>One payment. Six personalised video clips. MP4 download. One free role-specific interview included.</p>
+      <button class="pay-btn" onclick="handlePayment()">Unlock my video profile — $19.99</button>
+      <div class="payment-includes">
+        <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>6 personalised clips</div>
+        <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>MP4 download</div>
+        <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>1 free role-specific interview</div>
+        <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>Shareable profile link</div>
       </div>
-      <button class="pay-btn" onclick="handlePayment()">Pay $19.99 to unlock</button>
     </div>
   </div>
 
-  <!-- PROFILE DETAILS -->
-  <div class="section" id="profileSection">
-    <div class="section-header">
-      <div class="section-title">Your details</div>
-      <span class="section-badge badge-pending" id="profileBadge">Incomplete</span>
-    </div>
-    <div class="profile-grid">
-      <div class="field-group">
-        <label>First name</label>
-        <input type="text" id="firstName" placeholder="First name">
-      </div>
-      <div class="field-group">
-        <label>Last name</label>
-        <input type="text" id="lastName" placeholder="Last name">
-      </div>
-      <div class="field-group">
-        <label>Location</label>
-        <input type="text" id="location" placeholder="e.g. Brisbane, QLD">
-      </div>
-      <div class="field-group">
-        <label>Headline</label>
-        <input type="text" id="headline" placeholder="e.g. Operations Manager | Brisbane">
-      </div>
-    </div>
-    <button class="save-btn" onclick="saveProfile()">Save details</button>
-  </div>
-
-  <!-- CV UPLOAD -->
+  <!-- 2: CV -->
   <div class="section" id="cvSection">
     <div class="section-header">
-      <div class="section-title">Your CV or LinkedIn</div>
+      <div class="section-title">Upload your CV</div>
       <span class="section-badge badge-pending" id="cvBadge">Not uploaded</span>
     </div>
-
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6">We read your CV to generate personalised interview questions based on your actual experience. We never share your raw CV.</p>
     <div class="upload-area" id="uploadArea" onclick="document.getElementById('cvInput').click()">
       <input type="file" id="cvInput" accept=".pdf,.doc,.docx" onchange="handleCVUpload(event)">
-      <div class="upload-icon">
-        <svg viewBox="0 0 18 18"><path d="M9 2v10M5 8l4-4 4 4"/><path d="M3 14h12a1 1 0 0 0 1-1v-1"/></svg>
-      </div>
+      <div class="upload-icon"><svg viewBox="0 0 18 18"><path d="M9 2v10M5 8l4-4 4 4"/><path d="M3 14h12"/></svg></div>
       <div class="upload-title" id="uploadTitle">Upload your CV</div>
-      <div class="upload-sub" id="uploadSub">Drag and drop or <span>browse files</span> · PDF or Word</div>
+      <div class="upload-sub" id="uploadSub">Drag and drop or <span>browse files</span> · PDF or Word · Max 5MB</div>
     </div>
-
     <div class="or-row"><span>or paste your LinkedIn URL</span></div>
-
     <div class="li-input-wrap">
       <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
       <input type="url" id="linkedinUrl" placeholder="linkedin.com/in/yourname">
@@ -774,66 +312,54 @@ nav {
     </div>
   </div>
 
-  <!-- AI PROMPTS -->
+  <!-- 3: QUESTIONS -->
   <div class="section" id="promptsSection">
     <div class="section-header">
-      <div class="section-title">Your personalised questions</div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div class="section-title">Your interview questions</div>
+      <div style="display:flex;align-items:center;gap:8px">
         <span class="section-badge badge-pending" id="promptsBadge">Not generated</span>
-        <button class="save-btn" id="regenBtn" onclick="generatePrompts()" style="display:none;margin-top:0;font-size:12px;padding:7px 14px">Regenerate</button>
+        <button class="save-btn" id="regenAllBtn" onclick="generatePrompts()" style="display:none;margin-top:0;font-size:11px;padding:6px 12px">Regenerate all</button>
       </div>
     </div>
-
     <div id="promptsContent">
-      <div class="prompts-locked">
-        <div class="prompts-locked-icon">
-          <svg viewBox="0 0 18 18"><rect x="3" y="8" width="12" height="9" rx="1.5"/><path d="M6 8V6a3 3 0 0 1 6 0v2"/></svg>
-        </div>
-        <div class="prompts-locked-title">Upload your CV first</div>
-        <div class="prompts-locked-sub">Once you've uploaded your CV or LinkedIn, we'll generate 6 personalised questions based on your actual experience. No two profiles are the same.</div>
-        <button class="generate-btn" id="generateBtn" onclick="generatePrompts()" style="display:none">Generate my questions</button>
+      <div class="locked-msg">
+        <div class="locked-icon"><svg viewBox="0 0 18 18"><rect x="3" y="8" width="12" height="9" rx="1.5"/><path d="M6 8V6a3 3 0 0 1 6 0v2"/></svg></div>
+        <div class="locked-title">Upload your CV first</div>
+        <div class="locked-sub">Once your CV is uploaded we'll generate 6 personalised questions based on your actual experience.</div>
       </div>
     </div>
   </div>
 
-  <!-- VIDEO CLIPS -->
+  <!-- 4: CLIPS -->
   <div class="section" id="clipsSection">
     <div class="section-header">
-      <div class="section-title">Your video clips</div>
+      <div class="section-title">Record your 6 clips</div>
       <span class="section-badge badge-locked" id="clipsBadge">Locked</span>
     </div>
-
     <div id="clipsContent">
-      <div class="prompts-locked">
-        <div class="prompts-locked-icon">
-          <svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg>
-        </div>
-        <div class="prompts-locked-title">Complete the steps above first</div>
-        <div class="prompts-locked-sub">Pay for your profile and generate your questions — then you'll be ready to record your 6 video clips.</div>
+      <div class="locked-msg">
+        <div class="locked-icon"><svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg></div>
+        <div class="locked-title">Complete the steps above first</div>
+        <div class="locked-sub">Pay and generate your questions — then you'll be ready to record.</div>
       </div>
     </div>
   </div>
 
-  <!-- DOCUMENTS -->
+  <!-- 5: DOCUMENTS -->
   <div class="section" id="documentsSection">
     <div class="section-header">
-      <div class="section-title">Supporting documents</div>
-      <button class="save-btn" onclick="showAddDocument()" style="margin-top:0">Add document</button>
+      <div class="section-title">Supporting documents <span style="font-size:12px;font-weight:400;color:var(--muted2)">(optional)</span></div>
+      <button class="save-btn" onclick="document.getElementById('addDocForm').classList.toggle('show')" style="margin-top:0;font-size:12px;padding:7px 14px">Add document</button>
     </div>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6">Upload supporting documents to strengthen your profile — police checks, licences, certifications, qualifications and more. Expired documents are shown with a red date so employers know the status.</p>
-
-    <div id="documentsList">
-      <div style="text-align:center;padding:32px;color:var(--muted2);font-size:13px">No documents uploaded yet.</div>
-    </div>
-
-    <!-- Add document form -->
-    <div id="addDocumentForm" style="display:none;border-top:1px solid var(--border);margin-top:20px;padding-top:20px">
-      <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:16px">Add a document</div>
-      <div class="profile-grid">
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Police checks, licences, certifications, qualifications. Expired documents show in red.</p>
+    <div id="documentsList"><div style="text-align:center;padding:20px;color:var(--muted2);font-size:13px">No documents uploaded yet.</div></div>
+    <div class="add-doc-form" id="addDocForm">
+      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px">Add a document</div>
+      <div class="form-row-2">
         <div class="field-group">
           <label>Document type</label>
-          <select id="docType" style="width:100%;font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:var(--text);background:var(--off);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;outline:none">
-            <option value="">Select type...</option>
+          <select id="docType">
+            <option value="">Select...</option>
             <option value="police_check">Police check</option>
             <option value="working_with_children">Working With Children check</option>
             <option value="drivers_licence">Driver's licence</option>
@@ -847,31 +373,45 @@ nav {
           </select>
         </div>
         <div class="field-group">
-          <label>Document name <span style="color:var(--muted2);font-weight:400;text-transform:none">(optional)</span></label>
-          <input type="text" id="docName" placeholder="e.g. Bachelor of Business, QLD Driver Licence">
+          <label>Document name <span style="font-weight:400;text-transform:none;font-size:10px;color:var(--muted2)">(optional)</span></label>
+          <input type="text" id="docName" placeholder="e.g. QLD Driver Licence">
         </div>
         <div class="field-group">
-          <label>Expiry date <span style="color:var(--muted2);font-weight:400;text-transform:none">(leave blank if no expiry)</span></label>
+          <label>Expiry date <span style="font-weight:400;text-transform:none;font-size:10px;color:var(--muted2)">(leave blank if no expiry)</span></label>
           <input type="date" id="docExpiry">
         </div>
         <div class="field-group">
-          <label>Upload file</label>
-          <input type="file" id="docFile" accept=".pdf,.jpg,.jpeg,.png" style="width:100%;font-family:Plus Jakarta Sans,sans-serif;font-size:13px;color:var(--muted);background:var(--off);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;outline:none">
+          <label>Upload file (PDF, JPG, PNG)</label>
+          <input type="file" id="docFile" accept=".pdf,.jpg,.jpeg,.png" style="font-size:13px;color:var(--muted)">
         </div>
       </div>
-      <div style="display:flex;gap:10px;margin-top:16px">
+      <div style="display:flex;gap:10px;margin-top:14px">
         <button class="save-btn" onclick="saveDocument()">Save document</button>
-        <button onclick="document.getElementById('addDocumentForm').style.display='none'" style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:600;padding:10px 20px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer">Cancel</button>
+        <button onclick="document.getElementById('addDocForm').classList.remove('show')" style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:600;padding:10px 18px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer">Cancel</button>
       </div>
     </div>
   </div>
 
-  <!-- VISIBILITY & SHARING -->
+  <!-- 6: ROLE INTERVIEWS -->
+  <div class="section" id="roleInterviewSection">
+    <div class="section-header">
+      <div class="section-title">Role-specific interviews</div>
+      <span class="section-badge badge-locked" id="roleInterviewBadge">Complete your 6 clips first</span>
+    </div>
+    <div id="roleInterviewContent">
+      <div class="locked-msg">
+        <div class="locked-icon"><svg viewBox="0 0 18 18"><rect x="2" y="5" width="14" height="10" rx="1.5"/><path d="M6 5V4a2 2 0 0 1 6 0v1"/></svg></div>
+        <div class="locked-title">Complete your 6 clips first</div>
+        <div class="locked-sub">Once you've recorded all 6 clips you'll unlock a free role-specific interview. Paste any job ad and get 3 questions tailored to that exact role.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7: GO LIVE -->
   <div class="section" id="visibilitySection">
     <div class="section-header">
-      <div class="section-title">Profile visibility</div>
+      <div class="section-title">Go live</div>
     </div>
-
     <div class="visibility-row">
       <div class="visibility-info">
         <h4>Add me to the employer database</h4>
@@ -882,10 +422,19 @@ nav {
         <span class="toggle-label" id="visibilityLabel">Private</span>
       </div>
     </div>
-
     <div class="share-row" id="shareRow" style="display:none">
       <input type="text" class="share-url" id="shareUrl" readonly>
       <button class="copy-btn" onclick="copyLink()">Copy link</button>
+    </div>
+    <div style="border-top:1px solid var(--border);margin-top:24px;padding-top:24px">
+      <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:14px">Your profile details</div>
+      <div class="field-grid">
+        <div class="field-group"><label>First name</label><input type="text" id="firstName" placeholder="First name"></div>
+        <div class="field-group"><label>Last name</label><input type="text" id="lastName" placeholder="Last name"></div>
+        <div class="field-group"><label>Location</label><input type="text" id="location" placeholder="e.g. Brisbane, QLD"></div>
+        <div class="field-group"><label>Headline</label><input type="text" id="headline" placeholder="e.g. Operations Manager | Brisbane"></div>
+      </div>
+      <button class="save-btn" onclick="saveProfile()">Save details</button>
     </div>
   </div>
 
@@ -900,55 +449,37 @@ const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
 const STRIPE_PUBLISHABLE_KEY = 'YOUR_STRIPE_PUBLISHABLE_KEY';
 const STRIPE_PRICE_ID = 'YOUR_STRIPE_PRICE_ID_19.99';
+
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-
 
 let candidate = null;
 let clips = [];
+let promptHistory = {};
+let promptRegenCounts = {};
 
-// ── INIT ──
+const CLIP_TITLES = ['Your Passion & Direction', 'Work History', 'Career Highlight', 'Ideal Next Role', 'Strengths', 'Growth Area'];
+const DOC_LABELS = { police_check:'Police check', working_with_children:'Working With Children check', drivers_licence:"Driver's licence", working_rights:'Working rights / Visa', professional_certification:'Professional certification', trade_licence:'Trade licence', first_aid:'First Aid certificate', qualification:'Degree / Qualification', reference_letter:'Reference letter', other:'Other' };
+
 async function init() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) { window.location.href = 'candidate-auth.html'; return; }
 
-  let { data, error } = await supabaseClient
-    .from('candidates')
-    .select('*')
-    .eq('user_id', session.user.id)
-    .single();
+  let { data, error } = await supabaseClient.from('candidates').select('*').eq('user_id', session.user.id).single();
 
-  // If no candidate row exists, create one
   if (error || !data) {
-    const { data: newCandidate, error: insertError } = await supabaseClient
-      .from('candidates')
-      .insert({
-        user_id: session.user.id,
-        email: session.user.email,
-        first_name: session.user.user_metadata?.first_name || '',
-        last_name: session.user.user_metadata?.last_name || '',
-      })
-      .select()
-      .single();
-
-    if (insertError) {
-      console.error('Failed to create candidate:', insertError);
-      window.location.href = 'candidate-auth.html';
-      return;
-    }
-
-    data = newCandidate;
+    const { data: nc, error: ie } = await supabaseClient.from('candidates').insert({
+      user_id: session.user.id, email: session.user.email,
+      first_name: session.user.user_metadata?.first_name || '',
+      last_name: session.user.user_metadata?.last_name || '',
+    }).select().single();
+    if (ie) { window.location.href = 'candidate-auth.html'; return; }
+    data = nc;
   }
 
   candidate = data;
+  candidate.has_paid = true; // TEMP bypass — remove when Stripe configured
 
-  // Load clips
-  const { data: clipData } = await supabaseClient
-    .from('candidate_clips')
-    .select('*')
-    .eq('candidate_id', candidate.id)
-    .order('clip_number');
-
+  const { data: clipData } = await supabaseClient.from('candidate_clips').select('*').eq('candidate_id', candidate.id).order('clip_number');
   clips = clipData || [];
 
   renderDashboard();
@@ -958,288 +489,274 @@ async function init() {
 }
 
 function renderDashboard() {
-  // Nav
   const initials = ((candidate.first_name || '?')[0] + (candidate.last_name || '')[0]).toUpperCase();
   document.getElementById('navAvatar').textContent = initials;
   document.getElementById('navName').textContent = candidate.first_name || candidate.email;
 
-  // Profile fields
   document.getElementById('firstName').value = candidate.first_name || '';
   document.getElementById('lastName').value = candidate.last_name || '';
   document.getElementById('location').value = candidate.location || '';
   document.getElementById('headline').value = candidate.headline || '';
   document.getElementById('linkedinUrl').value = candidate.linkedin_url || '';
 
-  // CV badge
-  if (candidate.cv_url || candidate.linkedin_url || candidate.cv_text) {
+  // Step 1
+  if (candidate.has_paid) {
+    document.getElementById('paymentSection').style.display = 'none';
+    document.getElementById('step1').classList.add('done');
+  } else { document.getElementById('step1').classList.add('active'); }
+
+  // Step 2
+  if (candidate.cv_text || candidate.linkedin_url) {
     document.getElementById('cvBadge').textContent = 'Uploaded';
     document.getElementById('cvBadge').className = 'section-badge badge-complete';
     document.getElementById('uploadArea').classList.add('has-file');
-    document.getElementById('uploadTitle').textContent = 'CV uploaded';
+    document.getElementById('uploadTitle').textContent = candidate.cv_url || 'CV uploaded';
     document.getElementById('uploadSub').textContent = 'Upload a new file to replace it';
-    document.getElementById('generateBtn').style.display = 'inline-block';
-    document.getElementById('regenBtn').style.display = 'inline-block';
-  }
+    document.getElementById('step2').classList.add('done');
+    document.getElementById('regenAllBtn').style.display = 'inline-block';
+  } else { document.getElementById('step2').classList.add('active'); }
 
-  // Profile badge
-  if (candidate.first_name && candidate.location) {
-    document.getElementById('profileBadge').textContent = 'Complete';
-    document.getElementById('profileBadge').className = 'section-badge badge-complete';
-  }
-
-  // Payment section — TEMP: bypassed for testing, re-enable when Stripe is ready
-  // if (!candidate.has_paid) {
-  //   document.getElementById('paymentSection').style.display = 'block';
-  // }
-  candidate.has_paid = true; // TEMP bypass — remove when Stripe configured
-
-  // Prompts
+  // Step 3
   if (candidate.ai_prompts && candidate.ai_prompts.length > 0) {
+    document.getElementById('step3').classList.add('done');
     renderPrompts(candidate.ai_prompts);
   } else if (candidate.cv_text || candidate.linkedin_url) {
+    document.getElementById('step3').classList.add('active');
     document.getElementById('promptsContent').innerHTML = `
-      <div class="prompts-locked">
-        <div class="prompts-locked-icon">
-          <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/><line x1="9" y1="6" x2="9" y2="10"/><circle cx="9" cy="12.5" r="0.5" fill="currentColor"/></svg>
-        </div>
-        <div class="prompts-locked-title">Ready to generate</div>
-        <div class="prompts-locked-sub">Your CV is uploaded. Click below to generate your personalised questions.</div>
-        <button class="generate-btn" onclick="generatePrompts()">Generate my questions</button>
-      </div>
-    `;
+      <div class="locked-msg">
+        <div class="locked-title">Ready to generate</div>
+        <div class="locked-sub">Your CV is uploaded. Click below to generate your 6 personalised questions.</div>
+        <button class="save-btn" onclick="generatePrompts()" style="margin-top:14px">Generate my questions</button>
+      </div>`;
   }
 
-  // Clips
+  // Step 4
+  const doneClips = clips.filter(c => c.is_complete).length;
   if (candidate.has_paid && candidate.ai_prompts && candidate.ai_prompts.length > 0) {
     renderClips();
+    if (doneClips === 6) { document.getElementById('step4').classList.add('done'); document.getElementById('clipsBadge').textContent = 'All 6 recorded'; document.getElementById('clipsBadge').className = 'section-badge badge-complete'; }
+    else { document.getElementById('step4').classList.add('active'); document.getElementById('clipsBadge').textContent = `${doneClips}/6 recorded`; document.getElementById('clipsBadge').className = 'section-badge badge-pending'; }
   }
 
-  // Visibility
-  const toggle = document.getElementById('visibilityToggle');
-  const label = document.getElementById('visibilityLabel');
+  // Step 5 always active
+  document.getElementById('step5').classList.add('active');
+
+  // Step 6
+  if (doneClips === 6) {
+    document.getElementById('step6').classList.add('active');
+    const freeLeft = candidate.role_interviews_remaining || 0;
+    document.getElementById('roleInterviewBadge').textContent = freeLeft > 0 ? `${freeLeft} free remaining` : 'Upgrade for more';
+    document.getElementById('roleInterviewBadge').className = 'section-badge badge-active';
+    renderRoleInterviews();
+  }
+
+  // Step 7
   if (candidate.is_public) {
-    toggle.classList.add('on');
-    label.textContent = 'Visible to employers';
+    document.getElementById('visibilityToggle').classList.add('on');
+    document.getElementById('visibilityLabel').textContent = 'Visible to employers';
     document.getElementById('shareRow').style.display = 'flex';
     document.getElementById('shareUrl').value = window.location.origin + '/profile/' + candidate.id;
-  }
+    document.getElementById('step7').classList.add('done');
+  } else { document.getElementById('step7').classList.add('active'); }
 
-  // Progress
   updateProgress();
 }
 
 function updateProgress() {
-  let steps = 0;
-  let total = 5;
-  if (candidate.first_name && candidate.location) steps++;
-  if (candidate.cv_text || candidate.linkedin_url) steps++;
-  if (candidate.has_paid) steps++;
-  if (candidate.ai_prompts && candidate.ai_prompts.length > 0) steps++;
   const doneClips = clips.filter(c => c.is_complete).length;
+  let steps = 0;
+  if (candidate.has_paid) steps++;
+  if (candidate.cv_text || candidate.linkedin_url) steps++;
+  if (candidate.ai_prompts && candidate.ai_prompts.length > 0) steps++;
   if (doneClips === 6) steps++;
+  if (candidate.is_public) steps++;
 
-  const pct = Math.round((steps / total) * 100);
+  const pct = Math.round((steps / 5) * 100);
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('progressPct').textContent = pct + '% complete';
 
-  if (pct === 100) {
-    document.getElementById('progressTitle').textContent = 'Profile complete!';
-    document.getElementById('progressSub').textContent = 'Your video profile is live and ready to be seen.';
-    document.getElementById('progressCta').textContent = 'Share my profile';
-  } else if (!candidate.first_name) {
-    document.getElementById('progressSub').textContent = 'Start by filling in your details below.';
-    document.getElementById('progressCta').textContent = 'Fill in details';
-  } else if (!candidate.cv_text && !candidate.linkedin_url) {
-    document.getElementById('progressSub').textContent = 'Upload your CV or paste your LinkedIn URL.';
-    document.getElementById('progressCta').textContent = 'Upload CV';
-  } else if (!candidate.has_paid) {
-    document.getElementById('progressSub').textContent = 'Pay $19.99 to unlock your video profile.';
-    document.getElementById('progressCta').textContent = 'Unlock now — $19.99';
-  } else if (!candidate.ai_prompts) {
-    document.getElementById('progressSub').textContent = 'Generate your personalised interview questions.';
-    document.getElementById('progressCta').textContent = 'Generate questions';
-  } else {
-    document.getElementById('progressSub').textContent = `${doneClips} of 6 clips recorded.`;
-    document.getElementById('progressCta').textContent = 'Record clips';
-  }
+  if (pct === 100) { document.getElementById('progressTitle').textContent = 'Profile complete!'; document.getElementById('progressSub').textContent = 'Your video profile is live.'; document.getElementById('progressCta').textContent = 'Share my profile'; }
+  else if (!candidate.has_paid) { document.getElementById('progressTitle').textContent = 'Start your video profile'; document.getElementById('progressSub').textContent = 'Pay $19.99 to unlock everything.'; document.getElementById('progressCta').textContent = 'Unlock — $19.99'; }
+  else if (!candidate.cv_text && !candidate.linkedin_url) { document.getElementById('progressTitle').textContent = 'Upload your CV'; document.getElementById('progressSub').textContent = 'We need your CV to personalise your questions.'; document.getElementById('progressCta').textContent = 'Upload CV'; }
+  else if (!candidate.ai_prompts) { document.getElementById('progressTitle').textContent = 'Generate your questions'; document.getElementById('progressSub').textContent = 'AI will personalise 6 questions based on your background.'; document.getElementById('progressCta').textContent = 'Generate questions'; }
+  else if (doneClips < 6) { document.getElementById('progressTitle').textContent = 'Record your clips'; document.getElementById('progressSub').textContent = `${doneClips} of 6 clips recorded.`; document.getElementById('progressCta').textContent = 'Record now'; }
+  else { document.getElementById('progressTitle').textContent = 'Almost there!'; document.getElementById('progressSub').textContent = 'Go live so employers can find you.'; document.getElementById('progressCta').textContent = 'Go live'; }
 }
 
 function renderPrompts(prompts) {
   document.getElementById('promptsBadge').textContent = 'Generated';
   document.getElementById('promptsBadge').className = 'section-badge badge-complete';
+  prompts.forEach((p, i) => { if (!promptHistory[i]) { promptHistory[i] = [p]; promptRegenCounts[i] = 0; } });
 
-  const clipTitles = ['Your Passion & Direction', 'Work History', 'Career Highlight', 'Ideal Next Role', 'Strengths', 'Growth Area'];
-
-  document.getElementById('promptsContent').innerHTML = `
-    <div class="prompts-list">
-      ${prompts.map((p, i) => `
-        <div class="prompt-item">
-          <div class="prompt-num">Clip ${i + 1} · ${clipTitles[i]}</div>
-          <div class="prompt-text">"${p}"</div>
+  document.getElementById('promptsContent').innerHTML = `<div class="prompts-list">${prompts.map((p, i) => {
+    const rc = promptRegenCounts[i] || 0;
+    const canRegen = rc < 3;
+    const canBack = (promptHistory[i] || []).length > 1;
+    return `<div class="prompt-item" id="pi${i}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px">
+        <div class="prompt-num">Clip ${i + 1} · ${CLIP_TITLES[i]}</div>
+        <div style="display:flex;gap:5px;flex-shrink:0">
+          ${canBack ? `<button onclick="goBackPrompt(${i})" style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;font-weight:600;padding:3px 8px;border-radius:5px;border:1.5px solid var(--border);background:white;color:var(--muted);cursor:pointer">← Prev</button>` : ''}
+          ${canRegen ? `<button onclick="regenPrompt(${i})" style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;font-weight:700;padding:3px 8px;border-radius:5px;border:1.5px solid var(--emerald-border);background:var(--emerald-light);color:var(--emerald-dark);cursor:pointer">Different (${3 - rc} left)</button>` : `<span style="font-size:10px;color:var(--muted2)">Max reached</span>`}
         </div>
-      `).join('')}
-    </div>
-  `;
+      </div>
+      <div class="prompt-text">"${promptHistory[i][promptHistory[i].length - 1]}"</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+async function generatePrompts() {
+  if (!candidate.cv_text && !candidate.linkedin_url) { showToast('Upload your CV first'); return; }
+  showToast('Generating questions...');
+  document.getElementById('promptsContent').innerHTML = '<div class="locked-msg"><div class="locked-title">Generating your questions...</div><div class="locked-sub">This takes about 30 seconds.</div></div>';
+
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/generate-prompts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}`, 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ candidate_id: candidate.id }),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Failed');
+    candidate.ai_prompts = result.prompts;
+    promptHistory = {}; promptRegenCounts = {};
+    renderPrompts(result.prompts);
+    renderClips();
+    updateProgress();
+    showToast('Questions generated!');
+  } catch (err) {
+    console.error(err);
+    showToast('Something went wrong — please try again');
+    document.getElementById('promptsContent').innerHTML = '<div class="locked-msg"><div class="locked-title">Generation failed</div><div class="locked-sub">Please try again.</div><button class="save-btn" onclick="generatePrompts()" style="margin-top:14px">Try again</button></div>';
+  }
+}
+
+async function regenPrompt(clipIndex) {
+  if ((promptRegenCounts[clipIndex] || 0) >= 3) return;
+  const btn = document.querySelector(`#pi${clipIndex} button:last-child`);
+  if (btn) { btn.textContent = '...'; btn.disabled = true; }
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/generate-prompts`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}`, 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ candidate_id: candidate.id, regen_clip: clipIndex, current_question: promptHistory[clipIndex][promptHistory[clipIndex].length - 1] }),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error);
+    promptHistory[clipIndex].push(result.prompts[clipIndex]);
+    promptRegenCounts[clipIndex] = (promptRegenCounts[clipIndex] || 0) + 1;
+    candidate.ai_prompts[clipIndex] = result.prompts[clipIndex];
+    renderPrompts(candidate.ai_prompts);
+    showToast('New question generated');
+  } catch (err) { showToast('Something went wrong'); renderPrompts(candidate.ai_prompts); }
+}
+
+function goBackPrompt(clipIndex) {
+  const h = promptHistory[clipIndex];
+  if (!h || h.length <= 1) return;
+  h.pop();
+  candidate.ai_prompts[clipIndex] = h[h.length - 1];
+  supabaseClient.from('candidates').update({ ai_prompts: candidate.ai_prompts }).eq('id', candidate.id);
+  renderPrompts(candidate.ai_prompts);
+  showToast('Reverted to previous question');
 }
 
 function renderClips() {
-  document.getElementById('clipsBadge').textContent = `${clips.filter(c => c.is_complete).length}/6 recorded`;
-  document.getElementById('clipsBadge').className = 'section-badge badge-pending';
-
-  const clipTitles = ['Your Passion & Direction', 'Work History', 'Career Highlight', 'Ideal Next Role', 'Strengths', 'Growth Area'];
+  const doneClips = clips.filter(c => c.is_complete).length;
+  document.getElementById('clipsBadge').textContent = `${doneClips}/6 recorded`;
+  document.getElementById('clipsBadge').className = doneClips === 6 ? 'section-badge badge-complete' : 'section-badge badge-pending';
 
   document.getElementById('clipsContent').innerHTML = `
-    <div class="clips-grid">
-      ${clipTitles.map((title, i) => {
-        const clip = clips.find(c => c.clip_number === i + 1);
-        const done = clip && clip.is_complete;
-        return `
-          <div class="clip-item">
-            <div class="clip-thumb ${done ? 'done' : 'empty'}" onclick="${done ? `playClip('${clip.video_url}')` : `recordClip(${i + 1})`}">
-              ${done ? `
-                <div class="clip-status done"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div>
-                <div class="clip-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg></div>
-              ` : `
-                <div class="clip-record-icon"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6"/><circle cx="9" cy="9" r="3" fill="currentColor"/></svg></div>
-              `}
-              <div class="clip-lbl">${done ? 'Recorded' : 'Not recorded'}</div>
-            </div>
-            <div class="clip-footer">
-              <div class="clip-name">${title}</div>
-              <button class="clip-action ${done ? '' : 'record'}" onclick="${done ? `recordClip(${i + 1})` : `recordClip(${i + 1})`}">
-                ${done ? 'Re-record' : 'Record'}
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('')}
+    <div class="clips-grid">${CLIP_TITLES.map((title, i) => {
+      const clip = clips.find(c => c.clip_number === i + 1);
+      const done = clip && clip.is_complete;
+      return `<div class="clip-item">
+        <div class="clip-thumb" onclick="${done ? '' : `recordClip(${i + 1})`}">
+          ${done ? `<div class="clip-status"><svg viewBox="0 0 10 10"><polyline points="2,5 4,8 8,2"/></svg></div><div class="clip-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg></div>` : `<div class="clip-record-icon"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6"/><circle cx="9" cy="9" r="3" fill="rgba(255,255,255,0.4)"/></svg></div>`}
+          <div class="clip-lbl">${done ? 'Recorded' : 'Not recorded'}</div>
+        </div>
+        <div class="clip-footer">
+          <div class="clip-name">${title}</div>
+          <button class="clip-action ${done ? '' : 'record'}" onclick="recordClip(${i + 1})">${done ? 'Re-record' : 'Record'}</button>
+        </div>
+      </div>`;
+    }).join('')}</div>
+    <p style="font-size:12px;color:var(--muted);margin-top:14px">Max 5 minutes per clip · We recommend about 3 minutes · Re-record any clip as many times as you like</p>`;
+}
+
+function renderRoleInterviews() {
+  const freeLeft = candidate.role_interviews_remaining || 0;
+  document.getElementById('roleInterviewContent').innerHTML = `
+    <div class="role-hero">
+      <div class="free-badge"><svg viewBox="0 0 10 10" width="9" height="9" stroke="currentColor" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg>${freeLeft > 0 ? `${freeLeft} free interview remaining` : 'Free interview used'}</div>
+      <h3>Apply to a specific role.<br><span>Nail it before the interview starts.</span></h3>
+      <p>Paste a job ad URL. AI reads the role, matches it against your CV, and generates 3 questions tailored to that exact job. Record your answers and attach to your application.</p>
+      ${freeLeft > 0 || true ? `<div class="role-url-wrap"><input type="url" id="roleAdUrl" placeholder="Paste a Seek, LinkedIn or any job ad URL..."><button class="role-url-btn" onclick="startRoleInterview()">Generate questions</button></div>` : ''}
     </div>
-    <p style="font-size:12px;color:var(--muted);margin-top:14px">Max 5 minutes per clip · We recommend about 3 minutes · You can re-record any clip</p>
-  `;
+    <div id="roleInterviewsList"></div>
+    <div class="upgrade-bar">
+      <p>Need more? <strong>$29.99 per interview</strong> or <strong>$199/month unlimited.</strong></p>
+      <div class="upgrade-options">
+        <button class="ubtn ubtn-adhoc" onclick="handleRoleUpgrade('adhoc')">$29.99 one-off</button>
+        <button class="ubtn ubtn-unlimited" onclick="handleRoleUpgrade('unlimited')">$199/mo unlimited</button>
+      </div>
+    </div>`;
+  loadRoleInterviews();
 }
 
-// ── ACTIONS ──
-async function saveProfile() {
-  const { error } = await supabaseClient.from('candidates').update({
-    first_name: document.getElementById('firstName').value.trim(),
-    last_name: document.getElementById('lastName').value.trim(),
-    location: document.getElementById('location').value.trim(),
-    headline: document.getElementById('headline').value.trim(),
-  }).eq('id', candidate.id);
-
-  if (error) { showToast('Error saving — please try again'); return; }
-
-  candidate.first_name = document.getElementById('firstName').value.trim();
-  candidate.last_name = document.getElementById('lastName').value.trim();
-  candidate.location = document.getElementById('location').value.trim();
-  candidate.headline = document.getElementById('headline').value.trim();
-
-  document.getElementById('profileBadge').textContent = 'Complete';
-  document.getElementById('profileBadge').className = 'section-badge badge-complete';
-  updateProgress();
-  showToast('Details saved');
+async function loadRoleInterviews() {
+  const { data: interviews } = await supabaseClient.from('role_interviews').select('*').eq('candidate_id', candidate.id).order('created_at', { ascending: false });
+  const list = document.getElementById('roleInterviewsList');
+  if (!list || !interviews || interviews.length === 0) return;
+  list.innerHTML = interviews.map(iv => {
+    const done = [iv.clip_1_playback_id, iv.clip_2_playback_id, iv.clip_3_playback_id].filter(Boolean).length;
+    return `<div class="role-item"><div><h4>${iv.job_title || 'Role interview'}</h4><p>${iv.company_name || ''} · ${done}/3 clips recorded</p></div><button class="clip-action" onclick="continueRoleInterview('${iv.id}')">Continue</button></div>`;
+  }).join('');
 }
 
-async function saveLinkedIn() {
-  const url = document.getElementById('linkedinUrl').value.trim();
-  if (!url) { showToast('Please enter a LinkedIn URL'); return; }
+async function startRoleInterview() {
+  const url = document.getElementById('roleAdUrl')?.value.trim();
+  if (!url) { showToast('Please paste a job ad URL'); return; }
+  showToast('Role-specific interviews coming very soon!');
+}
 
-  const { error } = await supabaseClient.from('candidates').update({
-    linkedin_url: url,
-  }).eq('id', candidate.id);
+function handleRoleUpgrade(type) {
+  if (!STRIPE_PUBLISHABLE_KEY || STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') { showToast('Payment coming soon'); return; }
+}
 
-  if (error) { showToast('Error saving — please try again'); return; }
-
-  candidate.linkedin_url = url;
-  document.getElementById('cvBadge').textContent = 'Saved';
-  document.getElementById('cvBadge').className = 'section-badge badge-complete';
-  document.getElementById('generateBtn').style.display = 'inline-block';
-  updateProgress();
-  showToast('LinkedIn URL saved');
+function continueRoleInterview(id) {
+  window.location.href = `candidate-role-record.html?interview=${id}&candidate=${candidate.id}`;
 }
 
 async function handleCVUpload(event) {
   const file = event.target.files[0];
   if (!file) return;
-
-  // Validate file type
-  const allowed = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-  if (!allowed.includes(file.type) && !file.name.match(/\.(pdf|doc|docx)$/i)) {
-    showToast('Please upload a PDF or Word document');
-    return;
-  }
-
-  // Validate file size (5MB)
-  if (file.size > 5 * 1024 * 1024) {
-    showToast('File too large — maximum size is 5MB');
-    return;
-  }
-
+  if (file.size > 5 * 1024 * 1024) { showToast('File too large — max 5MB'); return; }
   showToast('Reading your CV...');
-  document.getElementById('uploadTitle').textContent = 'Reading your CV...';
-
+  document.getElementById('uploadTitle').textContent = 'Reading...';
   try {
     let cvText = '';
-
-    if (file.type === 'application/pdf' || file.name.match(/\.pdf$/i)) {
-      // Extract text from PDF using pdf.js
-      cvText = await extractPDFText(file);
-    } else {
-      // For Word docs — extract what we can from the raw text
-      cvText = await extractWordText(file);
-    }
-
-    if (!cvText || cvText.trim().length < 50) {
-      showToast('Could not read CV text — try a different file format');
-      document.getElementById('uploadTitle').textContent = 'Upload your CV';
-      return;
-    }
-
-    // Save extracted text directly to Supabase — no file storage needed
-    const { error: updateError } = await supabaseClient.from('candidates').update({
-      cv_url: file.name,
-      cv_text: cvText.trim().substring(0, 10000),
-    }).eq('id', candidate.id);
-
-    if (updateError) {
-      console.error('Save error:', updateError);
-      showToast('Error saving CV text — please try again');
-      return;
-    }
-
-    candidate.cv_text = cvText.trim();
-
+    if (file.name.match(/\.pdf$/i)) { cvText = await extractPDFText(file); }
+    else { cvText = await extractWordText(file); }
+    if (!cvText || cvText.trim().length < 50) { showToast('Could not read CV — try a PDF'); document.getElementById('uploadTitle').textContent = 'Upload your CV'; return; }
+    const { error } = await supabaseClient.from('candidates').update({ cv_url: file.name, cv_text: cvText.trim().substring(0, 10000) }).eq('id', candidate.id);
+    if (error) { showToast('Error saving'); return; }
+    candidate.cv_text = cvText.trim(); candidate.cv_url = file.name;
     document.getElementById('uploadArea').classList.add('has-file');
     document.getElementById('uploadTitle').textContent = file.name;
     document.getElementById('uploadSub').textContent = 'Upload a new file to replace it';
     document.getElementById('cvBadge').textContent = 'Uploaded';
     document.getElementById('cvBadge').className = 'section-badge badge-complete';
-
-    // Always show regenerate button after CV upload
-    document.getElementById('regenBtn').style.display = 'inline-block';
-
-    // Show generate prompts option
+    document.getElementById('step2').className = 'step-pill done';
+    document.getElementById('regenAllBtn').style.display = 'inline-block';
     if (!candidate.ai_prompts) {
-      document.getElementById('promptsContent').innerHTML = `
-        <div class="prompts-locked">
-          <div class="prompts-locked-icon">
-            <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/><line x1="9" y1="6" x2="9" y2="10"/></svg>
-          </div>
-          <div class="prompts-locked-title">Ready to generate</div>
-          <div class="prompts-locked-sub">Your CV has been read. Click below to generate your personalised questions — this takes about 30 seconds.</div>
-          <button class="generate-btn" onclick="generatePrompts()">Generate my questions</button>
-        </div>
-      `;
+      document.getElementById('promptsContent').innerHTML = '<div class="locked-msg"><div class="locked-title">Ready to generate</div><div class="locked-sub">Click below to generate your personalised questions.</div><button class="save-btn" onclick="generatePrompts()" style="margin-top:14px">Generate my questions</button></div>';
     }
-
     updateProgress();
-    showToast('CV read successfully — ready to generate your questions');
-
-  } catch (err) {
-    console.error('CV upload error:', err);
-    showToast('Something went wrong — please try again');
-    document.getElementById('uploadTitle').textContent = 'Upload your CV';
-  }
+    showToast('CV read — ready to generate questions');
+  } catch (err) { console.error(err); showToast('Something went wrong'); document.getElementById('uploadTitle').textContent = 'Upload your CV'; }
 }
 
 async function extractPDFText(file) {
@@ -1247,21 +764,15 @@ async function extractPDFText(file) {
     const reader = new FileReader();
     reader.onload = async (e) => {
       try {
-        const typedArray = new Uint8Array(e.target.result);
-        const pdf = await pdfjsLib.getDocument({ data: typedArray }).promise;
-        let fullText = '';
-
+        const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise;
+        let text = '';
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
-          const textContent = await page.getTextContent();
-          const pageText = textContent.items.map(item => item.str).join(' ');
-          fullText += pageText + '\n';
+          const tc = await page.getTextContent();
+          text += tc.items.map(x => x.str).join(' ') + '\n';
         }
-
-        resolve(fullText);
-      } catch (err) {
-        reject(err);
-      }
+        resolve(text);
+      } catch (err) { reject(err); }
     };
     reader.onerror = reject;
     reader.readAsArrayBuffer(file);
@@ -1271,331 +782,137 @@ async function extractPDFText(file) {
 async function extractWordText(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        // Basic text extraction from Word - strips XML tags
-        const content = e.target.result;
-        const text = content
-          .replace(/<[^>]+>/g, ' ')
-          .replace(/&amp;/g, '&')
-          .replace(/&lt;/g, '<')
-          .replace(/&gt;/g, '>')
-          .replace(/&nbsp;/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
-        resolve(text.length > 50 ? text : '');
-      } catch (err) {
-        reject(err);
-      }
-    };
+    reader.onload = (e) => { try { resolve(e.target.result.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()); } catch (err) { reject(err); } };
     reader.onerror = reject;
     reader.readAsText(file);
   });
 }
 
-async function generatePrompts() {
-  if (!candidate.cv_text && !candidate.linkedin_url) {
-    showToast('Please upload your CV or add your LinkedIn URL first');
-    return;
-  }
+async function saveLinkedIn() {
+  const url = document.getElementById('linkedinUrl').value.trim();
+  if (!url) { showToast('Please enter a LinkedIn URL'); return; }
+  const { error } = await supabaseClient.from('candidates').update({ linkedin_url: url }).eq('id', candidate.id);
+  if (error) { showToast('Error saving'); return; }
+  candidate.linkedin_url = url;
+  document.getElementById('cvBadge').textContent = 'Saved'; document.getElementById('cvBadge').className = 'section-badge badge-complete';
+  document.getElementById('step2').className = 'step-pill done';
+  document.getElementById('regenAllBtn').style.display = 'inline-block';
+  updateProgress(); showToast('LinkedIn URL saved');
+}
 
-  showToast('Generating your questions...');
-  document.getElementById('promptsContent').innerHTML = `
-    <div class="prompts-locked">
-      <div class="prompts-locked-icon">
-        <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/></svg>
-      </div>
-      <div class="prompts-locked-title">Generating your questions...</div>
-      <div class="prompts-locked-sub">This takes about 30 seconds. Please wait.</div>
-    </div>
-  `;
-
+async function recordClip(clipNumber) {
+  if (!candidate.has_paid) { showToast('Complete payment first'); return; }
+  showToast('Preparing recording...');
   try {
     const { data: { session } } = await supabaseClient.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/mux-upload`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}`, 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({ candidate_id: candidate.id, clip_number: clipNumber }),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error);
+    window.location.href = `candidate-record.html?clip=${clipNumber}&candidate=${candidate.id}&upload_id=${result.upload_id}&upload_url=${encodeURIComponent(result.upload_url)}`;
+  } catch (err) { console.error(err); showToast('Something went wrong'); }
+}
 
-    const response = await fetch(
-      `${SUPABASE_URL}/functions/v1/generate-prompts`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-          'apikey': SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({ candidate_id: candidate.id }),
-      }
-    );
-
-    const result = await response.json();
-
-    if (!response.ok) throw new Error(result.error || 'Failed to generate prompts');
-
-    candidate.ai_prompts = result.prompts;
-    renderPrompts(result.prompts);
-    updateProgress();
-    showToast('Questions generated!');
-
-  } catch (err) {
-    console.error(err);
-    showToast('Something went wrong — please try again');
-    document.getElementById('promptsContent').innerHTML = `
-      <div class="prompts-locked">
-        <div class="prompts-locked-icon">
-          <svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/></svg>
-        </div>
-        <div class="prompts-locked-title">Generation failed</div>
-        <div class="prompts-locked-sub">Something went wrong. Please try again.</div>
-        <button class="generate-btn" onclick="generatePrompts()">Try again</button>
-      </div>
-    `;
-  }
+async function saveProfile() {
+  const { error } = await supabaseClient.from('candidates').update({
+    first_name: document.getElementById('firstName').value.trim(),
+    last_name: document.getElementById('lastName').value.trim(),
+    location: document.getElementById('location').value.trim(),
+    headline: document.getElementById('headline').value.trim(),
+  }).eq('id', candidate.id);
+  if (error) { showToast('Error saving'); return; }
+  candidate.first_name = document.getElementById('firstName').value.trim();
+  showToast('Details saved');
 }
 
 async function handlePayment() {
-  if (!STRIPE_PUBLISHABLE_KEY || STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') {
-    showToast('Payment coming soon — Stripe not configured yet');
-    return;
-  }
-  // Stripe redirect will happen here
-  showToast('Redirecting to payment...');
+  if (!STRIPE_PUBLISHABLE_KEY || STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') { showToast('Payment coming soon — Stripe not configured yet'); return; }
 }
 
 async function toggleVisibility() {
   const newState = !candidate.is_public;
-  const { error } = await supabaseClient.from('candidates').update({
-    is_public: newState,
-  }).eq('id', candidate.id);
-
-  if (error) { showToast('Error updating visibility'); return; }
-
+  const { error } = await supabaseClient.from('candidates').update({ is_public: newState }).eq('id', candidate.id);
+  if (error) { showToast('Error updating'); return; }
   candidate.is_public = newState;
-  const toggle = document.getElementById('visibilityToggle');
-  const label = document.getElementById('visibilityLabel');
-  const shareRow = document.getElementById('shareRow');
-
-  toggle.classList.toggle('on', newState);
-  label.textContent = newState ? 'Visible to employers' : 'Private';
-  shareRow.style.display = newState ? 'flex' : 'none';
-
-  if (newState) {
-    document.getElementById('shareUrl').value = window.location.origin + '/profile/' + candidate.id;
-  }
-
+  document.getElementById('visibilityToggle').classList.toggle('on', newState);
+  document.getElementById('visibilityLabel').textContent = newState ? 'Visible to employers' : 'Private';
+  document.getElementById('shareRow').style.display = newState ? 'flex' : 'none';
+  if (newState) { document.getElementById('shareUrl').value = window.location.origin + '/profile/' + candidate.id; document.getElementById('step7').className = 'step-pill done'; }
   showToast(newState ? 'Profile now visible to employers' : 'Profile set to private');
+  updateProgress();
 }
 
-function copyLink() {
-  const url = document.getElementById('shareUrl').value;
-  navigator.clipboard.writeText(url).then(() => showToast('Link copied!'));
-}
+function copyLink() { navigator.clipboard.writeText(document.getElementById('shareUrl').value).then(() => showToast('Link copied!')); }
 
-async function recordClip(clipNumber) {
-  if (!candidate.has_paid) {
-    showToast('Complete payment first to unlock recording');
-    return;
-  }
-
-  // Get Mux upload URL from Edge Function
-  showToast('Preparing recording...');
-
-  try {
-    const { data: { session } } = await supabaseClient.auth.getSession();
-
-    const response = await fetch(
-      `${SUPABASE_URL}/functions/v1/mux-upload`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`,
-          'apikey': SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({
-          candidate_id: candidate.id,
-          clip_number: clipNumber,
-        }),
-      }
-    );
-
-    const result = await response.json();
-    if (!response.ok) throw new Error(result.error || 'Failed to get upload URL');
-
-    // Go to recording page with upload URL
-    window.location.href = `candidate-record.html?clip=${clipNumber}&candidate=${candidate.id}&upload_id=${result.upload_id}&upload_url=${encodeURIComponent(result.upload_url)}`;
-
-  } catch (err) {
-    console.error(err);
-    showToast('Something went wrong — please try again');
-  }
-}
-
-function playClip(url) {
-  window.open(url, '_blank');
-}
-
-function scrollToNext() {
-  if (!candidate.first_name) {
-    document.getElementById('profileSection').scrollIntoView({ behavior: 'smooth' });
-  } else if (!candidate.cv_text && !candidate.linkedin_url) {
-    document.getElementById('cvSection').scrollIntoView({ behavior: 'smooth' });
-  } else if (!candidate.has_paid) {
-    document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' });
-  } else if (!candidate.ai_prompts) {
-    document.getElementById('promptsSection').scrollIntoView({ behavior: 'smooth' });
-  } else {
-    document.getElementById('clipsSection').scrollIntoView({ behavior: 'smooth' });
-  }
-}
-
-async function handleSignOut() {
-  await supabaseClient.auth.signOut();
-  window.location.href = 'index.html';
-}
-
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
-
-// ── DOCUMENTS ──
 async function loadDocuments() {
-  const { data: docs } = await supabaseClient
-    .from('candidate_documents')
-    .select('*')
-    .eq('candidate_id', candidate.id)
-    .order('created_at', { ascending: false });
-
+  const { data: docs } = await supabaseClient.from('candidate_documents').select('*').eq('candidate_id', candidate.id).order('created_at', { ascending: false });
   const list = document.getElementById('documentsList');
-
-  if (!docs || docs.length === 0) {
-    list.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted2);font-size:13px">No documents uploaded yet.</div>';
-    return;
-  }
-
-  const docTypeLabels = {
-    police_check: 'Police check',
-    working_with_children: 'Working With Children check',
-    drivers_licence: "Driver's licence",
-    working_rights: 'Working rights / Visa',
-    professional_certification: 'Professional certification',
-    trade_licence: 'Trade licence',
-    first_aid: 'First Aid certificate',
-    qualification: 'Degree / Qualification',
-    reference_letter: 'Reference letter',
-    other: 'Other',
-  };
-
+  if (!docs || docs.length === 0) { list.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted2);font-size:13px">No documents uploaded yet.</div>'; return; }
   list.innerHTML = docs.map(doc => {
-    let expiryBadge = '';
+    let expBadge = '';
     if (doc.expiry_date) {
-      const expiry = new Date(doc.expiry_date);
-      const now = new Date();
-      const expired = expiry < now;
-      const formatted = expiry.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
-      expiryBadge = `<span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:5px;${expired
-        ? 'background:#fef2f2;color:#ef4444;border:1px solid #fecaca'
-        : 'background:var(--emerald-light);color:var(--emerald-dark);border:1px solid var(--emerald-border)'}">
-        ${expired ? 'Expired' : 'Valid'} · ${formatted}
-      </span>`;
-    } else {
-      expiryBadge = '<span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:5px;background:var(--off);color:var(--muted2);border:1px solid var(--border)">No expiry</span>';
-    }
-
-    return `
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)">
-        <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:0">
-          <div style="width:36px;height:36px;background:var(--off);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
-            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="var(--muted2)" stroke-width="1.5"><rect x="2" y="1" width="10" height="13" rx="1"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="8" x2="9" y2="8"/></svg>
-          </div>
-          <div>
-            <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px">${doc.document_name || docTypeLabels[doc.document_type] || 'Document'}</div>
-            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-              <span style="font-size:11px;color:var(--muted2)">${docTypeLabels[doc.document_type] || doc.document_type}</span>
-              ${expiryBadge}
-            </div>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;flex-shrink:0">
-          ${doc.file_url ? `<a href="${doc.file_url}" target="_blank" style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;font-weight:700;padding:7px 12px;border-radius:7px;border:1.5px solid var(--border);background:white;color:var(--navy);text-decoration:none;transition:all 0.15s">View</a>` : ''}
-          <button onclick="deleteDocument('${doc.id}')" style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;font-weight:600;padding:7px 12px;border-radius:7px;border:1.5px solid #fecaca;background:#fef2f2;color:#ef4444;cursor:pointer">Remove</button>
-        </div>
+      const expired = new Date(doc.expiry_date) < new Date();
+      const fmt = new Date(doc.expiry_date).toLocaleDateString('en-AU', { day:'numeric', month:'short', year:'numeric' });
+      expBadge = `<span class="exp-badge ${expired ? 'exp-expired' : 'exp-valid'}">${expired ? 'Expired' : 'Valid'} · ${fmt}</span>`;
+    } else { expBadge = '<span class="exp-badge exp-none">No expiry</span>'; }
+    return `<div class="doc-item">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0">
+        <div class="doc-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="1" width="10" height="13" rx="1"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="8" x2="9" y2="8"/></svg></div>
+        <div><div class="doc-name">${doc.document_name || DOC_LABELS[doc.document_type] || 'Document'}</div><div class="doc-meta"><span class="doc-type-label">${DOC_LABELS[doc.document_type] || doc.document_type}</span>${expBadge}</div></div>
       </div>
-    `;
+      <div style="display:flex;gap:8px;flex-shrink:0">
+        ${doc.file_url ? `<a href="${doc.file_url}" target="_blank" class="clip-action" style="text-decoration:none">View</a>` : ''}
+        <button class="clip-action" onclick="deleteDocument('${doc.id}')" style="border-color:#fecaca;color:#ef4444">Remove</button>
+      </div>
+    </div>`;
   }).join('');
-}
-
-function showAddDocument() {
-  document.getElementById('addDocumentForm').style.display = 'block';
-  document.getElementById('addDocumentForm').scrollIntoView({ behavior: 'smooth' });
 }
 
 async function saveDocument() {
   const type = document.getElementById('docType').value;
   const name = document.getElementById('docName').value.trim();
   const expiry = document.getElementById('docExpiry').value;
-  const fileInput = document.getElementById('docFile');
-  const file = fileInput.files[0];
-
+  const file = document.getElementById('docFile').files[0];
   if (!type) { showToast('Please select a document type'); return; }
-  if (!file) { showToast('Please select a file to upload'); return; }
-
-  showToast('Uploading document...');
-
+  if (!file) { showToast('Please select a file'); return; }
+  showToast('Uploading...');
   try {
-    // Upload file to Supabase Storage
     const { data: { session } } = await supabaseClient.auth.getSession();
     const fileName = `${session.user.id}/${Date.now()}-${file.name}`;
-
-    const { error: uploadError } = await supabaseClient.storage
-      .from('candidate-documents')
-      .upload(fileName, file, { upsert: true });
-
-    if (uploadError) throw uploadError;
-
-    const { data: urlData } = supabaseClient.storage
-      .from('candidate-documents')
-      .getPublicUrl(fileName);
-
-    // Save to database
-    const { error: insertError } = await supabaseClient
-      .from('candidate_documents')
-      .insert({
-        candidate_id: candidate.id,
-        document_type: type,
-        document_name: name || null,
-        file_name: file.name,
-        file_url: urlData.publicUrl,
-        expiry_date: expiry || null,
-      });
-
-    if (insertError) throw insertError;
-
-    document.getElementById('addDocumentForm').style.display = 'none';
-    document.getElementById('docType').value = '';
-    document.getElementById('docName').value = '';
-    document.getElementById('docExpiry').value = '';
-    fileInput.value = '';
-
-    await loadDocuments();
-    showToast('Document saved');
-
-  } catch (err) {
-    console.error(err);
-    showToast('Upload failed — please try again');
-  }
+    const { error: ue } = await supabaseClient.storage.from('candidate-documents').upload(fileName, file, { upsert: true });
+    if (ue) throw ue;
+    const { data: ud } = supabaseClient.storage.from('candidate-documents').getPublicUrl(fileName);
+    const { error: ie } = await supabaseClient.from('candidate_documents').insert({ candidate_id: candidate.id, document_type: type, document_name: name || null, file_name: file.name, file_url: ud.publicUrl, expiry_date: expiry || null });
+    if (ie) throw ie;
+    document.getElementById('addDocForm').classList.remove('show');
+    document.getElementById('docType').value = ''; document.getElementById('docName').value = ''; document.getElementById('docExpiry').value = ''; document.getElementById('docFile').value = '';
+    await loadDocuments(); showToast('Document saved');
+  } catch (err) { console.error(err); showToast('Upload failed — please try again'); }
 }
 
 async function deleteDocument(id) {
-  const { error } = await supabaseClient
-    .from('candidate_documents')
-    .delete()
-    .eq('id', id);
+  const { error } = await supabaseClient.from('candidate_documents').delete().eq('id', id);
+  if (error) { showToast('Error removing'); return; }
+  await loadDocuments(); showToast('Document removed');
+}
 
-  if (error) { showToast('Error removing document'); return; }
-  await loadDocuments();
-  showToast('Document removed');
+function scrollToNext() {
+  if (!candidate.has_paid) { document.getElementById('paymentSection').scrollIntoView({ behavior: 'smooth' }); }
+  else if (!candidate.cv_text && !candidate.linkedin_url) { document.getElementById('cvSection').scrollIntoView({ behavior: 'smooth' }); }
+  else if (!candidate.ai_prompts) { document.getElementById('promptsSection').scrollIntoView({ behavior: 'smooth' }); }
+  else if (clips.filter(c => c.is_complete).length < 6) { document.getElementById('clipsSection').scrollIntoView({ behavior: 'smooth' }); }
+  else { document.getElementById('visibilitySection').scrollIntoView({ behavior: 'smooth' }); }
+}
+
+async function handleSignOut() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
 }
 
 init();
