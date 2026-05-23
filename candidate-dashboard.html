@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>vett.work — My Profile</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
   // Set pdf.js worker
@@ -840,20 +839,22 @@ nav {
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
 const STRIPE_PUBLISHABLE_KEY = 'YOUR_STRIPE_PUBLISHABLE_KEY';
 const STRIPE_PRICE_ID = 'YOUR_STRIPE_PRICE_ID_19.99';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 
 let candidate = null;
 let clips = [];
 
 // ── INIT ──
 async function init() {
-  const { data: { session } } = await dbClient.auth.getSession();
+  const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) { window.location.href = 'candidate-auth.html'; return; }
 
   let { data, error } = await dbClient
@@ -1061,7 +1062,7 @@ function renderClips() {
 
 // ── ACTIONS ──
 async function saveProfile() {
-  const { error } = await dbClient.from('candidates').update({
+  const { error } = await supabaseClient.from('candidates').update({
     first_name: document.getElementById('firstName').value.trim(),
     last_name: document.getElementById('lastName').value.trim(),
     location: document.getElementById('location').value.trim(),
@@ -1085,7 +1086,7 @@ async function saveLinkedIn() {
   const url = document.getElementById('linkedinUrl').value.trim();
   if (!url) { showToast('Please enter a LinkedIn URL'); return; }
 
-  const { error } = await dbClient.from('candidates').update({
+  const { error } = await supabaseClient.from('candidates').update({
     linkedin_url: url,
   }).eq('id', candidate.id);
 
@@ -1138,7 +1139,7 @@ async function handleCVUpload(event) {
 
     // Upload file to Supabase Storage
     const fileName = `${candidate.id}/${Date.now()}-${file.name}`;
-    const { error: uploadError } = await dbClient.storage
+    const { error: uploadError } = await supabaseClient.storage
       .from('candidate-cvs')
       .upload(fileName, file, { upsert: true });
 
@@ -1148,7 +1149,7 @@ async function handleCVUpload(event) {
     }
 
     // Save extracted text to Supabase
-    await dbClient.from('candidates').update({
+    await supabaseClient.from('candidates').update({
       cv_url: fileName,
       cv_text: cvText.trim().substring(0, 10000), // cap at 10k chars
     }).eq('id', candidate.id);
@@ -1254,7 +1255,7 @@ async function generatePrompts() {
   `;
 
   try {
-    const { data: { session } } = await dbClient.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
 
     const response = await fetch(
       `${SUPABASE_URL}/functions/v1/generate-prompts`,
@@ -1305,7 +1306,7 @@ async function handlePayment() {
 
 async function toggleVisibility() {
   const newState = !candidate.is_public;
-  const { error } = await dbClient.from('candidates').update({
+  const { error } = await supabaseClient.from('candidates').update({
     is_public: newState,
   }).eq('id', candidate.id);
 
@@ -1342,7 +1343,7 @@ async function recordClip(clipNumber) {
   showToast('Preparing recording...');
 
   try {
-    const { data: { session } } = await dbClient.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
 
     const response = await fetch(
       `${SUPABASE_URL}/functions/v1/mux-upload`,
@@ -1391,7 +1392,7 @@ function scrollToNext() {
 }
 
 async function handleSignOut() {
-  await dbClient.auth.signOut();
+  await supabaseClient.auth.signOut();
   window.location.href = 'index.html';
 }
 
