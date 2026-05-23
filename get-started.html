@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vett.work — Get started</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  if (typeof pdfjsLib !== 'undefined') {
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+</script>
+<style>
+:root {
+  --navy: #0c1445;
+  --emerald: #10b981;
+  --emerald-light: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  --emerald-dark: #059669;
+  --off: #f8fafc;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --text: #0f172a;
+  --error: #ef4444;
+  --error-light: #fef2f2;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--navy); min-height: 100vh; display: flex; flex-direction: column; }
+
+nav { padding: 0 48px; height: 64px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.07); }
+.logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
+.logo-dot { color: var(--emerald); }
+.nav-back { font-size: 13px; color: rgba(255,255,255,0.4); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+.nav-back:hover { color: white; }
+.nav-back svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+main { flex: 1; display: grid; grid-template-columns: 1fr 480px; max-width: 1100px; margin: 0 auto; width: 100%; padding: 40px 24px 60px; gap: 60px; align-items: start; }
+
+/* LEFT — VALUE REMIND */
+.value-side { padding-top: 20px; }
+.value-tag { display: inline-flex; align-items: center; gap: 6px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.2); color: var(--emerald); font-size: 10px; font-weight: 700; padding: 5px 12px; border-radius: 100px; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 20px; }
+.value-title { font-size: clamp(28px, 3.5vw, 42px); font-weight: 800; letter-spacing: -2px; color: white; line-height: 1.05; margin-bottom: 16px; }
+.value-title span { color: var(--emerald); }
+.value-sub { font-size: 15px; color: rgba(255,255,255,0.45); line-height: 1.7; margin-bottom: 32px; }
+
+.value-steps { display: flex; flex-direction: column; gap: 16px; }
+.vstep { display: flex; align-items: flex-start; gap: 14px; }
+.vstep-num { width: 28px; height: 28px; border-radius: 50%; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.25); display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; color: var(--emerald); flex-shrink: 0; margin-top: 1px; }
+.vstep-text h4 { font-size: 14px; font-weight: 700; color: white; margin-bottom: 3px; }
+.vstep-text p { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.5; }
+
+.value-price { margin-top: 32px; padding: 18px 20px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; display: flex; align-items: center; gap: 16px; }
+.price-big { font-size: 36px; font-weight: 800; letter-spacing: -1.5px; color: white; flex-shrink: 0; }
+.price-info p { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
+.price-info strong { color: white; }
+
+/* RIGHT — FORM */
+.form-side {}
+
+.form-card { background: white; border-radius: 20px; padding: 36px; box-shadow: 0 24px 80px rgba(0,0,0,0.3); }
+
+/* Progress steps */
+.form-steps { display: flex; gap: 0; margin-bottom: 32px; }
+.form-step-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; position: relative; }
+.form-step-item:not(:last-child)::after { content: ''; position: absolute; top: 12px; left: 50%; width: 100%; height: 1px; background: var(--border); z-index: 0; }
+.form-step-dot { width: 24px; height: 24px; border-radius: 50%; background: var(--off); border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: var(--muted2); z-index: 1; flex-shrink: 0; transition: all 0.2s; }
+.form-step-item.active .form-step-dot { background: var(--navy); border-color: var(--navy); color: white; }
+.form-step-item.done .form-step-dot { background: var(--emerald); border-color: var(--emerald); color: white; }
+.form-step-label { font-size: 10px; font-weight: 600; color: var(--muted2); text-align: center; }
+.form-step-item.active .form-step-label { color: var(--navy); font-weight: 700; }
+.form-step-item.done .form-step-label { color: var(--emerald-dark); }
+
+/* Step panels */
+.step-panel { display: none; }
+.step-panel.active { display: block; }
+
+.step-title { font-size: 20px; font-weight: 800; color: var(--navy); letter-spacing: -0.5px; margin-bottom: 6px; }
+.step-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+
+.field { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.field label { font-size: 11px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.05em; }
+.field input { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 11px 14px; outline: none; transition: border-color 0.2s; }
+.field input:focus { border-color: var(--emerald); background: white; }
+.field input::placeholder { color: var(--muted2); }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.terms-check { display: flex; align-items: flex-start; gap: 10px; font-size: 12px; color: var(--muted); line-height: 1.5; margin-bottom: 20px; cursor: pointer; }
+.terms-check input { margin-top: 2px; accent-color: var(--emerald); flex-shrink: 0; }
+.terms-check a { color: var(--emerald-dark); }
+
+/* CV Upload */
+.cv-upload { border: 2px dashed var(--border); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; margin-bottom: 14px; }
+.cv-upload:hover { border-color: var(--emerald); background: var(--emerald-light); }
+.cv-upload.has-file { border-color: var(--emerald); background: var(--emerald-light); border-style: solid; }
+.cv-upload input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.cv-upload-icon { width: 36px; height: 36px; background: var(--off); border: 1px solid var(--border); border-radius: 9px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+.cv-upload.has-file .cv-upload-icon { background: var(--emerald-light); border-color: var(--emerald-border); }
+.cv-upload-icon svg { width: 16px; height: 16px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
+.cv-upload.has-file .cv-upload-icon svg { stroke: var(--emerald-dark); }
+.cv-upload-title { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.cv-upload-sub { font-size: 12px; color: var(--muted); }
+.cv-upload-sub span { color: var(--emerald-dark); font-weight: 600; }
+
+.cv-skip { font-size: 12px; color: var(--muted2); text-align: center; margin-bottom: 16px; }
+.cv-skip button { background: none; border: none; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 12px; font-family: 'Plus Jakarta Sans', sans-serif; }
+.cv-skip button:hover { color: var(--navy); }
+
+/* Payment summary */
+.pay-summary { background: var(--off); border: 1.5px solid var(--border); border-radius: 12px; padding: 18px; margin-bottom: 20px; }
+.pay-summary-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 12px; }
+.pay-line { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.pay-line:last-child { margin-bottom: 0; padding-top: 10px; border-top: 1px solid var(--border); font-weight: 700; color: var(--navy); font-size: 15px; }
+.pay-includes { display: flex; flex-direction: column; gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.pay-inc { display: flex; align-items: center; gap: 7px; font-size: 12px; color: var(--muted); }
+.pay-inc svg { width: 12px; height: 12px; stroke: var(--emerald); stroke-width: 2.5; fill: none; flex-shrink: 0; }
+
+.error-msg { background: var(--error-light); border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; font-size: 13px; color: var(--error); display: none; margin-bottom: 14px; }
+.error-msg.show { display: block; }
+
+/* Buttons */
+.next-btn { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px; font-weight: 700; padding: 14px; border-radius: 10px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: all 0.15s; }
+.next-btn:hover { background: var(--emerald-dark); }
+.next-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.back-link { display: block; text-align: center; font-size: 13px; color: var(--muted); cursor: pointer; background: none; border: none; font-family: 'Plus Jakarta Sans', sans-serif; margin-top: 12px; transition: color 0.15s; }
+.back-link:hover { color: var(--navy); }
+
+/* PROCESSING STATE */
+.processing { display: none; text-align: center; padding: 40px 20px; }
+.processing.show { display: block; }
+.proc-spinner { width: 48px; height: 48px; border: 3px solid var(--emerald-light); border-top-color: var(--emerald); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.proc-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+.proc-sub { font-size: 13px; color: var(--muted); }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--navy); color: white; font-size: 13px; font-weight: 600; padding: 12px 20px; border-radius: 9px; border: 1px solid var(--emerald); box-shadow: 0 8px 32px rgba(0,0,0,0.3); transition: transform 0.3s ease; z-index: 999; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 900px) {
+  main { grid-template-columns: 1fr; gap: 32px; }
+  .value-side { padding-top: 0; }
+  nav { padding: 0 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
+  <a href="interview.html" class="nav-back">
+    <svg viewBox="0 0 14 14"><line x1="12" y1="7" x2="2" y2="7"/><polyline points="6,3 2,7 6,11"/></svg>
+    Back
+  </a>
+</nav>
+
+<main>
+  <!-- LEFT -->
+  <div class="value-side">
+    <div class="value-tag">Virtual interview · $19.99</div>
+    <div class="value-title">You're one step away from<br><span>standing out.</span></div>
+    <div class="value-sub">Create your account, upload your CV, and pay — then you're straight into recording. The whole setup takes about 5 minutes.</div>
+
+    <div class="value-steps">
+      <div class="vstep">
+        <div class="vstep-num">1</div>
+        <div class="vstep-text">
+          <h4>Your details</h4>
+          <p>Name, email and location. Takes 30 seconds.</p>
+        </div>
+      </div>
+      <div class="vstep">
+        <div class="vstep-num">2</div>
+        <div class="vstep-text">
+          <h4>Upload your CV</h4>
+          <p>We read it to write your personalised interview questions. We never share your raw CV.</p>
+        </div>
+      </div>
+      <div class="vstep">
+        <div class="vstep-num">3</div>
+        <div class="vstep-text">
+          <h4>Pay $19.99</h4>
+          <p>One-time. No subscription. Secure checkout via Stripe.</p>
+        </div>
+      </div>
+      <div class="vstep">
+        <div class="vstep-num">4</div>
+        <div class="vstep-text">
+          <h4>Start recording</h4>
+          <p>Your questions are ready. Camera on. That's it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="value-price">
+      <div class="price-big">$19.99</div>
+      <div class="price-info">
+        <p><strong>One-time payment</strong></p>
+        <p>6 interview answers · MP4 download · shareable link · 1 free role-specific interview</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="form-side">
+    <div class="form-card">
+
+      <!-- Step indicators -->
+      <div class="form-steps">
+        <div class="form-step-item active" id="fstep1">
+          <div class="form-step-dot">1</div>
+          <div class="form-step-label">Details</div>
+        </div>
+        <div class="form-step-item" id="fstep2">
+          <div class="form-step-dot">2</div>
+          <div class="form-step-label">Your CV</div>
+        </div>
+        <div class="form-step-item" id="fstep3">
+          <div class="form-step-dot">3</div>
+          <div class="form-step-label">Pay & record</div>
+        </div>
+      </div>
+
+      <div class="error-msg" id="errorMsg"></div>
+
+      <!-- STEP 1: DETAILS -->
+      <div class="step-panel active" id="panel1">
+        <div class="step-title">Your details</div>
+        <div class="step-sub">Create your vett.work account. Already have one? <a href="candidate-auth.html" style="color:var(--emerald-dark)">Sign in instead</a></div>
+
+        <div class="field-row">
+          <div class="field">
+            <label>First name</label>
+            <input type="text" id="firstName" placeholder="First name">
+          </div>
+          <div class="field">
+            <label>Last name</label>
+            <input type="text" id="lastName" placeholder="Last name">
+          </div>
+        </div>
+        <div class="field">
+          <label>Email address</label>
+          <input type="email" id="email" placeholder="your@email.com">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" placeholder="Minimum 8 characters">
+        </div>
+        <div class="field">
+          <label>Location</label>
+          <input type="text" id="location" placeholder="e.g. Brisbane, QLD">
+        </div>
+
+        <label class="terms-check">
+          <input type="checkbox" id="termsCheck">
+          <span>I agree to the <a href="terms.html" target="_blank">Terms of Use</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>. I understand my virtual interview will be stored securely and only shared with employers according to my settings.</span>
+        </label>
+
+        <button class="next-btn" onclick="goStep2()">Continue →</button>
+      </div>
+
+      <!-- STEP 2: CV -->
+      <div class="step-panel" id="panel2">
+        <div class="step-title">Upload your CV</div>
+        <div class="step-sub">We read your CV to generate personalised interview questions based on your actual experience. We never share your raw CV with anyone.</div>
+
+        <div class="cv-upload" id="cvUpload" onclick="document.getElementById('cvInput').click()">
+          <input type="file" id="cvInput" accept=".pdf,.doc,.docx" onchange="handleCV(event)">
+          <div class="cv-upload-icon">
+            <svg viewBox="0 0 18 18"><path d="M9 2v10M5 8l4-4 4 4"/><path d="M3 14h12"/></svg>
+          </div>
+          <div class="cv-upload-title" id="cvTitle">Upload your CV</div>
+          <div class="cv-upload-sub" id="cvSub">PDF or Word · Max 5MB · <span>Browse files</span></div>
+        </div>
+
+        <div class="cv-skip">
+          <button onclick="skipCV()">Skip for now — I'll add my CV after signing up</button>
+        </div>
+
+        <button class="next-btn" id="cvNextBtn" onclick="goStep3()" disabled>Continue →</button>
+        <button class="back-link" onclick="goPanel(1)">← Back</button>
+      </div>
+
+      <!-- STEP 3: PAY -->
+      <div class="step-panel" id="panel3">
+        <div class="step-title">Ready to record</div>
+        <div class="step-sub">One payment unlocks everything — recording, download, and your shareable profile link.</div>
+
+        <div class="pay-summary">
+          <div class="pay-summary-title">Order summary</div>
+          <div class="pay-line"><span>Virtual interview</span><span>$19.99</span></div>
+          <div class="pay-line"><span><strong>Total</strong></span><span><strong>$19.99</strong></span></div>
+          <div class="pay-includes">
+            <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>6 personalised interview answers</div>
+            <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>MP4 download</div>
+            <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>Shareable profile link</div>
+            <div class="pay-inc"><svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>1 free role-specific interview</div>
+          </div>
+        </div>
+
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;display:flex;align-items:center;gap:6px">
+          <svg viewBox="0 0 14 14" width="12" height="12" fill="none" stroke="var(--muted2)" stroke-width="1.5"><rect x="2" y="6" width="10" height="7" rx="1"/><path d="M5 6V4a3 3 0 0 1 6 0v2"/></svg>
+          Secure checkout via Stripe · Your card details never touch our servers
+        </div>
+
+        <button class="next-btn" id="payBtn" onclick="handlePay()">Pay $19.99 & start recording</button>
+        <button class="back-link" onclick="goPanel(2)">← Back</button>
+      </div>
+
+      <!-- PROCESSING -->
+      <div class="processing" id="processingState">
+        <div class="proc-spinner"></div>
+        <div class="proc-title" id="procTitle">Creating your account...</div>
+        <div class="proc-sub" id="procSub">This takes just a moment.</div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+const STRIPE_PRICE_VIDEO = 'price_1Ta8LQAwK1Dmgw1KSotVsr79';
+
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let cvText = '';
+let cvFileName = '';
+let candidateId = null;
+let currentStep = 1;
+
+// ── NAVIGATION ──
+function goPanel(n) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`panel${n}`).classList.add('active');
+
+  for (let i = 1; i <= 3; i++) {
+    const el = document.getElementById(`fstep${i}`);
+    el.className = 'form-step-item';
+    if (i < n) el.classList.add('done');
+    else if (i === n) el.classList.add('active');
+  }
+
+  currentStep = n;
+  hideError();
+}
+
+function showProcessing(title, sub) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('processingState').classList.add('show');
+  document.getElementById('procTitle').textContent = title;
+  document.getElementById('procSub').textContent = sub;
+}
+
+function hideProcessing() {
+  document.getElementById('processingState').classList.remove('show');
+}
+
+// ── STEP 1 → 2 ──
+async function goStep2() {
+  const first = document.getElementById('firstName').value.trim();
+  const last = document.getElementById('lastName').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const location = document.getElementById('location').value.trim();
+
+  if (!first || !email || !password) { showError('Please fill in your name, email and password'); return; }
+  if (password.length < 8) { showError('Password must be at least 8 characters'); return; }
+  if (!document.getElementById('termsCheck').checked) { showError('Please agree to the Terms and Privacy Policy'); return; }
+
+  showProcessing('Creating your account...', 'Just a moment.');
+
+  try {
+    const { data, error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: { data: { first_name: first, last_name: last } }
+    });
+
+    if (error) {
+      if (error.message.includes('already registered')) {
+        showError('An account with this email already exists. <a href="candidate-auth.html" style="color:var(--error)">Sign in instead</a>');
+      } else {
+        showError(error.message);
+      }
+      hideProcessing();
+      goPanel(1);
+      return;
+    }
+
+    if (data.user) {
+      const { data: cand } = await supabaseClient.from('candidates').insert({
+        user_id: data.user.id,
+        email,
+        first_name: first,
+        last_name: last,
+        location: location || null,
+      }).select().single();
+
+      if (cand) candidateId = cand.id;
+    }
+
+    hideProcessing();
+    goPanel(2);
+  } catch (err) {
+    hideProcessing();
+    goPanel(1);
+    showError('Something went wrong — please try again');
+  }
+}
+
+// ── CV UPLOAD ──
+async function handleCV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 5 * 1024 * 1024) { showToast('File too large — max 5MB'); return; }
+
+  document.getElementById('cvTitle').textContent = 'Reading your CV...';
+  document.getElementById('cvNextBtn').disabled = true;
+
+  try {
+    let text = '';
+    if (file.name.match(/\.pdf$/i)) {
+      text = await extractPDFText(file);
+    } else {
+      text = await extractWordText(file);
+    }
+
+    if (!text || text.trim().length < 50) {
+      showToast('Could not read CV — try a PDF');
+      document.getElementById('cvTitle').textContent = 'Upload your CV';
+      return;
+    }
+
+    cvText = text.trim().substring(0, 10000);
+    cvFileName = file.name;
+
+    // Save to Supabase if we have candidateId
+    if (candidateId) {
+      await supabaseClient.from('candidates').update({
+        cv_text: cvText,
+        cv_url: cvFileName,
+      }).eq('id', candidateId);
+    }
+
+    document.getElementById('cvUpload').classList.add('has-file');
+    document.getElementById('cvTitle').textContent = file.name;
+    document.getElementById('cvSub').textContent = 'CV read successfully — ready to continue';
+    document.getElementById('cvNextBtn').disabled = false;
+    showToast('CV read successfully');
+  } catch (err) {
+    console.error(err);
+    showToast('Something went wrong reading your CV');
+    document.getElementById('cvTitle').textContent = 'Upload your CV';
+    document.getElementById('cvNextBtn').disabled = true;
+  }
+}
+
+function skipCV() {
+  cvText = '';
+  cvFileName = '';
+  document.getElementById('cvNextBtn').disabled = false;
+  goStep3();
+}
+
+async function extractPDFText(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      try {
+        const pdf = await pdfjsLib.getDocument({ data: new Uint8Array(e.target.result) }).promise;
+        let text = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const tc = await page.getTextContent();
+          text += tc.items.map(x => x.str).join(' ') + '\n';
+        }
+        resolve(text);
+      } catch (err) { reject(err); }
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function extractWordText(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => { try { resolve(e.target.result.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()); } catch (err) { reject(err); } };
+    reader.onerror = reject;
+    reader.readAsText(file);
+  });
+}
+
+// ── STEP 2 → 3 ──
+function goStep3() {
+  goPanel(3);
+}
+
+// ── PAY ──
+async function handlePay() {
+  if (!candidateId) { showError('Account setup issue — please refresh and try again'); return; }
+
+  const btn = document.getElementById('payBtn');
+  btn.textContent = 'Redirecting to payment...';
+  btn.disabled = true;
+
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    if (!session) {
+      // Try to sign in — account may need email confirmation
+      showError('Please check your email to confirm your account first, then return to complete payment.');
+      btn.textContent = 'Pay $19.99 & start recording';
+      btn.disabled = false;
+      return;
+    }
+
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({
+        price_id: STRIPE_PRICE_VIDEO,
+        product: 'video_profile',
+        candidate_id: candidateId,
+        success_url: `${window.location.origin}/candidate-dashboard.html?payment=success`,
+        cancel_url: `${window.location.origin}/get-started.html`,
+      }),
+    });
+
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Checkout failed');
+    window.location.href = result.url;
+  } catch (err) {
+    console.error(err);
+    showError('Something went wrong — please try again');
+    btn.textContent = 'Pay $19.99 & start recording';
+    btn.disabled = false;
+  }
+}
+
+// ── HELPERS ──
+function showError(msg) {
+  const el = document.getElementById('errorMsg');
+  el.innerHTML = msg;
+  el.classList.add('show');
+}
+
+function hideError() {
+  document.getElementById('errorMsg').classList.remove('show');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// Check if already logged in
+supabaseClient.auth.getSession().then(({ data: { session } }) => {
+  if (session) {
+    // Already logged in — skip to CV step
+    supabaseClient.from('candidates').select('id, has_paid').eq('user_id', session.user.id).single().then(({ data }) => {
+      if (data) {
+        candidateId = data.id;
+        if (data.has_paid) {
+          window.location.href = 'candidate-dashboard.html';
+        } else {
+          goPanel(2);
+        }
+      }
+    });
+  }
+});
+</script>
+</body>
+</html>
