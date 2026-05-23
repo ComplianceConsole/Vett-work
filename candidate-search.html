@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vett.work — Browse Candidates</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --navy: #0c1445;
+  --navy2: #111d5e;
+  --emerald: #10b981;
+  --emerald-light: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  --emerald-dark: #059669;
+  --white: #ffffff;
+  --off: #f8fafc;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --text: #0f172a;
+  --error: #ef4444;
+  --warning: #f59e0b;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off); color: var(--text); min-height: 100vh; }
+
+nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
+.logo-dot { color: var(--emerald); }
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.nav-back { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+.nav-back:hover { color: white; }
+.nav-back svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+.nav-cta { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 8px 16px; border-radius: 8px; border: none; background: var(--emerald); color: white; cursor: pointer; text-decoration: none; }
+
+.page { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; display: grid; grid-template-columns: 260px 1fr; gap: 24px; }
+
+/* SIDEBAR */
+.sidebar { position: sticky; top: 88px; height: fit-content; }
+
+.sidebar-card { background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 14px; }
+.sidebar-title { font-size: 13px; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 14px; }
+
+.search-wrap { display: flex; align-items: center; gap: 8px; background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 4px 12px; margin-bottom: 10px; transition: border-color 0.2s; }
+.search-wrap:focus-within { border-color: var(--emerald); }
+.search-wrap svg { width: 14px; height: 14px; stroke: var(--muted2); stroke-width: 2; fill: none; flex-shrink: 0; }
+.search-wrap input { flex: 1; background: transparent; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: var(--text); padding: 8px 0; }
+.search-wrap input::placeholder { color: var(--muted2); }
+
+.filter-group { margin-bottom: 16px; }
+.filter-group:last-child { margin-bottom: 0; }
+.filter-group-title { font-size: 11px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+
+.check-opt { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); cursor: pointer; padding: 4px 0; transition: color 0.15s; }
+.check-opt:hover { color: var(--navy); }
+.check-opt input { accent-color: var(--emerald); width: 14px; height: 14px; flex-shrink: 0; }
+
+.filter-select { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: var(--text); background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 9px 12px; outline: none; transition: border-color 0.2s; }
+.filter-select:focus { border-color: var(--emerald); }
+
+.clear-btn { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 600; padding: 9px; border-radius: 8px; border: 1.5px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.15s; margin-top: 4px; }
+.clear-btn:hover { background: var(--off); color: var(--navy); }
+
+/* SHORTLIST PANEL */
+.shortlist-panel { background: var(--navy); border-radius: 14px; padding: 18px; }
+.shortlist-title { font-size: 13px; font-weight: 700; color: white; margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; }
+.shortlist-count { background: var(--emerald); color: white; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 100px; }
+.shortlist-sub { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 14px; line-height: 1.5; }
+.shortlist-items { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+.shortlist-item { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: rgba(255,255,255,0.06); border-radius: 8px; padding: 8px 10px; }
+.shortlist-item-name { font-size: 12px; font-weight: 600; color: white; }
+.shortlist-item-remove { background: none; border: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 14px; line-height: 1; transition: color 0.15s; }
+.shortlist-item-remove:hover { color: white; }
+.shortlist-empty { font-size: 12px; color: rgba(255,255,255,0.3); text-align: center; padding: 12px 0; }
+
+.unlock-all-btn { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 11px; border-radius: 9px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; }
+.unlock-all-btn:hover { background: var(--emerald-dark); }
+.unlock-all-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.discount-banner { background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.25); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; display: none; }
+.discount-banner.show { display: block; }
+.discount-banner p { font-size: 11px; color: var(--emerald); line-height: 1.5; font-weight: 600; }
+
+/* MAIN */
+.main-content { min-width: 0; }
+
+.results-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.results-count { font-size: 14px; color: var(--muted); }
+.results-count strong { color: var(--navy); }
+
+.sort-select { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: var(--text); background: white; border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 12px; outline: none; cursor: pointer; }
+
+.candidates-grid { display: flex; flex-direction: column; gap: 12px; }
+
+/* CANDIDATE CARD */
+.cand-card { background: white; border: 1.5px solid var(--border); border-radius: 14px; padding: 20px 24px; transition: box-shadow 0.2s, border-color 0.2s; }
+.cand-card:hover { box-shadow: 0 4px 16px rgba(12,20,69,0.07); }
+.cand-card.shortlisted { border-color: var(--emerald-border); background: var(--emerald-light); }
+.cand-card.unlocked { border-color: var(--navy); }
+
+.cand-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 14px; }
+.cand-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; color: white; flex-shrink: 0; }
+.cand-avatar.blurred { background: var(--border); }
+.cand-info { flex: 1; min-width: 0; }
+.cand-name { font-size: 16px; font-weight: 800; color: var(--navy); margin-bottom: 3px; letter-spacing: -0.3px; }
+.cand-name.blurred { filter: blur(6px); user-select: none; color: var(--muted2); }
+.cand-headline { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.cand-headline.blurred { filter: blur(4px); user-select: none; }
+.cand-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.ctag { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: var(--off); border: 1px solid var(--border); color: var(--muted); }
+.ctag.green { background: var(--emerald-light); color: var(--emerald-dark); border-color: var(--emerald-border); }
+.ctag.navy { background: var(--navy); color: white; border-color: var(--navy); }
+
+.cand-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.shortlist-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: white; color: var(--navy); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.shortlist-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+.shortlist-btn.active { background: var(--emerald-light); color: var(--emerald-dark); border-color: var(--emerald-border); }
+.unlock-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 8px; border: none; background: var(--navy); color: white; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+.unlock-btn:hover { background: var(--emerald); }
+.unlock-btn.unlocked { background: var(--emerald); cursor: default; }
+
+.cand-clips { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+.clip-mini { background: var(--navy); border-radius: 6px; aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; cursor: pointer; transition: opacity 0.15s; }
+.clip-mini:hover { opacity: 0.8; }
+.clip-mini.blurred::after { content: ''; position: absolute; inset: 0; backdrop-filter: blur(8px); background: rgba(12,20,69,0.5); }
+.clip-mini svg { width: 10px; height: 10px; fill: white; margin-left: 1px; position: relative; z-index: 1; }
+.clip-mini-lock { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 2; }
+.clip-mini-lock svg { width: 12px; height: 12px; stroke: rgba(255,255,255,0.4); stroke-width: 1.5; fill: none; }
+
+.cand-docs { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+
+/* EMPTY / LOADING */
+.state-msg { text-align: center; padding: 64px 24px; background: white; border: 1.5px solid var(--border); border-radius: 14px; }
+.state-icon { width: 52px; height: 52px; background: var(--off); border: 1px solid var(--border); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; }
+.state-icon svg { width: 22px; height: 22px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
+.state-title { font-size: 18px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+.state-sub { font-size: 14px; color: var(--muted); line-height: 1.65; max-width: 380px; margin: 0 auto; }
+
+.loading-spinner { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--emerald); border-radius: 50%; animation: spin 0.8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: white; font-size: 14px; font-weight: 600; padding: 14px 24px; border-radius: 10px; border: 1px solid var(--emerald); box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s ease; z-index: 999; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+footer { background: var(--navy); padding: 20px 48px; display: flex; justify-content: space-between; align-items: center; }
+footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none; margin-left: 20px; }
+footer a:hover { color: white; }
+
+@media (max-width: 900px) {
+  .page { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .cand-clips { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
+  <div class="nav-right">
+    <a href="employer-dashboard.html" class="nav-back">
+      <svg viewBox="0 0 14 14"><line x1="12" y1="7" x2="2" y2="7"/><polyline points="6,3 2,7 6,11"/></svg>
+      Dashboard
+    </a>
+    <a href="employer-dashboard.html" class="nav-cta">My listings</a>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-card">
+      <div class="sidebar-title">Search candidates</div>
+      <div class="search-wrap">
+        <svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
+        <input type="text" id="searchInput" placeholder="Keyword, skill, role..." oninput="applyFilters()">
+      </div>
+      <div class="search-wrap">
+        <svg viewBox="0 0 16 16"><path d="M8 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
+        <input type="text" id="locationInput" placeholder="City, state, or remote..." oninput="applyFilters()">
+      </div>
+    </div>
+
+    <div class="sidebar-card">
+      <div class="filter-group">
+        <div class="filter-group-title">Category</div>
+        <select class="filter-select" id="categoryFilter" onchange="applyFilters()">
+          <option value="">All categories</option>
+          <option value="accounting">Accounting</option>
+          <option value="administration">Administration & Office Support</option>
+          <option value="advertising">Advertising, Arts & Media</option>
+          <option value="banking">Banking & Financial Services</option>
+          <option value="callcentre">Call Centre & Customer Service</option>
+          <option value="ceo">CEO & General Management</option>
+          <option value="community">Community Services & Development</option>
+          <option value="construction">Construction</option>
+          <option value="consulting">Consulting & Strategy</option>
+          <option value="design">Design & Architecture</option>
+          <option value="education">Education & Training</option>
+          <option value="engineering">Engineering</option>
+          <option value="farming">Farming, Animals & Conservation</option>
+          <option value="government">Government & Defence</option>
+          <option value="healthcare">Healthcare & Medical</option>
+          <option value="hospitality">Hospitality & Tourism</option>
+          <option value="hr">Human Resources & Recruitment</option>
+          <option value="ict">Information & Communication Technology</option>
+          <option value="insurance">Insurance & Superannuation</option>
+          <option value="legal">Legal</option>
+          <option value="manufacturing">Manufacturing, Transport & Logistics</option>
+          <option value="marketing">Marketing & Communications</option>
+          <option value="mining">Mining, Resources & Energy</option>
+          <option value="realestate">Real Estate & Property</option>
+          <option value="retail">Retail & Consumer Products</option>
+          <option value="sales">Sales</option>
+          <option value="science">Science & Technology</option>
+          <option value="sport">Sport & Recreation</option>
+          <option value="trades">Trades & Services</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-title">Work preference</div>
+        <label class="check-opt"><input type="checkbox" value="office" checked onchange="applyFilters()"><span>In office</span></label>
+        <label class="check-opt"><input type="checkbox" value="hybrid" checked onchange="applyFilters()"><span>Hybrid</span></label>
+        <label class="check-opt"><input type="checkbox" value="remote" checked onchange="applyFilters()"><span>Remote</span></label>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-title">Has documents</div>
+        <label class="check-opt"><input type="checkbox" id="filterPolice" onchange="applyFilters()"><span>Police check</span></label>
+        <label class="check-opt"><input type="checkbox" id="filterWWC" onchange="applyFilters()"><span>Working with children</span></label>
+        <label class="check-opt"><input type="checkbox" id="filterLicence" onchange="applyFilters()"><span>Driver's licence</span></label>
+      </div>
+
+      <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
+    </div>
+
+    <!-- SHORTLIST -->
+    <div class="shortlist-panel">
+      <div class="shortlist-title">
+        My shortlist
+        <span class="shortlist-count" id="shortlistCount">0</span>
+      </div>
+      <div class="shortlist-sub">Shortlist candidates you're interested in, then unlock their full profiles.</div>
+
+      <div class="discount-banner" id="discountBanner">
+        <p>Unlock your shortlist for $26.10 each — 10% off when you unlock 5 or more</p>
+      </div>
+
+      <div class="shortlist-items" id="shortlistItems">
+        <div class="shortlist-empty">No candidates shortlisted yet</div>
+      </div>
+
+      <button class="unlock-all-btn" id="unlockAllBtn" onclick="unlockAll()" disabled>
+        Unlock shortlist
+      </button>
+    </div>
+
+  </div>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <div class="results-header">
+      <div class="results-count" id="resultsCount"><strong>0</strong> candidates available</div>
+      <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+        <option value="recent">Most recent</option>
+        <option value="clips">Most clips</option>
+        <option value="docs">Has documents</option>
+      </select>
+    </div>
+
+    <div class="candidates-grid" id="candidatesGrid">
+      <div class="state-msg">
+        <div class="state-icon"><div class="loading-spinner"></div></div>
+        <div class="state-title">Loading candidates...</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" style="font-size:16px;font-weight:800;color:white;text-decoration:none;letter-spacing:-0.5px;margin-left:0">vett<span style="color:#10b981">.</span>work</a>
+  <div>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Use</a>
+    <a href="mailto:hello@vett.work">Contact</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let employer = null;
+let allCandidates = [];
+let shortlist = []; // array of candidate IDs
+let unlockedIds = []; // candidates this employer has already unlocked
+let candidateDocuments = {};
+
+const DOC_LABELS = {
+  police_check: 'Police check', working_with_children: 'WWC check',
+  drivers_licence: "Driver's licence", working_rights: 'Working rights',
+  professional_certification: 'Certification', trade_licence: 'Trade licence',
+  first_aid: 'First Aid', qualification: 'Qualification',
+  reference_letter: 'Reference', other: 'Document'
+};
+
+const CLIP_TITLES = ['Passion', 'History', 'Highlight', 'Ideal Role', 'Strengths', 'Growth'];
+
+async function init() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'employer-auth.html'; return; }
+
+  const { data: emp } = await supabaseClient.from('employers').select('*').eq('user_id', session.user.id).single();
+  if (!emp) { window.location.href = 'employer-auth.html'; return; }
+  employer = emp;
+
+  // Load unlocked candidates for this employer
+  const { data: unlocks } = await supabaseClient
+    .from('ai_match_unlocks')
+    .select('candidate_id')
+    .eq('employer_id', employer.id);
+  unlockedIds = (unlocks || []).map(u => u.candidate_id);
+
+  // Load shortlist from localStorage
+  const saved = localStorage.getItem(`shortlist_${employer.id}`);
+  shortlist = saved ? JSON.parse(saved) : [];
+
+  await loadCandidates();
+}
+
+async function loadCandidates() {
+  const { data: candidates } = await supabaseClient
+    .from('candidates')
+    .select('id, first_name, last_name, headline, location, is_public, created_at')
+    .eq('is_public', true)
+    .eq('has_paid', true);
+
+  if (!candidates || candidates.length === 0) {
+    showEmpty();
+    return;
+  }
+
+  // Load clips for all candidates
+  const ids = candidates.map(c => c.id);
+  const { data: clips } = await supabaseClient
+    .from('candidate_clips')
+    .select('candidate_id, clip_number, mux_playback_id, thumbnail_url, is_complete')
+    .in('candidate_id', ids)
+    .eq('is_complete', true);
+
+  // Load documents
+  const { data: docs } = await supabaseClient
+    .from('candidate_documents')
+    .select('candidate_id, document_type, expiry_date')
+    .in('candidate_id', ids);
+
+  // Attach clips and docs to candidates
+  allCandidates = candidates.map(c => ({
+    ...c,
+    clips: (clips || []).filter(cl => cl.candidate_id === c.id),
+    documents: (docs || []).filter(d => d.candidate_id === c.id),
+  }));
+
+  renderShortlist();
+  applyFilters();
+}
+
+function applyFilters() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const location = document.getElementById('locationInput').value.toLowerCase();
+  const category = document.getElementById('categoryFilter').value;
+  const workPrefs = [...document.querySelectorAll('.sidebar-card input[type="checkbox"]:not(#filterPolice):not(#filterWWC):not(#filterLicence):checked')].map(i => i.value);
+  const needsPolice = document.getElementById('filterPolice').checked;
+  const needsWWC = document.getElementById('filterWWC').checked;
+  const needsLicence = document.getElementById('filterLicence').checked;
+  const sort = document.getElementById('sortSelect').value;
+
+  let filtered = allCandidates.filter(c => {
+    const nameText = isUnlocked(c.id) ? `${c.first_name || ''} ${c.last_name || ''}`.toLowerCase() : '';
+    const headlineText = (c.headline || '').toLowerCase();
+    const locText = (c.location || '').toLowerCase();
+
+    const matchSearch = !query || nameText.includes(query) || headlineText.includes(query) || locText.includes(query);
+    const matchLocation = !location || locText.includes(location);
+    const matchPolice = !needsPolice || c.documents.some(d => d.document_type === 'police_check');
+    const matchWWC = !needsWWC || c.documents.some(d => d.document_type === 'working_with_children');
+    const matchLicence = !needsLicence || c.documents.some(d => d.document_type === 'drivers_licence');
+
+    return matchSearch && matchLocation && matchPolice && matchWWC && matchLicence;
+  });
+
+  // Sort
+  if (sort === 'clips') filtered.sort((a, b) => b.clips.length - a.clips.length);
+  else if (sort === 'docs') filtered.sort((a, b) => b.documents.length - a.documents.length);
+  else filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+  document.getElementById('resultsCount').innerHTML = `<strong>${filtered.length}</strong> candidate${filtered.length !== 1 ? 's' : ''} available`;
+  renderCandidates(filtered);
+}
+
+function renderCandidates(candidates) {
+  const grid = document.getElementById('candidatesGrid');
+
+  if (candidates.length === 0) {
+    grid.innerHTML = `
+      <div class="state-msg">
+        <div class="state-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 20s1-5 9-5 9 5 9 5"/></svg></div>
+        <div class="state-title">No candidates match your filters</div>
+        <div class="state-sub">Try adjusting your search or clearing the filters.</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = candidates.map(c => renderCard(c)).join('');
+}
+
+function renderCard(c) {
+  const unlocked = isUnlocked(c.id);
+  const inShortlist = shortlist.includes(c.id);
+  const initials = unlocked ? ((c.first_name || '?')[0] + (c.last_name || '')[0]).toUpperCase() : '?';
+  const name = unlocked ? `${c.first_name || ''} ${c.last_name || ''}`.trim() : 'Candidate';
+  const headline = c.headline || 'Open to opportunities';
+  const daysAgo = Math.floor((Date.now() - new Date(c.created_at)) / (1000 * 60 * 60 * 24));
+  const timeLabel = daysAgo === 0 ? 'Joined today' : daysAgo < 7 ? `${daysAgo}d ago` : `${Math.floor(daysAgo/7)}w ago`;
+
+  const tags = [];
+  if (c.location) tags.push({ text: c.location, green: false });
+  if (c.clips.length > 0) tags.push({ text: `${c.clips.length} video clip${c.clips.length > 1 ? 's' : ''}`, green: true });
+  if (c.documents.length > 0) tags.push({ text: `${c.documents.length} doc${c.documents.length > 1 ? 's' : ''}`, green: false });
+  tags.push({ text: timeLabel, green: false });
+
+  const clipsHtml = CLIP_TITLES.map((title, i) => {
+    const clip = c.clips.find(cl => cl.clip_number === i + 1);
+    if (!clip) return `<div class="clip-mini" style="opacity:0.2"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg></div>`;
+    if (!unlocked) return `<div class="clip-mini blurred"><div class="clip-mini-lock"><svg viewBox="0 0 14 16"><rect x="2" y="7" width="10" height="8" rx="1"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg></div></div>`;
+    return `<div class="clip-mini" onclick="viewProfile('${c.id}')" title="${title}"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9"/></svg></div>`;
+  }).join('');
+
+  const docsHtml = c.documents.length > 0 ? `
+    <div class="cand-docs">
+      ${c.documents.slice(0, 4).map(d => {
+        const expired = d.expiry_date && new Date(d.expiry_date) < new Date();
+        return `<span class="ctag ${expired ? '' : 'green'}">${DOC_LABELS[d.document_type] || 'Document'}${expired ? ' (exp)' : ''}</span>`;
+      }).join('')}
+      ${c.documents.length > 4 ? `<span class="ctag">+${c.documents.length - 4} more</span>` : ''}
+    </div>` : '';
+
+  return `
+    <div class="cand-card ${inShortlist ? 'shortlisted' : ''} ${unlocked ? 'unlocked' : ''}" id="card_${c.id}">
+      <div class="cand-top">
+        <div class="cand-avatar ${unlocked ? '' : 'blurred'}">${initials}</div>
+        <div class="cand-info">
+          <div class="cand-name ${unlocked ? '' : 'blurred'}">${unlocked ? name : 'Candidate Profile'}</div>
+          <div class="cand-headline ${unlocked ? '' : 'blurred'}">${headline}</div>
+          <div class="cand-tags">
+            ${tags.map(t => `<span class="ctag ${t.green ? 'green' : ''}">${t.text}</span>`).join('')}
+          </div>
+        </div>
+        <div class="cand-actions">
+          <button class="shortlist-btn ${inShortlist ? 'active' : ''}" onclick="toggleShortlist('${c.id}', '${name}')">
+            ${inShortlist ? '★ Shortlisted' : '☆ Shortlist'}
+          </button>
+          ${unlocked
+            ? `<button class="unlock-btn unlocked" onclick="viewProfile('${c.id}')">View profile →</button>`
+            : `<button class="unlock-btn" onclick="handleUnlock('${c.id}')">Unlock — $29</button>`
+          }
+        </div>
+      </div>
+      <div class="cand-clips">${clipsHtml}</div>
+      ${docsHtml}
+    </div>`;
+}
+
+function isUnlocked(id) {
+  return unlockedIds.includes(id);
+}
+
+function toggleShortlist(candidateId, name) {
+  const idx = shortlist.indexOf(candidateId);
+  if (idx === -1) {
+    shortlist.push(candidateId);
+    showToast('Added to shortlist');
+  } else {
+    shortlist.splice(idx, 1);
+    showToast('Removed from shortlist');
+  }
+  localStorage.setItem(`shortlist_${employer.id}`, JSON.stringify(shortlist));
+  renderShortlist();
+  applyFilters();
+}
+
+function renderShortlist() {
+  const count = shortlist.length;
+  document.getElementById('shortlistCount').textContent = count;
+  document.getElementById('unlockAllBtn').disabled = count === 0;
+
+  const banner = document.getElementById('discountBanner');
+  banner.classList.toggle('show', count >= 5);
+
+  const items = document.getElementById('shortlistItems');
+  if (count === 0) {
+    items.innerHTML = '<div class="shortlist-empty">No candidates shortlisted yet</div>';
+    document.getElementById('unlockAllBtn').textContent = 'Unlock shortlist';
+    return;
+  }
+
+  const price = count >= 5 ? 26.10 : 29;
+  const total = (price * count).toFixed(2);
+  document.getElementById('unlockAllBtn').textContent = count >= 5
+    ? `Unlock all ${count} — $${total} (10% off)`
+    : `Unlock all ${count} — $${total}`;
+
+  const shortlistCandidates = allCandidates.filter(c => shortlist.includes(c.id));
+  items.innerHTML = shortlistCandidates.map(c => {
+    const name = isUnlocked(c.id) ? `${c.first_name || ''} ${c.last_name || ''}`.trim() : `Candidate`;
+    return `
+      <div class="shortlist-item">
+        <span class="shortlist-item-name">${name}</span>
+        <button class="shortlist-item-remove" onclick="toggleShortlist('${c.id}', '')">×</button>
+      </div>`;
+  }).join('');
+}
+
+async function handleUnlock(candidateId) {
+  showToast('Unlock feature — payment coming soon');
+  // TODO: wire to Stripe checkout with price_1Ta8SkAwK1Dmgw1KgMHJvGgG ($29 AI match unlock)
+}
+
+async function unlockAll() {
+  if (shortlist.length === 0) return;
+  showToast('Bulk unlock — payment coming soon');
+  // TODO: wire to Stripe checkout for bulk unlock
+}
+
+function viewProfile(candidateId) {
+  window.location.href = `candidate-profile.html?candidate_id=${candidateId}`;
+}
+
+function clearFilters() {
+  document.getElementById('searchInput').value = '';
+  document.getElementById('locationInput').value = '';
+  document.getElementById('categoryFilter').value = '';
+  document.querySelectorAll('.sidebar-card input[type="checkbox"]').forEach(cb => {
+    if (cb.id === 'filterPolice' || cb.id === 'filterWWC' || cb.id === 'filterLicence') cb.checked = false;
+    else cb.checked = true;
+  });
+  applyFilters();
+}
+
+function showEmpty() {
+  document.getElementById('candidatesGrid').innerHTML = `
+    <div class="state-msg">
+      <div class="state-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 20s1-5 9-5 9 5 9 5"/></svg></div>
+      <div class="state-title">No candidates yet</div>
+      <div class="state-sub">Candidates who opt in to the employer database will appear here. Check back soon.</div>
+    </div>`;
+  document.getElementById('resultsCount').innerHTML = '<strong>0</strong> candidates available';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>

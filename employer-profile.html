@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vett.work — Company Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --navy: #0c1445;
+  --navy2: #111d5e;
+  --emerald: #10b981;
+  --emerald-light: #ecfdf5;
+  --emerald-border: #a7f3d0;
+  --emerald-dark: #059669;
+  --white: #ffffff;
+  --off: #f8fafc;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --muted2: #94a3b8;
+  --text: #0f172a;
+  --error: #ef4444;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--off); color: var(--text); min-height: 100vh; }
+
+nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+.logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
+.logo-dot { color: var(--emerald); }
+.nav-right { display: flex; align-items: center; gap: 14px; }
+.nav-back { font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+.nav-back:hover { color: white; }
+.nav-back svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 2; fill: none; }
+.nav-signout { font-size: 13px; color: rgba(255,255,255,0.4); background: none; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; padding: 7px 14px; border-radius: 7px; transition: color 0.15s; }
+.nav-signout:hover { color: white; }
+
+.page { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
+
+.page-header { margin-bottom: 32px; }
+.page-title { font-size: 26px; font-weight: 800; letter-spacing: -1px; color: var(--navy); margin-bottom: 6px; }
+.page-sub { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+.section { background: white; border: 1.5px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; }
+.section-header { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+.section-title { font-size: 16px; font-weight: 800; color: var(--navy); letter-spacing: -0.3px; margin-bottom: 4px; }
+.section-sub { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+.field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field.full { grid-column: 1 / -1; }
+.field label { font-size: 11px; font-weight: 700; color: var(--muted2); text-transform: uppercase; letter-spacing: 0.05em; }
+.field input, .field select, .field textarea { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 10px 14px; outline: none; transition: border-color 0.2s; }
+.field input:focus, .field select:focus, .field textarea:focus { border-color: var(--emerald); background: white; }
+.field input::placeholder, .field textarea::placeholder { color: var(--muted2); }
+.field textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+.field-hint { font-size: 11px; color: var(--muted2); margin-top: 4px; line-height: 1.4; }
+
+/* VALUES TAGS */
+.values-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.value-tag { display: flex; align-items: center; gap: 6px; background: var(--emerald-light); border: 1px solid var(--emerald-border); color: var(--emerald-dark); font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 6px; }
+.value-tag button { background: none; border: none; color: var(--emerald-dark); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; transition: opacity 0.15s; }
+.value-tag button:hover { opacity: 0.6; }
+.value-input-row { display: flex; gap: 8px; }
+.value-input { flex: 1; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; color: var(--text); background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 9px 14px; outline: none; transition: border-color 0.2s; }
+.value-input:focus { border-color: var(--emerald); background: white; }
+.value-input::placeholder { color: var(--muted2); }
+.value-add-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 9px 16px; border-radius: 9px; border: none; background: var(--navy); color: white; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+.value-add-btn:hover { background: var(--navy2); }
+
+.suggested-values { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.suggested-value { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 5px; background: var(--off); border: 1px solid var(--border); color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.suggested-value:hover { background: var(--emerald-light); color: var(--emerald-dark); border-color: var(--emerald-border); }
+
+/* FILE UPLOAD */
+.upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s; position: relative; }
+.upload-area:hover { border-color: var(--emerald); background: var(--emerald-light); }
+.upload-area.has-file { border-color: var(--emerald); background: var(--emerald-light); border-style: solid; }
+.upload-icon { width: 36px; height: 36px; background: var(--off); border: 1px solid var(--border); border-radius: 9px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+.upload-icon svg { width: 16px; height: 16px; stroke: var(--muted2); stroke-width: 1.5; fill: none; }
+.upload-area.has-file .upload-icon { background: var(--emerald-light); border-color: var(--emerald-border); }
+.upload-area.has-file .upload-icon svg { stroke: var(--emerald-dark); }
+.upload-title { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.upload-sub { font-size: 12px; color: var(--muted); }
+.upload-sub span { color: var(--emerald-dark); font-weight: 600; }
+.upload-area input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+/* SAVE BUTTON */
+.save-section { display: flex; align-items: center; gap: 14px; margin-top: 8px; }
+.save-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; padding: 12px 28px; border-radius: 10px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; }
+.save-btn:hover { background: var(--emerald-dark); }
+.save-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.save-status { font-size: 13px; color: var(--emerald-dark); font-weight: 600; display: none; }
+.save-status.show { display: block; }
+
+/* DANGER ZONE */
+.danger-section { background: #fff5f5; border: 1.5px solid #fecaca; border-radius: 16px; padding: 24px; margin-bottom: 20px; }
+.danger-title { font-size: 15px; font-weight: 700; color: var(--error); margin-bottom: 6px; }
+.danger-sub { font-size: 13px; color: var(--muted); line-height: 1.55; margin-bottom: 16px; }
+.danger-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 9px; border: 1.5px solid #fecaca; background: white; color: var(--error); cursor: pointer; transition: all 0.15s; }
+.danger-btn:hover { background: var(--error); color: white; border-color: var(--error); }
+
+.toast { position: fixed; bottom: 32px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--navy); color: white; font-size: 14px; font-weight: 600; padding: 14px 24px; border-radius: 10px; border: 1px solid var(--emerald); box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s ease; z-index: 999; white-space: nowrap; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+.loading { display: flex; align-items: center; justify-content: center; min-height: calc(100vh - 64px); font-size: 14px; color: var(--muted); }
+
+footer { background: var(--navy); padding: 20px 48px; display: flex; justify-content: space-between; align-items: center; }
+footer a { font-size: 12px; color: rgba(255,255,255,0.3); text-decoration: none; margin-left: 20px; }
+footer a:hover { color: white; }
+
+@media (max-width: 768px) {
+  nav { padding: 0 20px; }
+  .page { padding: 24px 16px 60px; }
+  .field-grid { grid-template-columns: 1fr; }
+  footer { padding: 20px; flex-direction: column; gap: 12px; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
+  <div class="nav-right">
+    <a href="employer-dashboard.html" class="nav-back">
+      <svg viewBox="0 0 14 14"><line x1="12" y1="7" x2="2" y2="7"/><polyline points="6,3 2,7 6,11"/></svg>
+      Dashboard
+    </a>
+    <button class="nav-signout" onclick="handleSignOut()">Sign out</button>
+  </div>
+</nav>
+
+<div id="loadingState" class="loading">Loading...</div>
+
+<div id="pageContent" style="display:none">
+<div class="page">
+
+  <div class="page-header">
+    <div class="page-title">Company profile</div>
+    <div class="page-sub">This information helps us match you with better candidates and lets candidates understand your culture before applying.</div>
+  </div>
+
+  <!-- COMPANY DETAILS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Company details</div>
+      <div class="section-sub">Basic information shown to candidates on your job listings.</div>
+    </div>
+    <div class="field-grid">
+      <div class="field full">
+        <label>Company name</label>
+        <input type="text" id="companyName" placeholder="Your company name">
+      </div>
+      <div class="field">
+        <label>Industry</label>
+        <select id="companyIndustry">
+          <option value="">Select industry...</option>
+          <option value="accounting">Accounting</option>
+          <option value="administration">Administration & Office Support</option>
+          <option value="advertising">Advertising, Arts & Media</option>
+          <option value="banking">Banking & Financial Services</option>
+          <option value="callcentre">Call Centre & Customer Service</option>
+          <option value="community">Community Services & Development</option>
+          <option value="construction">Construction</option>
+          <option value="consulting">Consulting & Strategy</option>
+          <option value="design">Design & Architecture</option>
+          <option value="education">Education & Training</option>
+          <option value="engineering">Engineering</option>
+          <option value="government">Government & Defence</option>
+          <option value="healthcare">Healthcare & Medical</option>
+          <option value="hospitality">Hospitality & Tourism</option>
+          <option value="hr">Human Resources & Recruitment</option>
+          <option value="ict">Information & Communication Technology</option>
+          <option value="legal">Legal</option>
+          <option value="manufacturing">Manufacturing, Transport & Logistics</option>
+          <option value="marketing">Marketing & Communications</option>
+          <option value="mining">Mining, Resources & Energy</option>
+          <option value="realestate">Real Estate & Property</option>
+          <option value="retail">Retail & Consumer Products</option>
+          <option value="sales">Sales</option>
+          <option value="science">Science & Technology</option>
+          <option value="trades">Trades & Services</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Company size</label>
+        <select id="companySize">
+          <option value="">Select size...</option>
+          <option value="1-10">1–10 people</option>
+          <option value="11-50">11–50 people</option>
+          <option value="51-200">51–200 people</option>
+          <option value="201-500">201–500 people</option>
+          <option value="500+">500+ people</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Company type</label>
+        <select id="companyType">
+          <option value="direct">Direct employer</option>
+          <option value="startup">Start-up</option>
+          <option value="nfp">Not-for-profit</option>
+          <option value="agency">Recruitment agency</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Location / HQ</label>
+        <input type="text" id="companyLocation" placeholder="e.g. Brisbane, QLD">
+      </div>
+      <div class="field full">
+        <label>Website</label>
+        <input type="url" id="companyWebsite" placeholder="https://yourcompany.com.au">
+      </div>
+    </div>
+    <div class="save-section">
+      <button class="save-btn" onclick="saveSection('details')">Save details</button>
+      <div class="save-status" id="detailsSaved">✓ Saved</div>
+    </div>
+  </div>
+
+  <!-- CULTURE & VALUES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Culture & values</div>
+      <div class="section-sub">Help candidates understand what it's like to work with you. This is fed directly into our AI to improve question quality and candidate matching.</div>
+    </div>
+
+    <div class="field-grid">
+      <div class="field full">
+        <label>About your culture</label>
+        <textarea id="companyCulture" placeholder="Describe what it's actually like to work here. What do your best people have in common? What does a typical day look like? What do you care about as a team?" style="min-height:120px"></textarea>
+        <div class="field-hint">Be honest and specific — candidates respond better to real descriptions than corporate speak. Aim for 100–200 words.</div>
+      </div>
+
+      <div class="field full">
+        <label>Your values</label>
+        <div class="values-wrap" id="valuesTags"></div>
+        <div class="value-input-row">
+          <input type="text" class="value-input" id="valueInput" placeholder="e.g. ownership, impact, flexibility..." onkeydown="if(event.key==='Enter'){event.preventDefault();addValue()}">
+          <button class="value-add-btn" onclick="addValue()">Add</button>
+        </div>
+        <div class="suggested-values" id="suggestedValues"></div>
+        <div class="field-hint" style="margin-top:8px">Add up to 8 values. Click a suggested value to add it.</div>
+      </div>
+
+      <div class="field full">
+        <label>People & culture page <span style="font-weight:400;text-transform:none;font-size:10px;color:var(--muted2)">(optional)</span></label>
+        <input type="url" id="culturePageUrl" placeholder="https://yourcompany.com.au/careers">
+        <div class="field-hint">Candidates will see this link when doing a role-specific interview for your roles.</div>
+      </div>
+
+      <div class="field full">
+        <label>What you look for in candidates</label>
+        <textarea id="candidateCriteria" placeholder="What makes someone successful in your team? What qualities or behaviours matter most to you beyond the role requirements?"></textarea>
+      </div>
+    </div>
+
+    <div class="save-section">
+      <button class="save-btn" onclick="saveSection('culture')">Save culture & values</button>
+      <div class="save-status" id="cultureSaved">✓ Saved</div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Supporting documents</div>
+      <div class="section-sub">Upload a culture deck, values document, or team overview. Shown to candidates when they're preparing a role-specific interview for your roles.</div>
+    </div>
+
+    <div class="upload-area" id="cultureDocArea" onclick="document.getElementById('cultureDocInput').click()">
+      <input type="file" id="cultureDocInput" accept=".pdf,.pptx,.docx" onchange="handleDocUpload(event)">
+      <div class="upload-icon"><svg viewBox="0 0 18 18"><path d="M9 2v10M5 8l4-4 4 4"/><path d="M3 14h12"/></svg></div>
+      <div class="upload-title" id="docUploadTitle">Upload a culture or values document</div>
+      <div class="upload-sub" id="docUploadSub">PDF, PowerPoint or Word · <span>Browse files</span> · Max 10MB</div>
+    </div>
+
+    <div class="save-section" style="margin-top:14px">
+      <div class="save-status show" id="docSaved" style="display:none">✓ Document saved</div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title">Account details</div>
+      <div class="section-sub">Your login and billing information.</div>
+    </div>
+    <div class="field-grid">
+      <div class="field">
+        <label>First name</label>
+        <input type="text" id="firstName" placeholder="First name">
+      </div>
+      <div class="field">
+        <label>Last name</label>
+        <input type="text" id="lastName" placeholder="Last name">
+      </div>
+      <div class="field full">
+        <label>Email address</label>
+        <input type="email" id="emailAddress" disabled style="opacity:0.6;cursor:not-allowed">
+        <div class="field-hint">To change your email address contact hello@vett.work</div>
+      </div>
+    </div>
+    <div class="save-section">
+      <button class="save-btn" onclick="saveSection('account')">Save account details</button>
+      <div class="save-status" id="accountSaved">✓ Saved</div>
+    </div>
+  </div>
+
+  <!-- DANGER ZONE -->
+  <div class="danger-section">
+    <div class="danger-title">Delete account</div>
+    <div class="danger-sub">Permanently delete your employer account and all associated data. This cannot be undone. Your active listings will be removed immediately.</div>
+    <button class="danger-btn" onclick="confirmDelete()">Delete my account</button>
+  </div>
+
+</div>
+</div>
+
+<footer>
+  <a href="index.html" style="font-size:16px;font-weight:800;color:white;text-decoration:none;letter-spacing:-0.5px;margin-left:0">vett<span style="color:#10b981">.</span>work</a>
+  <div>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms of Use</a>
+    <a href="mailto:hello@vett.work">Contact</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let employer = null;
+let values = [];
+
+const SUGGESTED_VALUES = [
+  'Autonomy', 'Impact', 'Flexibility', 'Transparency', 'Innovation',
+  'Collaboration', 'Ownership', 'Learning', 'Diversity', 'Work-life balance',
+  'Customer focus', 'Integrity', 'Excellence', 'Purpose', 'Community'
+];
+
+async function init() {
+  const { data: { session } } = await supabaseClient.auth.getSession();
+  if (!session) { window.location.href = 'employer-auth.html'; return; }
+
+  let { data: emp } = await supabaseClient.from('employers').select('*').eq('user_id', session.user.id).single();
+  if (!emp) { window.location.href = 'employer-auth.html'; return; }
+  employer = emp;
+
+  // Populate fields
+  document.getElementById('companyName').value = emp.company_name || '';
+  document.getElementById('companyIndustry').value = emp.industry || '';
+  document.getElementById('companySize').value = emp.company_size || '';
+  document.getElementById('companyType').value = emp.company_type || 'direct';
+  document.getElementById('companyLocation').value = emp.location || '';
+  document.getElementById('companyWebsite').value = emp.website || '';
+  document.getElementById('companyCulture').value = emp.culture_description || '';
+  document.getElementById('culturePageUrl').value = emp.culture_page_url || '';
+  document.getElementById('candidateCriteria').value = emp.candidate_criteria || '';
+  document.getElementById('firstName').value = emp.first_name || '';
+  document.getElementById('lastName').value = emp.last_name || '';
+  document.getElementById('emailAddress').value = session.user.email || '';
+
+  if (emp.culture_doc_url) {
+    document.getElementById('cultureDocArea').classList.add('has-file');
+    document.getElementById('docUploadTitle').textContent = emp.culture_doc_name || 'Document uploaded';
+    document.getElementById('docUploadSub').textContent = 'Upload a new file to replace it';
+    document.getElementById('docSaved').style.display = 'block';
+  }
+
+  // Values
+  values = emp.company_values ? (Array.isArray(emp.company_values) ? emp.company_values : JSON.parse(emp.company_values)) : [];
+  renderValues();
+  renderSuggestedValues();
+
+  document.getElementById('loadingState').style.display = 'none';
+  document.getElementById('pageContent').style.display = 'block';
+}
+
+function renderValues() {
+  const wrap = document.getElementById('valuesTags');
+  wrap.innerHTML = values.map((v, i) => `
+    <div class="value-tag">
+      ${v}
+      <button onclick="removeValue(${i})">×</button>
+    </div>`).join('');
+}
+
+function renderSuggestedValues() {
+  const remaining = SUGGESTED_VALUES.filter(v => !values.includes(v));
+  document.getElementById('suggestedValues').innerHTML = remaining.slice(0, 8).map(v =>
+    `<span class="suggested-value" onclick="addSuggestedValue('${v}')">${v}</span>`
+  ).join('');
+}
+
+function addValue() {
+  const input = document.getElementById('valueInput');
+  const val = input.value.trim();
+  if (!val) return;
+  if (values.length >= 8) { showToast('Maximum 8 values'); return; }
+  if (values.includes(val)) { showToast('Already added'); return; }
+  values.push(val);
+  input.value = '';
+  renderValues();
+  renderSuggestedValues();
+}
+
+function addSuggestedValue(v) {
+  if (values.length >= 8) { showToast('Maximum 8 values'); return; }
+  if (values.includes(v)) return;
+  values.push(v);
+  renderValues();
+  renderSuggestedValues();
+}
+
+function removeValue(i) {
+  values.splice(i, 1);
+  renderValues();
+  renderSuggestedValues();
+}
+
+async function saveSection(section) {
+  let updates = {};
+  let statusId = '';
+
+  if (section === 'details') {
+    updates = {
+      company_name: document.getElementById('companyName').value.trim(),
+      industry: document.getElementById('companyIndustry').value,
+      company_size: document.getElementById('companySize').value,
+      company_type: document.getElementById('companyType').value,
+      location: document.getElementById('companyLocation').value.trim(),
+      website: document.getElementById('companyWebsite').value.trim(),
+    };
+    statusId = 'detailsSaved';
+  } else if (section === 'culture') {
+    updates = {
+      culture_description: document.getElementById('companyCulture').value.trim(),
+      company_values: values,
+      culture_page_url: document.getElementById('culturePageUrl').value.trim(),
+      candidate_criteria: document.getElementById('candidateCriteria').value.trim(),
+    };
+    statusId = 'cultureSaved';
+  } else if (section === 'account') {
+    updates = {
+      first_name: document.getElementById('firstName').value.trim(),
+      last_name: document.getElementById('lastName').value.trim(),
+    };
+    statusId = 'accountSaved';
+  }
+
+  const { error } = await supabaseClient.from('employers').update(updates).eq('id', employer.id);
+
+  if (error) { showToast('Error saving — please try again'); return; }
+
+  Object.assign(employer, updates);
+
+  const statusEl = document.getElementById(statusId);
+  statusEl.classList.add('show');
+  setTimeout(() => statusEl.classList.remove('show'), 3000);
+  showToast('Saved');
+}
+
+async function handleDocUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { showToast('File too large — max 10MB'); return; }
+
+  showToast('Uploading document...');
+
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const fileName = `${session.user.id}/${Date.now()}-${file.name}`;
+    const { error: ue } = await supabaseClient.storage.from('employer-docs').upload(fileName, file, { upsert: true });
+    if (ue) throw ue;
+
+    const { data: ud } = supabaseClient.storage.from('employer-docs').getPublicUrl(fileName);
+
+    await supabaseClient.from('employers').update({
+      culture_doc_url: ud.publicUrl,
+      culture_doc_name: file.name,
+    }).eq('id', employer.id);
+
+    document.getElementById('cultureDocArea').classList.add('has-file');
+    document.getElementById('docUploadTitle').textContent = file.name;
+    document.getElementById('docUploadSub').textContent = 'Upload a new file to replace it';
+    document.getElementById('docSaved').style.display = 'block';
+    showToast('Document uploaded');
+  } catch (err) {
+    console.error(err);
+    showToast('Upload failed — please try again');
+  }
+}
+
+function confirmDelete() {
+  if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
+    showToast('To delete your account please email hello@vett.work');
+  }
+}
+
+async function handleSignOut() {
+  await supabaseClient.auth.signOut();
+  window.location.href = 'index.html';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
