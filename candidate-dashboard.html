@@ -857,7 +857,7 @@ async function init() {
   const { data: { session } } = await supabaseClient.auth.getSession();
   if (!session) { window.location.href = 'candidate-auth.html'; return; }
 
-  let { data, error } = await dbClient
+  let { data, error } = await supabaseClient
     .from('candidates')
     .select('*')
     .eq('user_id', session.user.id)
@@ -888,7 +888,7 @@ async function init() {
   candidate = data;
 
   // Load clips
-  const { data: clipData } = await dbClient
+  const { data: clipData } = await supabaseClient
     .from('candidate_clips')
     .select('*')
     .eq('candidate_id', candidate.id)
