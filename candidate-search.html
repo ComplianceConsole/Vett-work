@@ -244,13 +244,13 @@ footer a:hover { color: white; }
     <!-- SHORTLIST -->
     <div class="shortlist-panel">
       <div class="shortlist-title">
-        My shortlist
+        Saved candidates
         <span class="shortlist-count" id="shortlistCount">0</span>
       </div>
-      <div class="shortlist-sub">Shortlist candidates you're interested in, then unlock their full profiles.</div>
+      <div class="shortlist-sub">Save candidates you're interested in. Unlock 5 or more at once for 10% off.</div>
 
       <div class="discount-banner" id="discountBanner">
-        <p>Unlock your shortlist for $26.10 each — 10% off when you unlock 5 or more</p>
+        <p>You have 5+ saved candidates — unlock all for 10% off</p>
       </div>
 
       <div class="shortlist-items" id="shortlistItems">
@@ -301,6 +301,7 @@ footer a:hover { color: white; }
 const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const STRIPE_PRICE_AI_UNLOCK = 'price_1Ta8SkAwK1Dmgw1KgMHJvGgG'; // $29 AI match unlock
 
 let employer = null;
 let allCandidates = [];
@@ -325,6 +326,31 @@ async function init() {
   const { data: emp } = await supabaseClient.from('employers').select('*').eq('user_id', session.user.id).single();
   if (!emp) { window.location.href = 'employer-auth.html'; return; }
   employer = emp;
+
+  // Handle unlock success redirect from Stripe
+  const urlParams = new URLSearchParams(window.location.search);
+  const unlockSuccess = urlParams.get('unlock_success');
+  const bulkIds = urlParams.get('ids');
+
+  if (unlockSuccess && unlockSuccess !== 'bulk') {
+    // Single unlock — save to DB
+    await supabaseClient.from('ai_match_unlocks').insert({
+      employer_id: employer.id,
+      candidate_id: unlockSuccess,
+    });
+    history.replaceState({}, '', window.location.pathname);
+    showToast('Candidate unlocked! Full profile now visible.');
+  } else if (unlockSuccess === 'bulk' && bulkIds) {
+    // Bulk unlock — save all to DB
+    const ids = bulkIds.split(',');
+    await supabaseClient.from('ai_match_unlocks').insert(
+      ids.map(id => ({ employer_id: employer.id, candidate_id: id }))
+    );
+    // Clear shortlist for unlocked candidates
+    shortlist = shortlist.filter(id => !ids.includes(id));
+    history.replaceState({}, '', window.location.pathname);
+    showToast(`${ids.length} candidates unlocked!`);
+  }
 
   // Load unlocked candidates for this employer
   const { data: unlocks } = await supabaseClient
@@ -470,7 +496,7 @@ function renderCard(c) {
         </div>
         <div class="cand-actions">
           <button class="shortlist-btn ${inShortlist ? 'active' : ''}" onclick="toggleShortlist('${c.id}', '${name}')">
-            ${inShortlist ? '★ Shortlisted' : '☆ Shortlist'}
+            ${inShortlist ? '✓ Saved' : 'Save for later'}
           </button>
           ${unlocked
             ? `<button class="unlock-btn unlocked" onclick="viewProfile('${c.id}')">View profile →</button>`
@@ -518,9 +544,10 @@ function renderShortlist() {
 
   const price = count >= 5 ? 26.10 : 29;
   const total = (price * count).toFixed(2);
-  document.getElementById('unlockAllBtn').textContent = count >= 5
-    ? `Unlock all ${count} — $${total} (10% off)`
+  const label = count >= 5
+    ? `Unlock all ${count} — $${(26.10 * count).toFixed(2)} <s style="opacity:0.5;font-weight:400">$${(29 * count).toFixed(2)}</s>`
     : `Unlock all ${count} — $${total}`;
+  document.getElementById('unlockAllBtn').innerHTML = label;
 
   const shortlistCandidates = allCandidates.filter(c => shortlist.includes(c.id));
   items.innerHTML = shortlistCandidates.map(c => {
@@ -534,14 +561,71 @@ function renderShortlist() {
 }
 
 async function handleUnlock(candidateId) {
-  showToast('Unlock feature — payment coming soon');
-  // TODO: wire to Stripe checkout with price_1Ta8SkAwK1Dmgw1KgMHJvGgG ($29 AI match unlock)
+  showToast('Redirecting to payment...');
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({
+        price_id: 'price_1Ta8SkAwK1Dmgw1KgMHJvGgG',
+        product: 'ai_match_unlock',
+        employer_id: employer.id,
+        candidate_id: candidateId,
+        success_url: window.location.origin + `/candidate-search.html?unlock_success=${candidateId}`,
+        cancel_url: window.location.origin + '/candidate-search.html?unlock_cancelled=true',
+      }),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Failed');
+    window.location.href = result.url;
+  } catch (err) {
+    console.error(err);
+    showToast('Something went wrong — please try again');
+  }
 }
 
 async function unlockAll() {
   if (shortlist.length === 0) return;
-  showToast('Bulk unlock — payment coming soon');
-  // TODO: wire to Stripe checkout for bulk unlock
+  const unlockedShortlist = shortlist.filter(id => !isUnlocked(id));
+  if (unlockedShortlist.length === 0) { showToast('All shortlisted candidates already unlocked'); return; }
+
+  showToast('Redirecting to payment...');
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const count = unlockedShortlist.length;
+    const priceEach = count >= 5 ? 2610 : 2900; // cents — 10% off for 5+
+    const total = priceEach * count;
+
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({
+        price_id: 'price_1Ta8SkAwK1Dmgw1KgMHJvGgG',
+        product: 'ai_match_unlock_bulk',
+        employer_id: employer.id,
+        candidate_ids: unlockedShortlist.join(','),
+        quantity: count,
+        discount: count >= 5 ? 10 : 0,
+        success_url: window.location.origin + `/candidate-search.html?unlock_success=bulk&ids=${unlockedShortlist.join(',')}`,
+        cancel_url: window.location.origin + '/candidate-search.html',
+      }),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Failed');
+    window.location.href = result.url;
+  } catch (err) {
+    console.error(err);
+    showToast('Something went wrong — please try again');
+  }
 }
 
 function viewProfile(candidateId) {
