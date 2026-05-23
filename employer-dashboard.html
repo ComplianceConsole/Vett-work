@@ -412,6 +412,8 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 <script>
 const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
 const STRIPE_PUBLISHABLE_KEY = 'pk_live_51Ta8AVAwK1Dmgw1KtpYWxvu9FVrage8JR1FkMnvVcppN7WICUJjssTPrYEvAit7UhdzCwOXm02q54NPiP8rmxGxz00ho08mbJ0';
 const STRIPE_PRICE_JOB = 'price_1Ta8SkAwK1Dmgw1KgMHJvGgG';
 const STRIPE_PRICE_PREMIUM = 'price_1Ta8TsAwK1Dmgw1KBS4wQeIe';
@@ -464,6 +466,17 @@ async function init() {
     const jobIds = jobs.map(j => j.id);
     const { data: appData } = await supabaseClient.from('applications').select('*, jobs(title)').in('job_id', jobIds).order('created_at', { ascending: false });
     applications = appData || [];
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('payment') === 'success') {
+    history.replaceState({}, '', window.location.pathname);
+    showToast('Payment successful! Your listing is now live.');
+    const { data: jobData } = await supabaseClient.from('jobs').select('*').eq('employer_id', employer.id).order('created_at', { ascending: false });
+    jobs = jobData || [];
+  } else if (urlParams.get('payment') === 'cancelled') {
+    history.replaceState({}, '', window.location.pathname);
+    showToast('Payment cancelled — your listing was saved as draft.');
   }
 
   renderDashboard();
@@ -727,12 +740,27 @@ async function submitPost() {
     // Reset form
     ['jobTitle', 'jobLocation', 'jobSalary', 'jobDescription'].forEach(id => document.getElementById(id).value = '');
 
-    // TODO: redirect to Stripe for payment
-    if (STRIPE_PUBLISHABLE_KEY && STRIPE_PUBLISHABLE_KEY !== 'YOUR_STRIPE_PUBLISHABLE_KEY') {
-      showToast('Role saved — redirecting to payment...');
-    } else {
-      showToast('Role posted! (Payment coming soon — Stripe not configured yet)');
-    }
+    // Redirect to Stripe checkout
+    const priceMap = { base: STRIPE_PRICE_JOB, mid: STRIPE_PRICE_PREMIUM, pro: STRIPE_PRICE_BUNDLE };
+    const priceId = priceMap[selectedTier];
+
+    const { data: { session: authSession } } = await supabaseClient.auth.getSession();
+    const checkoutRes = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authSession.access_token}`, 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({
+        price_id: priceId,
+        product: selectedTier === 'base' ? 'job_listing' : selectedTier === 'mid' ? 'premium_listing' : 'listing_bundle',
+        employer_id: employer.id,
+        job_id: newJob.id,
+        success_url: window.location.origin + '/employer-dashboard.html?payment=success',
+        cancel_url: window.location.origin + '/employer-dashboard.html?payment=cancelled',
+      }),
+    });
+
+    const checkoutResult = await checkoutRes.json();
+    if (!checkoutRes.ok) throw new Error(checkoutResult.error || 'Checkout failed');
+    window.location.href = checkoutResult.url;
 
   } catch (err) {
     console.error(err);

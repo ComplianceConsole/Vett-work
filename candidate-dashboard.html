@@ -480,10 +480,22 @@ async function init() {
   }
 
   candidate = data;
-  candidate.has_paid = true; // TEMP bypass — remove when Stripe configured
-
   const { data: clipData } = await supabaseClient.from('candidate_clips').select('*').eq('candidate_id', candidate.id).order('clip_number');
   clips = clipData || [];
+
+  // Check for payment result in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('payment') === 'success') {
+    // Reload candidate to get updated has_paid status
+    const { data: refreshed } = await supabaseClient.from('candidates').select('*').eq('id', data.id).single();
+    if (refreshed) candidate = refreshed;
+    candidate.has_paid = true;
+    history.replaceState({}, '', window.location.pathname);
+    showToast('Payment successful! Your video profile is unlocked.');
+  } else if (urlParams.get('payment') === 'cancelled') {
+    history.replaceState({}, '', window.location.pathname);
+    showToast('Payment cancelled.');
+  }
 
   renderDashboard();
   loadDocuments();
@@ -832,7 +844,27 @@ async function saveProfile() {
 }
 
 async function handlePayment() {
-  if (!STRIPE_PUBLISHABLE_KEY || STRIPE_PUBLISHABLE_KEY === 'YOUR_STRIPE_PUBLISHABLE_KEY') { showToast('Payment coming soon — Stripe not configured yet'); return; }
+  showToast('Redirecting to payment...');
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/create-checkout`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}`, 'apikey': SUPABASE_ANON_KEY },
+      body: JSON.stringify({
+        price_id: STRIPE_PRICE_ID_VIDEO,
+        product: 'video_profile',
+        candidate_id: candidate.id,
+        success_url: window.location.origin + '/candidate-dashboard.html?payment=success',
+        cancel_url: window.location.origin + '/candidate-dashboard.html?payment=cancelled',
+      }),
+    });
+    const result = await res.json();
+    if (!res.ok) throw new Error(result.error || 'Failed to create checkout');
+    window.location.href = result.url;
+  } catch (err) {
+    console.error(err);
+    showToast('Something went wrong — please try again');
+  }
 }
 
 async function toggleVisibility() {
