@@ -778,7 +778,10 @@ nav {
   <div class="section" id="promptsSection">
     <div class="section-header">
       <div class="section-title">Your personalised questions</div>
-      <span class="section-badge badge-pending" id="promptsBadge">Not generated</span>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="section-badge badge-pending" id="promptsBadge">Not generated</span>
+        <button class="save-btn" id="regenBtn" onclick="generatePrompts()" style="display:none;margin-top:0;font-size:12px;padding:7px 14px">Regenerate</button>
+      </div>
     </div>
 
     <div id="promptsContent">
@@ -807,6 +810,58 @@ nav {
         </div>
         <div class="prompts-locked-title">Complete the steps above first</div>
         <div class="prompts-locked-sub">Pay for your profile and generate your questions — then you'll be ready to record your 6 video clips.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOCUMENTS -->
+  <div class="section" id="documentsSection">
+    <div class="section-header">
+      <div class="section-title">Supporting documents</div>
+      <button class="save-btn" onclick="showAddDocument()" style="margin-top:0">Add document</button>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6">Upload supporting documents to strengthen your profile — police checks, licences, certifications, qualifications and more. Expired documents are shown with a red date so employers know the status.</p>
+
+    <div id="documentsList">
+      <div style="text-align:center;padding:32px;color:var(--muted2);font-size:13px">No documents uploaded yet.</div>
+    </div>
+
+    <!-- Add document form -->
+    <div id="addDocumentForm" style="display:none;border-top:1px solid var(--border);margin-top:20px;padding-top:20px">
+      <div style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:16px">Add a document</div>
+      <div class="profile-grid">
+        <div class="field-group">
+          <label>Document type</label>
+          <select id="docType" style="width:100%;font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:var(--text);background:var(--off);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;outline:none">
+            <option value="">Select type...</option>
+            <option value="police_check">Police check</option>
+            <option value="working_with_children">Working With Children check</option>
+            <option value="drivers_licence">Driver's licence</option>
+            <option value="working_rights">Working rights / Visa</option>
+            <option value="professional_certification">Professional certification</option>
+            <option value="trade_licence">Trade licence</option>
+            <option value="first_aid">First Aid certificate</option>
+            <option value="qualification">Degree / Qualification</option>
+            <option value="reference_letter">Reference letter</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Document name <span style="color:var(--muted2);font-weight:400;text-transform:none">(optional)</span></label>
+          <input type="text" id="docName" placeholder="e.g. Bachelor of Business, QLD Driver Licence">
+        </div>
+        <div class="field-group">
+          <label>Expiry date <span style="color:var(--muted2);font-weight:400;text-transform:none">(leave blank if no expiry)</span></label>
+          <input type="date" id="docExpiry">
+        </div>
+        <div class="field-group">
+          <label>Upload file</label>
+          <input type="file" id="docFile" accept=".pdf,.jpg,.jpeg,.png" style="width:100%;font-family:Plus Jakarta Sans,sans-serif;font-size:13px;color:var(--muted);background:var(--off);border:1.5px solid var(--border);border-radius:9px;padding:10px 14px;outline:none">
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:16px">
+        <button class="save-btn" onclick="saveDocument()">Save document</button>
+        <button onclick="document.getElementById('addDocumentForm').style.display='none'" style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:600;padding:10px 20px;border-radius:8px;border:1.5px solid var(--border);background:transparent;color:var(--muted);cursor:pointer">Cancel</button>
       </div>
     </div>
   </div>
@@ -897,6 +952,7 @@ async function init() {
   clips = clipData || [];
 
   renderDashboard();
+  loadDocuments();
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('dashboardContent').style.display = 'block';
 }
@@ -922,6 +978,7 @@ function renderDashboard() {
     document.getElementById('uploadTitle').textContent = 'CV uploaded';
     document.getElementById('uploadSub').textContent = 'Upload a new file to replace it';
     document.getElementById('generateBtn').style.display = 'inline-block';
+    document.getElementById('regenBtn').style.display = 'inline-block';
   }
 
   // Profile badge
@@ -1156,6 +1213,9 @@ async function handleCVUpload(event) {
     document.getElementById('uploadSub').textContent = 'Upload a new file to replace it';
     document.getElementById('cvBadge').textContent = 'Uploaded';
     document.getElementById('cvBadge').className = 'section-badge badge-complete';
+
+    // Always show regenerate button after CV upload
+    document.getElementById('regenBtn').style.display = 'inline-block';
 
     // Show generate prompts option
     if (!candidate.ai_prompts) {
@@ -1396,6 +1456,145 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── DOCUMENTS ──
+async function loadDocuments() {
+  const { data: docs } = await supabaseClient
+    .from('candidate_documents')
+    .select('*')
+    .eq('candidate_id', candidate.id)
+    .order('created_at', { ascending: false });
+
+  const list = document.getElementById('documentsList');
+
+  if (!docs || docs.length === 0) {
+    list.innerHTML = '<div style="text-align:center;padding:32px;color:var(--muted2);font-size:13px">No documents uploaded yet.</div>';
+    return;
+  }
+
+  const docTypeLabels = {
+    police_check: 'Police check',
+    working_with_children: 'Working With Children check',
+    drivers_licence: "Driver's licence",
+    working_rights: 'Working rights / Visa',
+    professional_certification: 'Professional certification',
+    trade_licence: 'Trade licence',
+    first_aid: 'First Aid certificate',
+    qualification: 'Degree / Qualification',
+    reference_letter: 'Reference letter',
+    other: 'Other',
+  };
+
+  list.innerHTML = docs.map(doc => {
+    let expiryBadge = '';
+    if (doc.expiry_date) {
+      const expiry = new Date(doc.expiry_date);
+      const now = new Date();
+      const expired = expiry < now;
+      const formatted = expiry.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+      expiryBadge = `<span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:5px;${expired
+        ? 'background:#fef2f2;color:#ef4444;border:1px solid #fecaca'
+        : 'background:var(--emerald-light);color:var(--emerald-dark);border:1px solid var(--emerald-border)'}">
+        ${expired ? 'Expired' : 'Valid'} · ${formatted}
+      </span>`;
+    } else {
+      expiryBadge = '<span style="font-size:11px;font-weight:700;padding:3px 9px;border-radius:5px;background:var(--off);color:var(--muted2);border:1px solid var(--border)">No expiry</span>';
+    }
+
+    return `
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--border)">
+        <div style="display:flex;align-items:center;gap:14px;flex:1;min-width:0">
+          <div style="width:36px;height:36px;background:var(--off);border:1px solid var(--border);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="var(--muted2)" stroke-width="1.5"><rect x="2" y="1" width="10" height="13" rx="1"/><line x1="5" y1="5" x2="9" y2="5"/><line x1="5" y1="8" x2="9" y2="8"/></svg>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px">${doc.document_name || docTypeLabels[doc.document_type] || 'Document'}</div>
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+              <span style="font-size:11px;color:var(--muted2)">${docTypeLabels[doc.document_type] || doc.document_type}</span>
+              ${expiryBadge}
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          ${doc.file_url ? `<a href="${doc.file_url}" target="_blank" style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;font-weight:700;padding:7px 12px;border-radius:7px;border:1.5px solid var(--border);background:white;color:var(--navy);text-decoration:none;transition:all 0.15s">View</a>` : ''}
+          <button onclick="deleteDocument('${doc.id}')" style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;font-weight:600;padding:7px 12px;border-radius:7px;border:1.5px solid #fecaca;background:#fef2f2;color:#ef4444;cursor:pointer">Remove</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function showAddDocument() {
+  document.getElementById('addDocumentForm').style.display = 'block';
+  document.getElementById('addDocumentForm').scrollIntoView({ behavior: 'smooth' });
+}
+
+async function saveDocument() {
+  const type = document.getElementById('docType').value;
+  const name = document.getElementById('docName').value.trim();
+  const expiry = document.getElementById('docExpiry').value;
+  const fileInput = document.getElementById('docFile');
+  const file = fileInput.files[0];
+
+  if (!type) { showToast('Please select a document type'); return; }
+  if (!file) { showToast('Please select a file to upload'); return; }
+
+  showToast('Uploading document...');
+
+  try {
+    // Upload file to Supabase Storage
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const fileName = `${session.user.id}/${Date.now()}-${file.name}`;
+
+    const { error: uploadError } = await supabaseClient.storage
+      .from('candidate-documents')
+      .upload(fileName, file, { upsert: true });
+
+    if (uploadError) throw uploadError;
+
+    const { data: urlData } = supabaseClient.storage
+      .from('candidate-documents')
+      .getPublicUrl(fileName);
+
+    // Save to database
+    const { error: insertError } = await supabaseClient
+      .from('candidate_documents')
+      .insert({
+        candidate_id: candidate.id,
+        document_type: type,
+        document_name: name || null,
+        file_name: file.name,
+        file_url: urlData.publicUrl,
+        expiry_date: expiry || null,
+      });
+
+    if (insertError) throw insertError;
+
+    document.getElementById('addDocumentForm').style.display = 'none';
+    document.getElementById('docType').value = '';
+    document.getElementById('docName').value = '';
+    document.getElementById('docExpiry').value = '';
+    fileInput.value = '';
+
+    await loadDocuments();
+    showToast('Document saved');
+
+  } catch (err) {
+    console.error(err);
+    showToast('Upload failed — please try again');
+  }
+}
+
+async function deleteDocument(id) {
+  const { error } = await supabaseClient
+    .from('candidate_documents')
+    .delete()
+    .eq('id', id);
+
+  if (error) { showToast('Error removing document'); return; }
+  await loadDocuments();
+  showToast('Document removed');
 }
 
 init();

@@ -283,8 +283,13 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
         <label>Password</label>
         <input type="password" id="signupPassword" placeholder="Minimum 8 characters">
       </div>
+      <div class="form-field">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;text-transform:none;font-size:13px;font-weight:400;color:var(--muted)">
+          <input type="checkbox" id="employerTerms" style="margin-top:3px;flex-shrink:0;accent-color:var(--emerald)">
+          <span>I agree to the <a href="terms.html" target="_blank" style="color:var(--emerald-dark)">Terms of Use</a> and <a href="privacy.html" target="_blank" style="color:var(--emerald-dark)">Privacy Policy</a>. I understand that all candidate information is self-reported and unverified, and I am responsible for conducting my own due diligence before making any hiring decisions.</span>
+        </label>
+      </div>
       <button class="submit-btn" onclick="handleSignup()" id="signupBtn">Create employer account</button>
-      <div class="terms-note">By creating an account you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.</div>
     </div>
 
     <!-- LOGIN -->
@@ -356,6 +361,10 @@ async function handleSignup() {
 
   if (!first || !email || !password || !company) {
     showError('signupError', 'Please fill in all required fields');
+    return;
+  }
+  if (!document.getElementById('employerTerms').checked) {
+    showError('signupError', 'Please agree to the Terms of Use and Privacy Policy to continue');
     return;
   }
   if (password.length < 8) {
