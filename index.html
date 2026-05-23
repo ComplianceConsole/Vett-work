@@ -966,41 +966,13 @@ footer p { font-size: 12px; color: var(--muted2); }
     </div>
 
     <div class="jobs-list" id="jobsList">
-
-      <!-- Empty state — remove when real listings exist -->
       <div class="empty-state" id="emptyState">
         <div class="empty-icon">
           <svg viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="20" rx="2"/><line x1="10" y1="12" x2="22" y2="12"/><line x1="10" y1="17" x2="18" y2="17"/></svg>
         </div>
-        <div class="empty-title">No roles listed yet</div>
-        <div class="empty-body">We're in early access. Roles will appear here as employers post them. <a href="employer.html">Post your role</a> and be first.</div>
+        <div class="empty-title">Loading roles...</div>
+        <div class="empty-body">Fetching live listings.</div>
       </div>
-
-      <!-- REAL LISTINGS GO HERE
-      To add a listing, copy this block and fill in the details:
-
-      <div class="job-card" data-category="operations">
-        <div class="job-card-left">
-          <div class="job-co-mark">
-            <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="1.5"/><path d="M8 6V5a2 2 0 0 1 4 0v1"/></svg>
-          </div>
-          <div>
-            <div class="job-title">Role Title Here</div>
-            <div class="job-co">Company Name · Industry · X people</div>
-            <div class="job-tags">
-              <span class="job-tag">Full-time</span>
-              <span class="job-tag tag-loc">Brisbane</span>
-              <span class="job-tag tag-sal">$XX–XXk</span>
-            </div>
-          </div>
-        </div>
-        <div class="job-card-right">
-          <div class="job-time">X days ago</div>
-          <button class="job-apply-btn" onclick="openApplyModal('Role Title Here', 'Company Name')">Apply</button>
-        </div>
-      </div>
-      -->
-
     </div>
   </div>
 </section>
@@ -1061,7 +1033,127 @@ footer p { font-size: 12px; color: var(--muted2); }
 
 <div class="toast" id="toast"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+const sbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let allJobs = [];
+
+const SEEK_LABELS = {
+  accounting: 'Accounting', administration: 'Administration & Office Support',
+  advertising: 'Advertising, Arts & Media', banking: 'Banking & Financial Services',
+  callcentre: 'Call Centre & Customer Service', ceo: 'CEO & General Management',
+  community: 'Community Services & Development', construction: 'Construction',
+  consulting: 'Consulting & Strategy', design: 'Design & Architecture',
+  education: 'Education & Training', engineering: 'Engineering',
+  farming: 'Farming, Animals & Conservation', government: 'Government & Defence',
+  healthcare: 'Healthcare & Medical', hospitality: 'Hospitality & Tourism',
+  hr: 'Human Resources & Recruitment', ict: 'Information & Communication Technology',
+  insurance: 'Insurance & Superannuation', legal: 'Legal',
+  manufacturing: 'Manufacturing, Transport & Logistics', marketing: 'Marketing & Communications',
+  mining: 'Mining, Resources & Energy', realestate: 'Real Estate & Property',
+  retail: 'Retail & Consumer Products', sales: 'Sales',
+  science: 'Science & Technology', sport: 'Sport & Recreation', trades: 'Trades & Services'
+};
+
+async function loadJobs() {
+  try {
+    const { data: jobs } = await sbClient
+      .from('jobs')
+      .select('*, employers(company_name, company_type)')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false });
+
+    allJobs = jobs || [];
+    renderJobs(allJobs);
+  } catch (err) {
+    console.error('Failed to load jobs:', err);
+    showEmptyState('Could not load listings — please refresh');
+  }
+}
+
+function renderJobs(jobs) {
+  const list = document.getElementById('jobsList');
+
+  if (!jobs || jobs.length === 0) {
+    showEmptyState();
+    return;
+  }
+
+  document.getElementById('emptyState').style.display = 'none';
+
+  const existingCards = list.querySelectorAll('.job-card');
+  existingCards.forEach(c => c.remove());
+
+  jobs.forEach(job => {
+    const daysAgo = Math.floor((Date.now() - new Date(job.created_at)) / (1000 * 60 * 60 * 24));
+    const timeLabel = daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' : `${daysAgo}d ago`;
+    const companyName = job.employers?.company_name || 'Company';
+    const companyType = job.employers?.company_type || 'direct';
+
+    const card = document.createElement('div');
+    card.className = 'job-card';
+    card.dataset.category = job.category || 'other';
+    card.dataset.location = job.location || '';
+    card.dataset.emptype = companyType;
+    card.dataset.worktype = job.work_type || 'office';
+    card.dataset.jobid = job.id;
+
+    card.innerHTML = `
+      <div class="job-card-left">
+        <div class="job-co-mark">
+          <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="1.5"/><path d="M8 6V5a2 2 0 0 1 4 0v1"/></svg>
+        </div>
+        <div>
+          <div class="job-title">${escapeHtml(job.title)}</div>
+          <div class="job-co">${escapeHtml(companyName)} · ${SEEK_LABELS[job.category] || job.category || 'General'}</div>
+          <div class="job-tags">
+            <span class="job-tag">${formatEmpType(job.employment_type)}</span>
+            <span class="job-tag tag-loc">${escapeHtml(job.location || 'Location TBC')}</span>
+            ${job.work_type ? `<span class="job-tag">${formatWorkType(job.work_type)}</span>` : ''}
+            ${job.salary_range ? `<span class="job-tag tag-sal">${escapeHtml(job.salary_range)}</span>` : ''}
+          </div>
+        </div>
+      </div>
+      <div class="job-card-right">
+        <div class="job-time">${timeLabel}</div>
+        <button class="job-apply-btn" onclick="openApplyModal('${escapeHtml(job.title)}', '${escapeHtml(companyName)}', '${job.id}')">Apply</button>
+      </div>
+    `;
+
+    list.appendChild(card);
+  });
+}
+
+function showEmptyState(msg) {
+  const es = document.getElementById('emptyState');
+  es.style.display = '';
+  es.querySelector('.empty-title').textContent = msg || 'No roles listed yet';
+  es.querySelector('.empty-body').innerHTML = msg
+    ? 'Please try refreshing the page.'
+    : 'We're in early access. Roles will appear here as employers post them. <a href="employer.html">Post your role</a> and be first.';
+}
+
+function formatEmpType(t) {
+  const map = { fulltime: 'Full-time', parttime: 'Part-time', casual: 'Casual', contractor: 'Contract' };
+  return map[t] || t || 'Full-time';
+}
+
+function formatWorkType(t) {
+  const map = { office: 'In office', hybrid: 'Hybrid', remote: 'Remote' };
+  return map[t] || t;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// Load jobs on page load
+loadJobs();
+
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -1104,7 +1196,10 @@ function filterJobs() {
   if (empty) empty.style.display = visible === 0 ? '' : 'none';
 }
 
-function openApplyModal(title, company) {
+let currentJobId = null;
+
+function openApplyModal(title, company, jobId) {
+  currentJobId = jobId || null;
   document.getElementById('modalRoleTitle').textContent = title;
   document.getElementById('modalRoleCo').textContent = company;
   document.getElementById('applyModal').classList.add('open');
