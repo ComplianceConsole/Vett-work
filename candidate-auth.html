@@ -297,7 +297,7 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
     </div>
 
     <!-- SIGNUP FORM -->
-    <div class="auth-form active" id="signupForm">
+    <div class="auth-form" id="signupForm" style="display:flex">
       <div class="auth-error" id="signupError"></div>
       <div class="auth-success" id="signupSuccess"></div>
       <div class="form-row">
@@ -332,7 +332,7 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
     </div>
 
     <!-- LOGIN FORM -->
-    <div class="auth-form" id="loginForm">
+    <div class="auth-form" id="loginForm" style="display:none">
       <div class="auth-error" id="loginError"></div>
       <div class="auth-success" id="loginSuccess"></div>
       <div class="form-field">
@@ -368,19 +368,19 @@ sbClient.auth.getSession().then(({ data: { session } }) => {
 });
 
 function switchTab(tab) {
-  // Update tab buttons
-  document.querySelectorAll('.auth-tab').forEach((t, i) => {
-    t.classList.toggle('active', (tab === 'signup' && i === 0) || (tab === 'login' && i === 1));
-  });
-  // Show/hide forms explicitly
-  const signupForm = document.getElementById('signupForm');
-  const loginForm = document.getElementById('loginForm');
-  if (tab === 'signup') {
-    signupForm.style.display = 'flex';
-    loginForm.style.display = 'none';
+  const signup = document.getElementById('signupForm');
+  const login = document.getElementById('loginForm');
+  const tabs = document.querySelectorAll('.auth-tab');
+  if (tab === 'login') {
+    signup.style.display = 'none';
+    login.style.display = 'flex';
+    tabs[0].classList.remove('active');
+    tabs[1].classList.add('active');
   } else {
-    signupForm.style.display = 'none';
-    loginForm.style.display = 'flex';
+    signup.style.display = 'flex';
+    login.style.display = 'none';
+    tabs[0].classList.add('active');
+    tabs[1].classList.remove('active');
   }
 }
 
