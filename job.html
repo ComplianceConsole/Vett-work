@@ -92,6 +92,16 @@ footer a:hover { color: white; }
   .page { grid-template-columns: 1fr; padding: 20px 16px 60px; }
 }
 </style>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="vett.work">
+  <meta property="og:title" content="Job listing — vett.work">
+  <meta property="og:description" content="Apply for this role on vett.work. Create a free account and record your virtual interview to stand out from every other applicant.">
+  <meta property="og:image" content="https://vett.work/og-home.png">
+  <meta property="og:url" content="https://vett.work">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Job listing — vett.work">
+  <meta name="twitter:description" content="Apply for this role on vett.work. Create a free account and record your virtual interview to stand out from every other applicant.">
+  <meta name="twitter:image" content="https://vett.work/og-home.png">
 </head>
 <body>
 
@@ -231,7 +241,7 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const EMP_LABELS = { fulltime: 'Full-time', parttime: 'Part-time', casual: 'Casual', contractor: 'Contract' };
 const WORK_LABELS = { office: 'In office', hybrid: 'Hybrid', remote: 'Remote' };
-const SEEK_LABELS = { accounting:'Accounting', administration:'Administration & Office Support', advertising:'Advertising, Arts & Media', banking:'Banking & Financial Services', callcentre:'Call Centre & Customer Service', ceo:'CEO & General Management', community:'Community Services & Development', construction:'Construction', consulting:'Consulting & Strategy', design:'Design & Architecture', education:'Education & Training', engineering:'Engineering', farming:'Farming, Animals & Conservation', government:'Government & Defence', healthcare:'Healthcare & Medical', hospitality:'Hospitality & Tourism', hr:'Human Resources & Recruitment', ict:'Information & Communication Technology', insurance:'Insurance & Superannuation', legal:'Legal', manufacturing:'Manufacturing, Transport & Logistics', marketing:'Marketing & Communications', mining:'Mining, Resources & Energy', realestate:'Real Estate & Property', retail:'Retail & Consumer Products', sales:'Sales', science:'Science & Technology', sport:'Sport & Recreation', trades:'Trades & Services' };
+const SEEK_LABELS = { accounting:'Accounting', administration:'Administration & Office Support', advertising:'Creative, Media & Communications', banking:'Banking & Financial Services', callcentre:'Customer Experience & Service', ceo:'Leadership & General Management', community:'Community Services & Development', construction:'Construction', consulting:'Consulting & Strategy', design:'Design & Architecture', education:'Education & Training', engineering:'Engineering', farming:'Agriculture, Animals & Environment', government:'Government & Defence', healthcare:'Healthcare & Medical', hospitality:'Hospitality & Tourism', hr:'Human Resources & Recruitment', ict:'Technology & Digital', insurance:'Insurance & Wealth', legal:'Legal', manufacturing:'Manufacturing & Production', marketing:'Marketing & Communications', mining:'Mining, Resources & Energy', realestate:'Real Estate & Property', retail:'Retail & Consumer Products', sales:'Sales', science:'Science & Technology', sport:'Sport & Recreation', trades:'Trades & Services' };
 
 let job = null;
 let saved = false;
@@ -247,6 +257,27 @@ async function init() {
   job = data;
 
   document.title = `${job.title} — vett.work`;
+
+  // Update OG tags dynamically
+  const compMeta = job.employers?.company_name || 'vett.work';
+  const locMeta = job.location ? ` · ${job.location}` : '';
+  const salMeta = job.salary_range ? ` · ${job.salary_range}` : '';
+  const ogTitle = `${job.title} at ${compMeta} — vett.work`;
+  const ogDesc = `${job.short_description || job.title + ' at ' + compMeta}${locMeta}${salMeta}. Apply on vett.work — record your virtual interview and stand out.`;
+  const ogUrl = window.location.href;
+
+  const setMeta = (prop, val, attr='property') => {
+    let el = document.querySelector(`meta[${attr}="${prop}"]`);
+    if (!el) { el = document.createElement('meta'); el.setAttribute(attr, prop); document.head.appendChild(el); }
+    el.setAttribute('content', val);
+  };
+
+  setMeta('og:title', ogTitle);
+  setMeta('og:description', ogDesc);
+  setMeta('og:url', ogUrl);
+  setMeta('twitter:title', ogTitle);
+  setMeta('twitter:description', ogDesc);
+  setMeta('name', 'description', 'name');
 
   const emp = job.employers || {};
   const companyName = emp.company_name || 'Company';

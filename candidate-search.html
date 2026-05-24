@@ -392,7 +392,7 @@ async function loadCandidates() {
     .from('candidate_clips')
     .select('candidate_id, clip_number, mux_playback_id, thumbnail_url, is_complete')
     .in('candidate_id', ids)
-    .eq('is_complete', true);
+    .eq('is_complete', true).not('mux_playback_id', 'is', null);
 
   // Load documents
   const { data: docs } = await supabaseClient
@@ -479,7 +479,8 @@ function renderCard(c) {
 
   const tags = [];
   if (c.location) tags.push({ text: c.location, green: false });
-  if (c.clips.length > 0) tags.push({ text: `${c.clips.length} video clip${c.clips.length > 1 ? 's' : ''}`, green: true });
+  const validClips = c.clips.filter(cl => cl.mux_playback_id);
+  if (validClips.length > 0) tags.push({ text: `${validClips.length} interview answer${validClips.length > 1 ? 's' : ''}`, green: true });
   if (c.documents.length > 0) tags.push({ text: `${c.documents.length} doc${c.documents.length > 1 ? 's' : ''}`, green: false });
   tags.push({ text: timeLabel, green: false });
 

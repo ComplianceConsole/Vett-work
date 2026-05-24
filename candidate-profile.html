@@ -286,15 +286,30 @@ async function init() {
     return;
   }
 
+  // Check if employer
   const { data: emp } = await supabaseClient.from('employers').select('*').eq('user_id', session.user.id).single();
-  employer = emp;
+  if (emp) {
+    employer = emp;
+    document.getElementById('navRight').innerHTML = `
+      <a href="employer-dashboard.html" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none">Dashboard</a>
+      <a href="employer-dashboard.html" class="nav-cta">My listings</a>
+    `;
+    await loadProfile();
+    return;
+  }
 
-  document.getElementById('navRight').innerHTML = `
-    <a href="employer-dashboard.html" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none">Dashboard</a>
-    <a href="employer-dashboard.html" class="nav-cta">My listings</a>
-  `;
+  // Check if candidate viewing own profile
+  const { data: cand } = await supabaseClient.from('candidates').select('id').eq('user_id', session.user.id).single();
+  if (cand && cand.id === candidateId) {
+    document.getElementById('navRight').innerHTML = `
+      <a href="candidate-dashboard.html" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none">My dashboard</a>
+    `;
+    await loadProfile();
+    return;
+  }
 
-  await loadProfile();
+  // Otherwise show gate
+  document.getElementById('gateView').style.display = 'flex';
 }
 
 async function loadProfile() {
