@@ -884,9 +884,9 @@ footer p { font-size: 12px; color: var(--muted2); }
 .search-btn {
   font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 14px; font-weight: 700;
-  padding: 11px 24px; border-radius: 9px; border: none;
+  padding: 0 24px; height: 48px; border-radius: 9px; border: none;
   background: var(--emerald); color: white; cursor: pointer;
-  transition: background 0.15s; white-space: nowrap;
+  transition: background 0.15s; white-space: nowrap; flex-shrink: 0;
 }
 .search-btn:hover { background: var(--emerald-dark); }
 
@@ -978,16 +978,16 @@ footer p { font-size: 12px; color: var(--muted2); }
     </div>
 
     <!-- Search + location -->
-    <div class="search-row" style="display:flex;gap:10px;align-items:center">
-      <div class="search-wrap" style="flex:1">
-        <svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
-        <input type="text" placeholder="Role, skill, or keyword" id="jobSearch" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()">
+    <div style="display:flex;gap:10px;align-items:stretch;margin-bottom:16px">
+      <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s" onfocusin="this.style.borderColor='#10b981'" onfocusout="this.style.borderColor='var(--border)'">
+        <svg viewBox="0 0 16 16" width="14" height="14" stroke="#94a3b8" stroke-width="1.5" fill="none" flex-shrink="0"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
+        <input type="text" placeholder="Role, skill, or keyword" id="jobSearch" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()" style="flex:1;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;background:transparent">
       </div>
-      <div class="search-wrap" style="flex:1">
-        <svg viewBox="0 0 16 16"><path d="M8 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
-        <input type="text" placeholder="Location — city, state, or remote" id="jobLocation" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()">
+      <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s" onfocusin="this.style.borderColor='#10b981'" onfocusout="this.style.borderColor='var(--border)'">
+        <svg viewBox="0 0 16 16" width="14" height="14" stroke="#94a3b8" stroke-width="1.5" fill="none" flex-shrink="0"><path d="M8 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
+        <input type="text" placeholder="Location — city, state, or remote" id="jobLocation" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()" style="flex:1;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;background:transparent">
       </div>
-      <button class="search-btn" onclick="filterJobs()">Search</button>
+      <button onclick="filterJobs()" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:0 24px;height:46px;border-radius:9px;border:none;background:#10b981;color:white;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">Search</button>
     </div>
 
     <!-- Company type -->
