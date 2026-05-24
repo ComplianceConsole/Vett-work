@@ -833,33 +833,35 @@ footer p { font-size: 12px; color: var(--muted2); }
 .sticky-search-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
 .sticky-search-btn:hover { background: var(--emerald-dark); }
 
-/* JOB CARDS */
+/* JOB CARDS — Option C */
 .job-card {
   background: white;
-  border: 1.5px solid var(--border);
-  border-radius: 14px;
-  padding: 20px 24px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--emerald);
+  border-radius: 12px;
+  padding: 18px 20px;
   margin-bottom: 10px;
   cursor: pointer;
-  transition: box-shadow 0.15s, border-color 0.15s;
-  position: relative;
-  overflow: hidden;
+  transition: box-shadow 0.15s;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
 }
-.job-card:hover { box-shadow: 0 4px 20px rgba(12,20,69,0.08); border-color: #cbd5e1; }
-
-.job-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 6px; }
-.job-title { font-size: 17px; font-weight: 800; color: var(--navy); letter-spacing: -0.4px; line-height: 1.2; }
-.job-logo { width: 48px; height: 48px; border-radius: 10px; background: var(--off); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden; font-size: 15px; font-weight: 800; color: var(--navy); }
+.job-card:hover { box-shadow: 0 4px 16px rgba(12,20,69,0.07); }
+.job-card-body { flex: 1; min-width: 0; }
+.job-title { font-size: 15px; font-weight: 700; color: var(--emerald-dark); margin-bottom: 2px; letter-spacing: -0.2px; }
+.job-company { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.job-meta { font-size: 12px; color: var(--muted2); margin-bottom: 8px; }
+.job-desc { font-size: 13px; color: var(--muted); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.job-card-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; flex-shrink: 0; }
+.job-logo { width: 44px; height: 44px; border-radius: 8px; background: var(--emerald-light); border: 1px solid var(--emerald-border); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--emerald-dark); overflow: hidden; }
 .job-logo img { width: 100%; height: 100%; object-fit: cover; }
-.job-meta { font-size: 13px; color: var(--muted); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-.job-meta-sep { color: var(--border); }
-.job-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.job-footer { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.job-tags { display: flex; gap: 6px; flex-wrap: wrap; }
-.job-tag { font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: var(--off); border: 1px solid var(--border); color: var(--muted); display: flex; align-items: center; gap: 5px; }
+.job-time { font-size: 11px; color: var(--muted2); }
+.job-apply-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 7px 16px; border-radius: 7px; border: 1px solid var(--border); background: white; color: var(--navy); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+.job-apply-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+.job-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 10px; }
+.job-tag { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 4px; background: var(--off); border: 1px solid var(--border); color: var(--muted); }
 .job-tag.green { background: var(--emerald-light); color: var(--emerald-dark); border-color: var(--emerald-border); }
-.job-apply-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 9px; border: 1.5px solid var(--navy); background: white; color: var(--navy); cursor: pointer; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
-.job-apply-btn:hover { background: var(--navy); color: white; }
 
 /* SEARCH GREEN BUTTON */
 .search-btn {
@@ -1163,7 +1165,7 @@ async function loadJobs() {
   try {
     const { data: jobs } = await sbClient
       .from('jobs')
-      .select('*, employers(company_name, company_type, logo_url)')
+      .select('*, employers(company_name, company_type, logo_url, industry)')
       .eq('is_active', true)
       .order('created_at', { ascending: false });
 
@@ -1200,7 +1202,7 @@ function renderJobs(jobs) {
     const companyType = job.employers?.company_type || 'direct';
     const logoUrl = job.employers?.logo_url || '';
     const initials = companyName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
-    const desc = job.description ? job.description.replace(/<[^>]+>/g, '').substring(0, 160) : '';
+    const desc = job.short_description || (job.description ? job.description.replace(/<[^>]+>/g, '').substring(0, 160) : '');
     const empType = EMP_TYPE_LABELS[job.employment_type] || job.employment_type || 'Full-time';
     const workType = WORK_TYPE_LABELS[job.work_type] || '';
     const compTypeLabel = COMPANY_TYPE_LABELS[companyType] || companyType;
@@ -1215,28 +1217,19 @@ function renderJobs(jobs) {
     card.onclick = (e) => { if (!e.target.classList.contains('job-apply-btn')) openApplyModal(escapeHtml(job.title), escapeHtml(companyName), job.id); };
 
     card.innerHTML = `
-      <div class="job-card-header">
-        <div style="flex:1;min-width:0">
-          <div class="job-title">${escapeHtml(job.title)}</div>
-        </div>
-        <div class="job-logo">
-          ${logoUrl ? `<img src="${logoUrl}" alt="${escapeHtml(companyName)}">` : initials}
-        </div>
-      </div>
-      <div class="job-meta">
-        <span>${timeLabel}</span>
-        <span class="job-meta-sep">|</span>
-        <span>${escapeHtml(companyName)}</span>
-        ${job.location ? `<span class="job-meta-sep">|</span><span>${escapeHtml(job.location)}</span>` : ''}
-      </div>
-      ${desc ? `<div class="job-desc">${escapeHtml(desc)}</div>` : ''}
-      <div class="job-footer">
+      <div class="job-card-body">
+        <div class="job-title">${escapeHtml(job.title)}</div>
+        <div class="job-company">${escapeHtml(companyName)}</div>
+        <div class="job-meta">${escapeHtml(job.location || 'Location TBC')} · ${empType}${workType ? ' · ' + workType : ''}${job.salary_range ? ' · ' + escapeHtml(job.salary_range) : ''}</div>
+        ${desc ? `<div class="job-desc">${escapeHtml(desc)}</div>` : ''}
         <div class="job-tags">
-          <span class="job-tag">${empType}</span>
-          ${workType ? `<span class="job-tag">${workType}</span>` : ''}
-          ${job.salary_range ? `<span class="job-tag green">${escapeHtml(job.salary_range)}</span>` : ''}
           <span class="job-tag">${SEEK_LABELS[job.category] || job.category || 'General'}</span>
+          ${compTypeLabel !== 'Direct employer' ? `<span class="job-tag">${compTypeLabel}</span>` : ''}
         </div>
+      </div>
+      <div class="job-card-right">
+        <div class="job-logo">${logoUrl ? `<img src="${logoUrl}" alt="${escapeHtml(companyName)}">` : initials}</div>
+        <div class="job-time">${timeLabel}</div>
         <button class="job-apply-btn" onclick="openApplyModal('${escapeHtml(job.title)}', '${escapeHtml(companyName)}', '${job.id}')">Apply</button>
       </div>
     `;

@@ -383,7 +383,11 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
             </select>
           </div>
           <div class="field field-full">
-            <label>What you're looking for</label>
+            <label>Short description <span style="font-weight:400;text-transform:none;font-size:10px;color:var(--muted2)">shown on the job board listing (max 200 chars)</span></label>
+            <input type="text" id="jobShortDesc" placeholder="e.g. Looking for an experienced Sales Manager to lead our QLD team and drive revenue growth." maxlength="200">
+          </div>
+          <div class="field field-full">
+            <label>Full description</label>
             <textarea id="jobDescription" placeholder="Describe the role, what the person will be doing day to day, what kind of person you're after. Keep it real — candidates respond better to honest descriptions than corporate job ads."></textarea>
           </div>
         </div>
@@ -765,6 +769,7 @@ async function submitPost() {
   const workType = document.getElementById('jobWorkType').value;
   const empType = document.getElementById('jobEmpType').value;
   const category = document.getElementById('jobCategory').value;
+  const short_description = document.getElementById('jobShortDesc').value.trim();
   const description = document.getElementById('jobDescription').value.trim();
 
   if (!title) { showToast('Please enter a job title'); return; }
@@ -802,7 +807,7 @@ async function submitPost() {
     document.getElementById('statListings').textContent = jobs.filter(j => j.is_active).length;
 
     // Reset form
-    ['jobTitle', 'jobLocation', 'jobSalary', 'jobDescription'].forEach(id => document.getElementById(id).value = '');
+    ['jobTitle', 'jobLocation', 'jobSalary', 'jobShortDesc', 'jobDescription'].forEach(id => document.getElementById(id).value = '');
 
     // Redirect to Stripe checkout
     const priceMap = { base: STRIPE_PRICE_JOB, mid: STRIPE_PRICE_PREMIUM, pro: STRIPE_PRICE_BUNDLE };
