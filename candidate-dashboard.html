@@ -442,11 +442,13 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 
   <!-- SAVED JOBS TAB -->
   <div id="dash-saved-content" style="display:none">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
-      <div style="font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-0.5px">Saved jobs</div>
-      <a href="index.html" style="font-size:13px;color:var(--emerald-dark);text-decoration:none;font-weight:600">Browse jobs →</a>
+    <div style="max-width:720px;margin:0 auto">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+        <div style="font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-0.5px">Saved jobs</div>
+        <a href="index.html" style="font-size:13px;color:var(--emerald-dark);text-decoration:none;font-weight:600">Browse jobs →</a>
+      </div>
+      <div id="savedJobsList"></div>
     </div>
-    <div id="savedJobsList"></div>
   </div>
 
 <div class="toast" id="toast"></div>
