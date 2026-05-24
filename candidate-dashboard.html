@@ -249,6 +249,28 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
     <div class="step-pill" id="step7"><div class="step-pill-num">7</div><div class="step-pill-label">Go live</div></div>
   </div>
 
+  <!-- PROFILE DETAILS -->
+  <div class="section" id="profileDetailsSection">
+    <div class="section-header">
+      <div class="section-title">Your details</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)">
+      <div id="avatarCircle" style="width:64px;height:64px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:white;letter-spacing:-1px;flex-shrink:0">?</div>
+      <div>
+        <div id="avatarName" style="font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-0.5px">Your name</div>
+        <div id="avatarHeadline" style="font-size:13px;color:var(--muted);margin-top:2px">Add your headline below</div>
+        <div id="avatarLocation" style="font-size:12px;color:var(--muted2);margin-top:2px"></div>
+      </div>
+    </div>
+    <div class="field-grid">
+      <div class="field-group"><label>First name</label><input type="text" id="firstName" placeholder="First name" oninput="updateAvatar()"></div>
+      <div class="field-group"><label>Last name</label><input type="text" id="lastName" placeholder="Last name" oninput="updateAvatar()"></div>
+      <div class="field-group"><label>Location</label><input type="text" id="location" placeholder="e.g. Brisbane, QLD" oninput="updateAvatar()"></div>
+      <div class="field-group"><label>Headline</label><input type="text" id="headline" placeholder="e.g. Operations Manager | Brisbane" oninput="updateAvatar()"></div>
+    </div>
+    <button class="save-btn" onclick="saveProfile()">Save details</button>
+  </div>
+
   <!-- 2: CV -->
   <div class="section" id="cvSection">
     <div class="section-header">
@@ -286,28 +308,6 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
         <div class="locked-sub">Once your CV is uploaded we'll generate 6 personalised questions based on your actual experience.</div>
       </div>
     </div>
-  </div>
-
-  <!-- PROFILE DETAILS -->
-  <div class="section" id="profileDetailsSection">
-    <div class="section-header">
-      <div class="section-title">Your details</div>
-    </div>
-    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)">
-      <div id="avatarCircle" style="width:64px;height:64px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:white;letter-spacing:-1px;flex-shrink:0">?</div>
-      <div>
-        <div id="avatarName" style="font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-0.5px">Your name</div>
-        <div id="avatarHeadline" style="font-size:13px;color:var(--muted);margin-top:2px">Add your headline below</div>
-        <div id="avatarLocation" style="font-size:12px;color:var(--muted2);margin-top:2px"></div>
-      </div>
-    </div>
-    <div class="field-grid">
-      <div class="field-group"><label>First name</label><input type="text" id="firstName" placeholder="First name" oninput="updateAvatar()"></div>
-      <div class="field-group"><label>Last name</label><input type="text" id="lastName" placeholder="Last name" oninput="updateAvatar()"></div>
-      <div class="field-group"><label>Location</label><input type="text" id="location" placeholder="e.g. Brisbane, QLD" oninput="updateAvatar()"></div>
-      <div class="field-group"><label>Headline</label><input type="text" id="headline" placeholder="e.g. Operations Manager | Brisbane" oninput="updateAvatar()"></div>
-    </div>
-    <button class="save-btn" onclick="saveProfile()">Save details</button>
   </div>
 
   <!-- 1: PAYMENT NUDGE -->
