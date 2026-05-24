@@ -1211,7 +1211,7 @@ function renderJobs(jobs) {
     card.dataset.emptype = companyType;
     card.dataset.worktype = job.work_type || 'office';
     card.dataset.jobid = job.id;
-    card.onclick = (e) => { if (!e.target.classList.contains('job-apply-btn')) openApplyModal(escapeHtml(job.title), escapeHtml(companyName), job.id); };
+    card.onclick = (e) => { if (!e.target.classList.contains('job-apply-btn')) window.location.href = `job.html?id=${job.id}`; };
 
     card.innerHTML = `
       <div class="job-card-body">
