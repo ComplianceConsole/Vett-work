@@ -425,6 +425,18 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 
 <div class="toast" id="toast"></div>
 
+<!-- VIDEO MODAL -->
+<div id="videoModal" onclick="if(event.target===this)closeVideo()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;align-items:center;justify-content:center;padding:20px">
+  <div style="width:100%;max-width:800px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:15px;font-weight:700;color:white" id="videoModalTitle"></div>
+      <button onclick="closeVideo()" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:rgba(255,255,255,0.5);background:none;border:none;cursor:pointer;transition:color 0.15s" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">✕ Close</button>
+    </div>
+    <video id="videoModalPlayer" controls playsinline style="width:100%;border-radius:12px;background:#000;max-height:70vh"></video>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
@@ -978,6 +990,41 @@ async function saveWorkRights() {
 
   if (error) { showToast('Error saving'); return; }
   showToast('Work rights saved');
+}
+
+let hlsInstance = null;
+
+function playClip(playbackId, title) {
+  const modal = document.getElementById('videoModal');
+  const video = document.getElementById('videoModalPlayer');
+  const titleEl = document.getElementById('videoModalTitle');
+
+  titleEl.textContent = title;
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+
+  const src = `https://stream.mux.com/${playbackId}.m3u8`;
+
+  if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+    if (hlsInstance) hlsInstance.destroy();
+    hlsInstance = new Hls();
+    hlsInstance.loadSource(src);
+    hlsInstance.attachMedia(video);
+    hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+  } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    video.src = src;
+    video.play();
+  }
+}
+
+function closeVideo() {
+  const modal = document.getElementById('videoModal');
+  const video = document.getElementById('videoModalPlayer');
+  modal.style.display = 'none';
+  document.body.style.overflow = '';
+  video.pause();
+  if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
+  video.src = '';
 }
 
 async function handleSignOut() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
