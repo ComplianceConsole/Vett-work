@@ -24,7 +24,7 @@ nav { background: #0c1445; padding: 0 48px; height: 64px; display: flex; justify
 .banner-title { font-size: 26px; font-weight: 800; color: white; letter-spacing: -1px; margin-bottom: 6px; line-height: 1.1; }
 .banner-meta { font-size: 14px; color: rgba(255,255,255,0.5); }
 .banner-actions { display: flex; gap: 10px; flex-shrink: 0; }
-.btn-save { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; padding: 11px 22px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.2); background: transparent; color: white; cursor: pointer; transition: all 0.15s; }
+.btn-save { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; padding: 11px 28px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,0.2); background: transparent; color: white; cursor: pointer; transition: all 0.15s; }
 .btn-save:hover { border-color: white; }
 .btn-save.saved { border-color: #10b981; color: #10b981; }
 .btn-apply { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 700; padding: 11px 28px; border-radius: 10px; border: none; background: #10b981; color: white; cursor: pointer; transition: background 0.15s; }
@@ -114,9 +114,6 @@ footer a:hover { color: white; }
         <div class="banner-meta" id="bannerMeta"></div>
       </div>
       <div class="banner-actions">
-        <button class="btn-save" onclick="emailToFriend()" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:11px 18px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)';this.style.color='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.6)'">
-          Share →
-        </button>
         <button class="btn-save" id="saveBtn" onclick="toggleSave()">☆ Save job</button>
         <button class="btn-apply" onclick="openApply()">Apply now</button>
       </div>
@@ -174,6 +171,15 @@ footer a:hover { color: white; }
       <div class="disclaimer">
         All job listings on vett.work are posted by employers. vett.work does not verify the accuracy of listings. Always exercise caution when applying.
       </div>
+
+      <div class="sidebar-card" style="margin-top:16px">
+        <div class="section-title">Email this job to a friend</div>
+        <p style="font-size:13px;color:#64748b;margin-bottom:12px;line-height:1.5">Know someone who'd be perfect for this role? Send it their way.</p>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <input type="email" id="friendEmail" placeholder="friend@email.com" style="width:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:9px;padding:10px 14px;outline:none">
+          <button onclick="sendToFriend()" style="width:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:11px;border-radius:9px;border:none;background:#0c1445;color:white;cursor:pointer;transition:background 0.15s" onmouseover="this.style.background='#10b981'" onmouseout="this.style.background='#0c1445'">Send job link</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -182,14 +188,26 @@ footer a:hover { color: white; }
 <div class="modal-overlay" id="applyModal">
   <div class="modal">
     <h3>Apply for this role</h3>
-    <p id="applyModalSub">Your application will be sent to the employer.</p>
-    <div class="modal-field"><label>Full name</label><input type="text" id="applyName" placeholder="Your name"></div>
-    <div class="modal-field"><label>Email address</label><input type="email" id="applyEmail" placeholder="your@email.com"></div>
-    <div class="modal-field"><label>Profile link <span style="font-weight:400;text-transform:none;font-size:10px;color:#94a3b8">(optional)</span></label><input type="url" id="applyLink" placeholder="vett.work/candidate-profile.html?..."></div>
-    <div class="modal-field"><label>Cover note <span style="font-weight:400;text-transform:none;font-size:10px;color:#94a3b8">(optional)</span></label><textarea id="applyNote" placeholder="Anything you want the employer to know..."></textarea></div>
-    <div class="modal-btns">
-      <button class="modal-cancel" onclick="closeApply()">Cancel</button>
-      <button class="modal-submit" id="applySubmit" onclick="submitApply()">Submit application</button>
+
+    <!-- NOT LOGGED IN STATE -->
+    <div id="applyLoggedOut" style="display:none">
+      <p style="font-size:14px;color:#475569;line-height:1.65;margin-bottom:20px">Create a free candidate account to apply. Your virtual interview goes straight to the employer — no cover letter needed.</p>
+      <a href="candidate-auth.html" style="display:block;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:15px;font-weight:700;padding:13px;border-radius:10px;background:#10b981;color:white;text-decoration:none;margin-bottom:10px">Create free account</a>
+      <a href="candidate-auth.html?tab=login" style="display:block;text-align:center;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;padding:11px;border-radius:10px;border:1.5px solid #e2e8f0;color:#475569;text-decoration:none;margin-bottom:16px">Sign in to existing account</a>
+      <button class="modal-cancel" onclick="closeApply()" style="width:100%">Cancel</button>
+    </div>
+
+    <!-- LOGGED IN STATE -->
+    <div id="applyLoggedIn" style="display:none">
+      <p id="applyModalSub" style="font-size:13px;color:#64748b;margin-bottom:16px">Your application will be sent to the employer.</p>
+      <div class="modal-field"><label>Full name</label><input type="text" id="applyName" placeholder="Your name"></div>
+      <div class="modal-field"><label>Email address</label><input type="email" id="applyEmail" placeholder="your@email.com"></div>
+      <div class="modal-field"><label>Profile link <span style="font-weight:400;text-transform:none;font-size:10px;color:#94a3b8">(optional)</span></label><input type="url" id="applyLink" placeholder="vett.work/candidate-profile.html?..."></div>
+      <div class="modal-field"><label>Cover note <span style="font-weight:400;text-transform:none;font-size:10px;color:#94a3b8">(optional)</span></label><textarea id="applyNote" placeholder="Anything you want the employer to know..."></textarea></div>
+      <div class="modal-btns">
+        <button class="modal-cancel" onclick="closeApply()">Cancel</button>
+        <button class="modal-submit" id="applySubmit" onclick="submitApply()">Submit application</button>
+      </div>
     </div>
   </div>
 </div>
@@ -336,23 +354,41 @@ async function toggleSave() {
   }
 }
 
-function emailToFriend() {
+function sendToFriend() {
+  const email = document.getElementById('friendEmail').value.trim();
+  if (!email || !email.includes('@')) {
+    document.getElementById('friendEmail').style.borderColor = '#ef4444';
+    setTimeout(() => document.getElementById('friendEmail').style.borderColor = '#e2e8f0', 2000);
+    return;
+  }
   const title = job?.title || 'Job listing';
   const company = job?.employers?.company_name || 'a company';
   const url = window.location.href;
   const subject = encodeURIComponent(`Job opportunity — ${title} at ${company}`);
   const body = encodeURIComponent(`Hi,
 
-I thought you might be interested in this role I found on vett.work:
+I thought you might be perfect for this role on vett.work:
 
 ${title} at ${company}
 ${url}
 
 vett.work — recruitment that's more human.`);
-  window.location.href = `mailto:?subject=${subject}&body=${body}`;
+  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+  document.getElementById('friendEmail').value = '';
+  showToast('Opening your email client...');
 }
 
-function openApply() { document.getElementById('applyModal').classList.add('open'); }
+function openApply() {
+  if (!currentCandidateId) {
+    document.getElementById('applyModal').classList.add('open');
+    document.getElementById('applyLoggedOut').style.display = 'block';
+    document.getElementById('applyLoggedIn').style.display = 'none';
+    return;
+  }
+  document.getElementById('applyModal').classList.add('open');
+  document.getElementById('applyLoggedOut').style.display = 'none';
+  document.getElementById('applyLoggedIn').style.display = 'block';
+}
 function closeApply() { document.getElementById('applyModal').classList.remove('open'); }
 
 async function submitApply() {
