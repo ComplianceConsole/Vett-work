@@ -293,11 +293,19 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
     <div class="section-header">
       <div class="section-title">Your details</div>
     </div>
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)">
+      <div id="avatarCircle" style="width:64px;height:64px;border-radius:50%;background:var(--emerald);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:white;letter-spacing:-1px;flex-shrink:0">?</div>
+      <div>
+        <div id="avatarName" style="font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-0.5px">Your name</div>
+        <div id="avatarHeadline" style="font-size:13px;color:var(--muted);margin-top:2px">Add your headline below</div>
+        <div id="avatarLocation" style="font-size:12px;color:var(--muted2);margin-top:2px"></div>
+      </div>
+    </div>
     <div class="field-grid">
-      <div class="field-group"><label>First name</label><input type="text" id="firstName" placeholder="First name"></div>
-      <div class="field-group"><label>Last name</label><input type="text" id="lastName" placeholder="Last name"></div>
-      <div class="field-group"><label>Location</label><input type="text" id="location" placeholder="e.g. Brisbane, QLD"></div>
-      <div class="field-group"><label>Headline</label><input type="text" id="headline" placeholder="e.g. Operations Manager | Brisbane"></div>
+      <div class="field-group"><label>First name</label><input type="text" id="firstName" placeholder="First name" oninput="updateAvatar()"></div>
+      <div class="field-group"><label>Last name</label><input type="text" id="lastName" placeholder="Last name" oninput="updateAvatar()"></div>
+      <div class="field-group"><label>Location</label><input type="text" id="location" placeholder="e.g. Brisbane, QLD" oninput="updateAvatar()"></div>
+      <div class="field-group"><label>Headline</label><input type="text" id="headline" placeholder="e.g. Operations Manager | Brisbane" oninput="updateAvatar()"></div>
     </div>
     <button class="save-btn" onclick="saveProfile()">Save details</button>
   </div>
@@ -507,6 +515,9 @@ function renderDashboard() {
   document.getElementById('location').value = candidate.location || '';
   document.getElementById('headline').value = candidate.headline || '';
   document.getElementById('linkedinUrl').value = candidate.linkedin_url || '';
+
+  // Update avatar
+  updateAvatar();
 
   // Work rights
   if (candidate.work_rights_status) {
@@ -1003,6 +1014,21 @@ function loadChecklist() {
     if (el && state[`chk${i}`]) el.checked = true;
   }
   updateChecklistProgress();
+}
+
+function updateAvatar() {
+  const first = (document.getElementById('firstName').value || '').trim();
+  const last = (document.getElementById('lastName').value || '').trim();
+  const loc = (document.getElementById('location').value || '').trim();
+  const hl = (document.getElementById('headline').value || '').trim();
+
+  const initials = ((first[0] || '') + (last[0] || '')).toUpperCase() || '?';
+  const name = [first, last].filter(Boolean).join(' ') || 'Your name';
+
+  document.getElementById('avatarCircle').textContent = initials;
+  document.getElementById('avatarName').textContent = name;
+  document.getElementById('avatarHeadline').textContent = hl || 'Add your headline below';
+  document.getElementById('avatarLocation').textContent = loc || '';
 }
 
 function toggleWorkRightsFields() {
