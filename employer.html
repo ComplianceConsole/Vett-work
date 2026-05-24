@@ -648,6 +648,7 @@ const CONFIG = {
   <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
   <div style="display:flex;align-items:center;gap:8px">
     <a href="employer-auth.html" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s" onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">Log in</a>
+    <div id="navUserArea" style="display:flex;align-items:center;gap:8px"></div>
     <button class="nav-cta" onclick="window.location.href='employer-auth.html'">Post a role</button>
   </div>
 </nav>
@@ -1148,6 +1149,31 @@ document.querySelectorAll('.how-card, .why-card, .price-card, .wyg-item').forEac
   el.style.transition = 'opacity 0.45s ease, transform 0.45s ease';
   observer.observe(el);
 });
+</script>
+<script>
+(async function() {
+  if (typeof window.supabase === 'undefined') return;
+  const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+  const _sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const { data: { session } } = await _sb.auth.getSession();
+  if (!session) return;
+  const area = document.getElementById('navUserArea');
+  if (!area) return;
+  const { data: cand } = await _sb.from('candidates').select('first_name, last_name').eq('user_id', session.user.id).single();
+  if (cand) {
+    const initials = ((cand.first_name||'')[0]+(cand.last_name||'')[0]).toUpperCase()||'?';
+    const name = [cand.first_name,cand.last_name].filter(Boolean).join(' ');
+    area.innerHTML = '<a href="candidate-dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none"><div style="width:32px;height:32px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0">'+initials+'</div><span style="font-size:13px;font-weight:600;color:white">'+name+'</span></a>';
+    return;
+  }
+  const { data: emp } = await _sb.from('employers').select('company_name,first_name,last_name').eq('user_id', session.user.id).single();
+  if (emp) {
+    const name = emp.company_name||[emp.first_name,emp.last_name].filter(Boolean).join(' ')||'Employer';
+    const initials = name.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+    area.innerHTML = '<a href="employer-dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none"><div style="width:32px;height:32px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0">'+initials+'</div><span style="font-size:13px;font-weight:600;color:white">'+name+'</span></a>';
+  }
+})();
 </script>
 </body>
 </html>

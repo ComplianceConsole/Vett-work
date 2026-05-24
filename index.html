@@ -885,8 +885,9 @@ footer p { font-size: 12px; color: var(--muted2); }
 <nav>
   <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
   <div style="display:flex;align-items:center;gap:8px" id="navButtons">
-    <a href="candidate-auth.html?tab=login" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s" onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">Candidate login</a>
-    <a href="employer-auth.html?tab=login" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s" onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">Employer login</a>
+    <div id="navUserArea" style="display:flex;align-items:center;gap:8px"></div>
+    <a href="candidate-auth.html?tab=login" id="navCandLogin" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s">Candidate login</a>
+    <a href="employer-auth.html?tab=login" id="navEmpLogin" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s">Employer login</a>
   </div>
 </nav>
 
@@ -1266,30 +1267,20 @@ loadJobs();
 (async () => {
   const { data: { session } } = await sbClient.auth.getSession();
   if (!session) return;
-
-  // Check if candidate
+  document.getElementById('navCandLogin').style.display = 'none';
+  document.getElementById('navEmpLogin').style.display = 'none';
   const { data: cand } = await sbClient.from('candidates').select('first_name, last_name').eq('user_id', session.user.id).single();
   if (cand) {
-    const initials = ((cand.first_name||'')[0] + (cand.last_name||'')[0]).toUpperCase() || '?';
-    const name = [cand.first_name, cand.last_name].filter(Boolean).join(' ');
-    document.getElementById('navButtons').innerHTML = `
-      <a href="candidate-dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none">
-        <div style="width:32px;height:32px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white">${initials}</div>
-        <span style="font-size:13px;font-weight:600;color:white">${name}</span>
-      </a>`;
+    const initials = ((cand.first_name||'')[0]+(cand.last_name||'')[0]).toUpperCase()||'?';
+    const name = [cand.first_name,cand.last_name].filter(Boolean).join(' ');
+    document.getElementById('navUserArea').innerHTML = '<a href="candidate-dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none"><div style="width:32px;height:32px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white">'+initials+'</div><span style="font-size:13px;font-weight:600;color:white">'+name+'</span></a>';
     return;
   }
-
-  // Check if employer
-  const { data: emp } = await sbClient.from('employers').select('company_name, first_name, last_name').eq('user_id', session.user.id).single();
+  const { data: emp } = await sbClient.from('employers').select('company_name,first_name,last_name').eq('user_id', session.user.id).single();
   if (emp) {
-    const name = emp.company_name || [emp.first_name, emp.last_name].filter(Boolean).join(' ') || 'Employer';
-    const initials = name.split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
-    document.getElementById('navButtons').innerHTML = `
-      <a href="employer-dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none">
-        <div style="width:32px;height:32px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white">${initials}</div>
-        <span style="font-size:13px;font-weight:600;color:white">${name}</span>
-      </a>`;
+    const name = emp.company_name||[emp.first_name,emp.last_name].filter(Boolean).join(' ')||'Employer';
+    const initials = name.split(' ').map(function(w){return w[0];}).join('').substring(0,2).toUpperCase();
+    document.getElementById('navUserArea').innerHTML = '<a href="employer-dashboard.html" style="display:flex;align-items:center;gap:8px;text-decoration:none"><div style="width:32px;height:32px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white">'+initials+'</div><span style="font-size:13px;font-weight:600;color:white">'+name+'</span></a>';
   }
 })();
 
