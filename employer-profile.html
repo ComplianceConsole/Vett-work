@@ -150,6 +150,20 @@ footer a:hover { color: white; }
     </div>
     <div class="field-grid">
       <div class="field full">
+        <!-- Logo upload -->
+        <label>Company logo</label>
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:4px">
+          <div id="logoPreview" style="width:64px;height:64px;border-radius:12px;background:var(--emerald-light);border:1.5px solid var(--emerald-border);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:var(--emerald-dark);overflow:hidden;flex-shrink:0">?</div>
+          <div>
+            <div style="position:relative;display:inline-block">
+              <input type="file" id="logoInput" accept="image/*" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%" onchange="handleLogoUpload(event)">
+              <button style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:9px 18px;border-radius:8px;border:1.5px solid var(--border);background:white;color:var(--navy);cursor:pointer">Upload logo</button>
+            </div>
+            <div style="font-size:11px;color:var(--muted2);margin-top:6px">PNG or JPG · Square works best · Max 2MB</div>
+          </div>
+        </div>
+      </div>
+      <div class="field full">
         <label>Company name</label>
         <input type="text" id="companyName" placeholder="Your company name">
       </div>
@@ -159,9 +173,9 @@ footer a:hover { color: white; }
           <option value="">Select industry...</option>
           <option value="accounting">Accounting</option>
           <option value="administration">Administration & Office Support</option>
-          <option value="advertising">Advertising, Arts & Media</option>
+          <option value="advertising">Creative, Media & Communications</option>
           <option value="banking">Banking & Financial Services</option>
-          <option value="callcentre">Call Centre & Customer Service</option>
+          <option value="callcentre">Customer Experience & Service</option>
           <option value="community">Community Services & Development</option>
           <option value="construction">Construction</option>
           <option value="consulting">Consulting & Strategy</option>
@@ -172,9 +186,9 @@ footer a:hover { color: white; }
           <option value="healthcare">Healthcare & Medical</option>
           <option value="hospitality">Hospitality & Tourism</option>
           <option value="hr">Human Resources & Recruitment</option>
-          <option value="ict">Information & Communication Technology</option>
+          <option value="ict">Technology & Digital</option>
           <option value="legal">Legal</option>
-          <option value="manufacturing">Manufacturing, Transport & Logistics</option>
+          <option value="manufacturing">Manufacturing & Production</option>
           <option value="marketing">Marketing & Communications</option>
           <option value="mining">Mining, Resources & Energy</option>
           <option value="realestate">Real Estate & Property</option>
@@ -352,6 +366,14 @@ async function init() {
   employer = emp;
 
   // Populate fields
+  // Load logo preview
+  if (emp.logo_url) {
+    document.getElementById('logoPreview').innerHTML = '<img src="' + emp.logo_url + '" style="width:100%;height:100%;object-fit:cover">';
+  } else if (emp.company_name) {
+    const initials = emp.company_name.split(' ').map(w => w[0]).join('').substring(0,2).toUpperCase();
+    document.getElementById('logoPreview').textContent = initials;
+  }
+
   document.getElementById('companyName').value = emp.company_name || '';
   document.getElementById('companyIndustry').value = emp.industry || '';
   document.getElementById('companySize').value = emp.company_size || '';
@@ -499,6 +521,43 @@ async function handleDocUpload(event) {
 function confirmDelete() {
   if (confirm('Are you sure you want to delete your account? This cannot be undone.')) {
     showToast('To delete your account please email hello@vett.work');
+  }
+}
+
+async function handleLogoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 2 * 1024 * 1024) { showToast('File too large — max 2MB'); return; }
+
+  showToast('Uploading logo...');
+
+  try {
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const ext = file.name.split('.').pop();
+    const fileName = session.user.id + '/logo.' + ext;
+
+    const { error: ue } = await supabaseClient.storage
+      .from('employer-docs')
+      .upload(fileName, file, { upsert: true, contentType: file.type });
+    if (ue) throw ue;
+
+    const { data: ud } = supabaseClient.storage
+      .from('employer-docs')
+      .getPublicUrl(fileName);
+
+    await supabaseClient.from('employers')
+      .update({ logo_url: ud.publicUrl })
+      .eq('id', employer.id);
+
+    employer.logo_url = ud.publicUrl;
+
+    // Update preview
+    const preview = document.getElementById('logoPreview');
+    preview.innerHTML = '<img src="' + ud.publicUrl + '?t=' + Date.now() + '" style="width:100%;height:100%;object-fit:cover">';
+    showToast('Logo uploaded');
+  } catch (err) {
+    console.error(err);
+    showToast('Upload failed — please try again');
   }
 }
 
