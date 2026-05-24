@@ -456,13 +456,31 @@ async function handleLogin() {
 
   try {
     const { data, error } = await sbClient.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+    if (error) {
+      if (error.message.includes('Email not confirmed')) {
+        showError('loginError', 'Please check your email and click the confirmation link first. <a href="#" onclick="resendConfirmation()" style="color:var(--error)">Resend confirmation email</a>');
+      } else if (error.message.includes('Invalid login')) {
+        showError('loginError', 'Email or password incorrect — please try again');
+      } else {
+        showError('loginError', error.message);
+      }
+      btn.textContent = 'Sign in';
+      btn.disabled = false;
+      return;
+    }
     window.location.href = 'candidate-dashboard.html';
   } catch (err) {
-    showError('loginError', err.message || 'Invalid email or password');
+    showError('loginError', 'Something went wrong — please try again');
     btn.textContent = 'Sign in';
     btn.disabled = false;
   }
+}
+
+async function resendConfirmation() {
+  const email = document.getElementById('loginEmail').value.trim();
+  if (!email) { showError('loginError', 'Enter your email address above first'); return; }
+  await sbClient.auth.resend({ type: 'signup', email });
+  showError('loginError', 'Confirmation email resent — check your inbox');
 }
 
 async function handleForgotPassword() {

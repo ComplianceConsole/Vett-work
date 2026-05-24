@@ -817,8 +817,9 @@ async function submitPost() {
         product: selectedTier === 'base' ? 'job_listing' : selectedTier === 'mid' ? 'premium_listing' : 'listing_bundle',
         employer_id: employer.id,
         job_id: newJob.id,
-        success_url: window.location.origin + '/employer-dashboard.html?payment=success',
-        cancel_url: window.location.origin + '/employer-dashboard.html?payment=cancelled',
+        allow_promotion_codes: true,
+        success_url: window.location.origin + '/employer-dashboard.html?payment=success&job_id=' + newJob.id,
+        cancel_url: window.location.origin + '/employer-dashboard.html?payment=cancelled&job_id=' + newJob.id,
       }),
     });
 
@@ -997,25 +998,111 @@ function removeSaved(candidateId) {
 }
 
 async function emailProfile(candidateId, candidateName) {
-  const email = prompt(`Send ${candidateName}'s profile link to which email address?`);
-  if (!email || !email.includes('@')) return;
+  const btn = document.querySelector(`#savedCard_${candidateId} .email-profile-btn`);
+  if (btn) { btn.textContent = 'Sending...'; btn.disabled = true; }
 
-  const profileUrl = `${window.location.origin}/candidate-profile.html?candidate_id=${candidateId}`;
+  try {
+    // Load full candidate data
+    const { data: candidate } = await supabaseClient
+      .from('candidates')
+      .select('*, candidate_clips(*), candidate_documents(*)')
+      .eq('id', candidateId)
+      .single();
 
-  // Use mailto as fallback — will open email client
-  const subject = encodeURIComponent(`Candidate profile — ${candidateName} via vett.work`);
-  const body = encodeURIComponent(`Hi,
+    if (!candidate) throw new Error('Candidate not found');
 
-I wanted to share this candidate profile with you from vett.work.
+    const profileUrl = `${window.location.origin}/candidate-profile.html?candidate_id=${candidateId}`;
+    const clips = (candidate.candidate_clips || []).filter(c => c.is_complete).sort((a,b) => a.clip_number - b.clip_number);
+    const docs = candidate.candidate_documents || [];
+    const clipTitles = ['Your Passion & Direction','Work History','Career Highlight','Ideal Next Role','Strengths','Growth Area'];
+    const docLabels = { police_check:'Police check', working_with_children:'Working With Children check', drivers_licence:"Driver's licence", working_rights:'Working rights / Visa', professional_certification:'Professional certification', trade_licence:'Trade licence', first_aid:'First Aid certificate', qualification:'Degree / Qualification', reference_letter:'Reference letter', other:'Other' };
 
-${candidateName}'s virtual interview profile:
-${profileUrl}
+    // Build HTML email body
+    const emailHtml = `
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><style>
+body { font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #f8fafc; }
+.header { background: #0c1445; padding: 28px 32px; border-radius: 12px 12px 0 0; }
+.logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; }
+.logo span { color: #10b981; }
+.body { background: white; padding: 32px; }
+.name { font-size: 22px; font-weight: 800; color: #0c1445; letter-spacing: -0.5px; margin-bottom: 4px; }
+.headline { font-size: 14px; color: #64748b; margin-bottom: 6px; }
+.location { font-size: 13px; color: #94a3b8; margin-bottom: 24px; }
+.section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #10b981; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #e2e8f0; }
+.clip-item { background: #f8fafc; border-left: 3px solid #10b981; border-radius: 6px; padding: 12px 14px; margin-bottom: 10px; }
+.clip-num { font-size: 10px; font-weight: 700; color: #10b981; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+.clip-q { font-size: 13px; color: #0c1445; font-style: italic; line-height: 1.5; }
+.doc-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; color: #475569; }
+.doc-status { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.valid { background: #ecfdf5; color: #059669; }
+.expired { background: #fef2f2; color: #ef4444; }
+.view-btn { display: block; background: #10b981; color: white; font-weight: 700; font-size: 14px; padding: 14px 28px; border-radius: 10px; text-decoration: none; text-align: center; margin-top: 24px; }
+.footer { background: #0c1445; padding: 20px 32px; border-radius: 0 0 12px 12px; font-size: 12px; color: rgba(255,255,255,0.3); }
+</style></head>
+<body>
+<div class="header"><div class="logo">vett<span>.</span>work</div></div>
+<div class="body">
+  <p style="font-size:13px;color:#64748b;margin-bottom:20px">Here's the candidate profile you saved on vett.work. Videos can be watched via the profile link below.</p>
+  <div class="name">${candidateName}</div>
+  ${candidate.headline ? `<div class="headline">${candidate.headline}</div>` : ''}
+  ${candidate.location ? `<div class="location">📍 ${candidate.location}</div>` : ''}
 
-This link will ask for an email address to verify access.
+  ${clips.length > 0 ? `
+  <div class="section-title">Virtual interview — ${clips.length} of 6 questions recorded</div>
+  ${clips.map(clip => `
+    <div class="clip-item">
+      <div class="clip-num">Clip ${clip.clip_number} · ${clipTitles[clip.clip_number - 1] || ''}</div>
+      <div class="clip-q">"${clip.ai_prompt || ''}"</div>
+    </div>
+  `).join('')}
+  ` : ''}
 
-vett.work`);
-  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
-  showToast('Opening email client...');
+  ${docs.length > 0 ? `
+  <div class="section-title" style="margin-top:24px">Supporting documents</div>
+  ${docs.map(doc => {
+    const expired = doc.expiry_date && new Date(doc.expiry_date) < new Date();
+    const fmt = doc.expiry_date ? new Date(doc.expiry_date).toLocaleDateString('en-AU', {day:'numeric',month:'short',year:'numeric'}) : null;
+    return `<div class="doc-item">
+      <span>${doc.document_name || docLabels[doc.document_type] || 'Document'}</span>
+      ${fmt ? `<span class="doc-status ${expired ? 'expired' : 'valid'}">${expired ? 'Expired' : 'Valid'} · ${fmt}</span>` : '<span class="doc-status" style="background:#f8fafc;color:#94a3b8">No expiry</span>'}
+    </div>`;
+  }).join('')}
+  ` : ''}
+
+  <a href="${profileUrl}" class="view-btn">Watch virtual interview →</a>
+  <p style="font-size:11px;color:#94a3b8;margin-top:12px;text-align:center">This link requires an email address to access. All candidate information is self-reported and unverified.</p>
+</div>
+<div class="footer">vett.work · Sent to ${employer.email}</div>
+</body>
+</html>`;
+
+    // Send via Supabase Edge Function
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const res = await fetch(`${SUPABASE_URL}/functions/v1/send-profile-email`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`,
+        'apikey': SUPABASE_ANON_KEY,
+      },
+      body: JSON.stringify({
+        to: employer.email,
+        subject: `Candidate profile — ${candidateName} · vett.work`,
+        html: emailHtml,
+      }),
+    });
+
+    if (!res.ok) throw new Error('Send failed');
+    showToast(`Profile sent to ${employer.email}`);
+
+  } catch (err) {
+    console.error(err);
+    showToast('Could not send — please try again');
+  }
+
+  if (btn) { btn.innerHTML = '<svg viewBox="0 0 14 14" width="12" height="12" stroke="currentColor" stroke-width="2" fill="none"><path d="M2 3h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><polyline points="1,3 7,8 13,3"/></svg> Email me this profile'; btn.disabled = false; }
 }
 
 async function handleSignOut() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
