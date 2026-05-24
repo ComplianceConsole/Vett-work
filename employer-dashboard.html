@@ -157,6 +157,41 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 .cancel-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 14px; font-weight: 600; padding: 14px 20px; border-radius: 10px; border: 1.5px solid var(--border); background: transparent; color: var(--muted); cursor: pointer; }
 .cancel-btn:hover { background: var(--off); }
 
+.saved-card {
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+  transition: box-shadow 0.2s;
+}
+.saved-card:hover { box-shadow: 0 4px 16px rgba(12,20,69,0.07); }
+.saved-card-top { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 16px; }
+.saved-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--navy); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: white; flex-shrink: 0; }
+.saved-info { flex: 1; min-width: 0; }
+.saved-name { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 3px; }
+.saved-name.blurred { filter: blur(5px); user-select: none; color: var(--muted2); }
+.saved-headline { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.saved-headline.blurred { filter: blur(4px); user-select: none; }
+.saved-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.saved-actions { display: flex; flex-direction: column; gap: 6px; align-items: flex-end; flex-shrink: 0; }
+
+.star-rating { display: flex; gap: 3px; }
+.star { font-size: 18px; cursor: pointer; color: var(--border); transition: color 0.15s; line-height: 1; }
+.star.active { color: #f59e0b; }
+.star:hover { color: #f59e0b; }
+
+.saved-notes { width: 100%; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: var(--text); background: var(--off); border: 1.5px solid var(--border); border-radius: 9px; padding: 10px 14px; outline: none; resize: vertical; min-height: 60px; transition: border-color 0.2s; margin-top: 12px; }
+.saved-notes:focus { border-color: var(--emerald); }
+.saved-notes-row { display: flex; gap: 10px; align-items: flex-end; margin-top: 8px; }
+.save-note-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 16px; border-radius: 8px; border: none; background: var(--navy); color: white; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+.save-note-btn:hover { background: var(--emerald); }
+
+.email-profile-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 14px; border-radius: 8px; border: 1.5px solid var(--border); background: white; color: var(--navy); cursor: pointer; white-space: nowrap; transition: all 0.15s; display: flex; align-items: center; gap: 6px; }
+.email-profile-btn:hover { background: var(--navy); color: white; border-color: var(--navy); }
+.email-profile-btn svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+/* VIEW APPLICATION MODAL */
 /* VIEW APPLICATION MODAL */
 .view-modal { max-width: 700px; }
 .clips-preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
@@ -245,6 +280,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
   <div class="tabs">
     <button class="tab active" onclick="switchTab('listings', this)">My listings</button>
     <button class="tab" onclick="switchTab('applications', this)">All applications</button>
+    <button class="tab" onclick="switchTab('saved', this)">Saved candidates <span id="savedCount" style="display:none;background:var(--emerald);color:white;font-size:10px;font-weight:800;padding:1px 6px;border-radius:100px;margin-left:4px"></span></button>
   </div>
 
   <!-- LISTINGS TAB -->
@@ -255,6 +291,11 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
   <!-- APPLICATIONS TAB -->
   <div id="tabApplications" style="display:none">
     <div class="applications-list" id="applicationsList"></div>
+  </div>
+
+  <!-- SAVED CANDIDATES TAB -->
+  <div id="tabSaved" style="display:none">
+    <div id="savedCandidatesList"></div>
   </div>
 
 </div>
@@ -808,6 +849,173 @@ function switchTab(tab, el) {
   el.classList.add('active');
   document.getElementById('tabListings').style.display = tab === 'listings' ? 'block' : 'none';
   document.getElementById('tabApplications').style.display = tab === 'applications' ? 'block' : 'none';
+  document.getElementById('tabSaved').style.display = tab === 'saved' ? 'block' : 'none';
+  if (tab === 'saved') loadSavedCandidates();
+}
+
+async function loadSavedCandidates() {
+  const list = document.getElementById('savedCandidatesList');
+
+  // Load from localStorage
+  const savedKey = `shortlist_${employer.id}`;
+  const saved = localStorage.getItem(savedKey);
+  const shortlist = saved ? JSON.parse(saved) : [];
+
+  // Load unlock status
+  const { data: unlocks } = await supabaseClient
+    .from('ai_match_unlocks')
+    .select('candidate_id')
+    .eq('employer_id', employer.id);
+  const unlockedIds = (unlocks || []).map(u => u.candidate_id);
+
+  // Load notes/ratings from Supabase
+  const { data: savedData } = await supabaseClient
+    .from('employer_saved_candidates')
+    .select('*')
+    .eq('employer_id', employer.id);
+  const savedMap = {};
+  (savedData || []).forEach(s => savedMap[s.candidate_id] = s);
+
+  // Update tab count
+  const countEl = document.getElementById('savedCount');
+  if (shortlist.length > 0) {
+    countEl.textContent = shortlist.length;
+    countEl.style.display = 'inline';
+  } else {
+    countEl.style.display = 'none';
+  }
+
+  if (shortlist.length === 0) {
+    list.innerHTML = `
+      <div class="empty">
+        <div class="empty-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="5"/><path d="M3 20s1-5 9-5 9 5 9 5"/></svg></div>
+        <div class="empty-title">No saved candidates yet</div>
+        <div class="empty-sub">Browse the candidate database and save profiles you're interested in. They'll appear here for easy comparison.</div>
+        <a href="candidate-search.html" class="post-btn" style="display:inline-flex;margin:0 auto;text-decoration:none">Browse candidates</a>
+      </div>`;
+    return;
+  }
+
+  // Load candidate data
+  const { data: candidates } = await supabaseClient
+    .from('candidates')
+    .select('id, first_name, last_name, headline, location, is_public')
+    .in('id', shortlist);
+
+  if (!candidates || candidates.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-title">Saved candidates not found</div></div>';
+    return;
+  }
+
+  list.innerHTML = candidates.map(c => {
+    const unlocked = unlockedIds.includes(c.id);
+    const saved = savedMap[c.id] || {};
+    const rating = saved.rating || 0;
+    const notes = saved.notes || '';
+    const initials = unlocked ? ((c.first_name || '?')[0] + (c.last_name || '')[0]).toUpperCase() : '?';
+    const name = unlocked ? `${c.first_name || ''} ${c.last_name || ''}`.trim() : 'Candidate profile';
+
+    return `
+      <div class="saved-card" id="savedCard_${c.id}">
+        <div class="saved-card-top">
+          <div class="saved-avatar">${initials}</div>
+          <div class="saved-info">
+            <div class="saved-name ${unlocked ? '' : 'blurred'}">${name}</div>
+            <div class="saved-headline ${unlocked ? '' : 'blurred'}">${c.headline || 'Open to opportunities'}</div>
+            <div class="saved-tags">
+              ${c.location ? `<span class="ltag">${c.location}</span>` : ''}
+              ${unlocked ? '<span class="ltag active">Unlocked</span>' : '<span class="ltag">Locked</span>'}
+            </div>
+          </div>
+          <div class="saved-actions">
+            <div class="star-rating" id="stars_${c.id}">
+              ${[1,2,3,4,5].map(n => `<span class="star ${rating >= n ? 'active' : ''}" onclick="setRating('${c.id}', ${n})">★</span>`).join('')}
+            </div>
+            <div style="display:flex;gap:6px;margin-top:4px">
+              ${unlocked
+                ? `<button class="email-profile-btn" onclick="emailProfile('${c.id}', '${name}')">
+                    <svg viewBox="0 0 14 14"><path d="M2 3h10a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><polyline points="1,3 7,8 13,3"/></svg>
+                    Email profile
+                  </button>
+                  <button class="lbtn lbtn-green" onclick="window.location.href='candidate-profile.html?candidate_id=${c.id}'">View profile</button>`
+                : `<button class="lbtn lbtn-outline" onclick="window.location.href='candidate-search.html'">Unlock — $29</button>`
+              }
+            </div>
+          </div>
+        </div>
+        <div>
+          <textarea class="saved-notes" id="notes_${c.id}" placeholder="Add private notes about this candidate...">${notes}</textarea>
+          <div class="saved-notes-row">
+            <div style="font-size:11px;color:var(--muted2);flex:1">Notes are private — only visible to you</div>
+            <button class="save-note-btn" onclick="saveNote('${c.id}')">Save note</button>
+            <button onclick="removeSaved('${c.id}')" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;padding:8px 12px;border-radius:8px;border:1.5px solid #fecaca;background:white;color:#ef4444;cursor:pointer">Remove</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function setRating(candidateId, rating) {
+  // Update stars UI
+  const stars = document.querySelectorAll(`#stars_${candidateId} .star`);
+  stars.forEach((s, i) => s.classList.toggle('active', i < rating));
+
+  // Save to Supabase
+  await supabaseClient.from('employer_saved_candidates').upsert({
+    employer_id: employer.id,
+    candidate_id: candidateId,
+    rating,
+  }, { onConflict: 'employer_id,candidate_id' });
+
+  showToast('Rating saved');
+}
+
+async function saveNote(candidateId) {
+  const notes = document.getElementById(`notes_${candidateId}`).value;
+  await supabaseClient.from('employer_saved_candidates').upsert({
+    employer_id: employer.id,
+    candidate_id: candidateId,
+    notes,
+  }, { onConflict: 'employer_id,candidate_id' });
+  showToast('Note saved');
+}
+
+function removeSaved(candidateId) {
+  const saved = localStorage.getItem(`shortlist_${employer.id}`);
+  let shortlist = saved ? JSON.parse(saved) : [];
+  shortlist = shortlist.filter(id => id !== candidateId);
+  localStorage.setItem(`shortlist_${employer.id}`, JSON.stringify(shortlist));
+  document.getElementById(`savedCard_${candidateId}`)?.remove();
+  showToast('Removed from saved');
+  const countEl = document.getElementById('savedCount');
+  if (shortlist.length === 0) {
+    countEl.style.display = 'none';
+    loadSavedCandidates();
+  } else {
+    countEl.textContent = shortlist.length;
+  }
+}
+
+async function emailProfile(candidateId, candidateName) {
+  const email = prompt(`Send ${candidateName}'s profile link to which email address?`);
+  if (!email || !email.includes('@')) return;
+
+  const profileUrl = `${window.location.origin}/candidate-profile.html?candidate_id=${candidateId}`;
+
+  // Use mailto as fallback — will open email client
+  const subject = encodeURIComponent(`Candidate profile — ${candidateName} via vett.work`);
+  const body = encodeURIComponent(`Hi,
+
+I wanted to share this candidate profile with you from vett.work.
+
+${candidateName}'s virtual interview profile:
+${profileUrl}
+
+This link will ask for an email address to verify access.
+
+vett.work`);
+  window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+  showToast('Opening email client...');
 }
 
 async function handleSignOut() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
