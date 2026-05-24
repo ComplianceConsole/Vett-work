@@ -238,7 +238,14 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 <div id="dashboardContent" style="display:none">
 <div class="page">
 
-  <!-- STEPS -->
+  <!-- TAB NAV -->
+  <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:24px">
+    <button onclick="switchDashTab('profile')" id="dtab-profile" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:12px 20px;border:none;background:transparent;color:var(--emerald-dark);border-bottom:2px solid var(--emerald);margin-bottom:-2px;cursor:pointer">My profile</button>
+    <button onclick="switchDashTab('saved')" id="dtab-saved" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:12px 20px;border:none;background:transparent;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer">Saved jobs</button>
+  </div>
+
+  <!-- STEPS (profile tab only) -->
+  <div id="dash-profile-content">
   <div class="steps-row">
     <div class="step-pill" id="step1"><div class="step-pill-num">1</div><div class="step-pill-label">Your details</div></div>
     <div class="step-pill" id="step2"><div class="step-pill-num">2</div><div class="step-pill-label">Upload CV</div></div>
@@ -430,6 +437,17 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
     <a href="mailto:hello@vett.work" style="font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none">Contact us</a>
   </div>
 </footer>
+
+</div><!-- end dash-profile-content -->
+
+  <!-- SAVED JOBS TAB -->
+  <div id="dash-saved-content" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-0.5px">Saved jobs</div>
+      <a href="index.html" style="font-size:13px;color:var(--emerald-dark);text-decoration:none;font-weight:600">Browse jobs →</a>
+    </div>
+    <div id="savedJobsList"></div>
+  </div>
 
 <div class="toast" id="toast"></div>
 
@@ -1090,6 +1108,67 @@ function closeVideo() {
   video.pause();
   if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
   video.src = '';
+}
+
+function switchDashTab(tab) {
+  document.getElementById('dash-profile-content').style.display = tab === 'profile' ? 'block' : 'none';
+  document.getElementById('dash-saved-content').style.display = tab === 'saved' ? 'block' : 'none';
+  document.getElementById('dtab-profile').style.color = tab === 'profile' ? 'var(--emerald-dark)' : 'var(--muted)';
+  document.getElementById('dtab-profile').style.borderBottomColor = tab === 'profile' ? 'var(--emerald)' : 'transparent';
+  document.getElementById('dtab-saved').style.color = tab === 'saved' ? 'var(--emerald-dark)' : 'var(--muted)';
+  document.getElementById('dtab-saved').style.borderBottomColor = tab === 'saved' ? 'var(--emerald)' : 'transparent';
+  if (tab === 'saved') loadSavedJobs();
+}
+
+async function loadSavedJobs() {
+  const list = document.getElementById('savedJobsList');
+  list.innerHTML = '<div style="font-size:14px;color:var(--muted);padding:20px 0">Loading...</div>';
+
+  const { data: saved } = await supabaseClient
+    .from('saved_jobs')
+    .select('*, jobs(id, title, location, employment_type, work_type, salary_range, category, created_at, employers(company_name))')
+    .eq('candidate_id', candidate.id)
+    .order('created_at', { ascending: false });
+
+  if (!saved || saved.length === 0) {
+    list.innerHTML = `
+      <div style="text-align:center;padding:48px 24px;background:white;border:1px solid var(--border);border-radius:14px">
+        <div style="font-size:32px;margin-bottom:12px">🔖</div>
+        <div style="font-size:16px;font-weight:700;color:var(--navy);margin-bottom:8px">No saved jobs yet</div>
+        <div style="font-size:14px;color:var(--muted);margin-bottom:20px">When you save a job listing it appears here so you can apply later.</div>
+        <a href="index.html" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:10px 24px;border-radius:9px;background:var(--emerald);color:white;text-decoration:none">Browse jobs</a>
+      </div>`;
+    return;
+  }
+
+  const EMP = { fulltime:'Full-time', parttime:'Part-time', casual:'Casual', contractor:'Contract' };
+  const WORK = { office:'In office', hybrid:'Hybrid', remote:'Remote' };
+
+  list.innerHTML = saved.map(s => {
+    const job = s.jobs;
+    if (!job) return '';
+    const company = job.employers?.company_name || 'Company';
+    const daysAgo = Math.floor((Date.now() - new Date(s.created_at)) / (1000*60*60*24));
+    const timeLabel = daysAgo === 0 ? 'Saved today' : `Saved ${daysAgo}d ago`;
+    return `
+      <div style="background:white;border:1px solid #e2e8f0;border-left:3px solid #10b981;border-radius:12px;padding:18px 20px;margin-bottom:10px;display:flex;align-items:center;gap:16px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:15px;font-weight:700;color:#059669;margin-bottom:2px">${job.title}</div>
+          <div style="font-size:14px;font-weight:700;color:#0c1445;margin-bottom:3px">${company}</div>
+          <div style="font-size:12px;color:#94a3b8">${job.location || ''} · ${EMP[job.employment_type] || ''} · ${timeLabel}</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-shrink:0">
+          <button onclick="unsaveJob('${s.id}', this)" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;padding:7px 14px;border-radius:7px;border:1px solid #e2e8f0;background:white;color:#64748b;cursor:pointer">Remove</button>
+          <a href="job.html?id=${job.id}" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:700;padding:7px 16px;border-radius:7px;border:none;background:#0c1445;color:white;text-decoration:none;cursor:pointer">View job</a>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function unsaveJob(savedId, btn) {
+  btn.textContent = 'Removing...';
+  await supabaseClient.from('saved_jobs').delete().eq('id', savedId);
+  loadSavedJobs();
 }
 
 async function handleSignOut() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }
