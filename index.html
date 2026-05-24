@@ -797,10 +797,105 @@ footer p { font-size: 12px; color: var(--muted2); }
 .cat-sub:hover { color: var(--text); border-color: var(--text); }
 .cat-sub.active { background: var(--emerald-light); color: var(--emerald-dark); border-color: var(--emerald-border); }
 
+/* STICKY SEARCH */
+.sticky-search {
+  position: sticky;
+  top: 64px;
+  z-index: 90;
+  background: var(--navy);
+  padding: 12px 48px;
+  display: none;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.2s;
+}
+.sticky-search.show { display: flex; }
+.sticky-search-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.sticky-search-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 4px 12px;
+}
+.sticky-search-wrap svg { width: 14px; height: 14px; stroke: rgba(255,255,255,0.4); stroke-width: 2; fill: none; flex-shrink: 0; }
+.sticky-search-wrap input { flex: 1; background: transparent; border: none; outline: none; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; color: white; padding: 7px 0; }
+.sticky-search-wrap input::placeholder { color: rgba(255,255,255,0.35); }
+.sticky-search-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 9px 20px; border-radius: 8px; border: none; background: var(--emerald); color: white; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+.sticky-search-btn:hover { background: var(--emerald-dark); }
+
+/* IMPROVED JOB CARDS */
+.job-card {
+  background: white;
+  border-bottom: 1.5px solid var(--emerald);
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: background 0.15s;
+  cursor: pointer;
+  border-radius: 0;
+  margin-bottom: 0;
+}
+.job-card:first-child { border-radius: 12px 12px 0 0; border-top: 1.5px solid var(--border); }
+.job-card:last-child { border-radius: 0 0 12px 12px; border-bottom: 1.5px solid var(--border); }
+.job-card:only-child { border-radius: 12px; border: 1.5px solid var(--border); }
+.job-card:hover { background: #f8fafc; }
+
+.job-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--off);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--navy);
+}
+.job-logo img { width: 100%; height: 100%; object-fit: cover; }
+
+.job-main { flex: 1; min-width: 0; }
+.job-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 3px; letter-spacing: -0.2px; }
+.job-co { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+.job-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.job-tag { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: var(--off); border: 1px solid var(--border); color: var(--muted); }
+.job-tag.green { background: var(--emerald-light); color: var(--emerald-dark); border-color: var(--emerald-border); }
+.job-desc { font-size: 12px; color: var(--muted2); line-height: 1.5; margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.job-right { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; flex-shrink: 0; }
+.job-time { font-size: 11px; color: var(--muted2); white-space: nowrap; }
+.job-apply-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 16px; border-radius: 8px; border: none; background: var(--navy); color: white; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+.job-apply-btn:hover { background: var(--emerald); }
+
+/* SEARCH GREEN BUTTON */
+.search-btn {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14px; font-weight: 700;
+  padding: 11px 24px; border-radius: 9px; border: none;
+  background: var(--emerald); color: white; cursor: pointer;
+  transition: background 0.15s; white-space: nowrap;
+}
+.search-btn:hover { background: var(--emerald-dark); }
+
 @media (max-width: 768px) {
   .search-row { grid-template-columns: 1fr; }
   .emp-type-row { gap: 12px; }
   .cats-row { gap: 6px; }
+  .sticky-search { padding: 10px 16px; }
+  .job-logo { width: 36px; height: 36px; }
 }
 
 </style>
@@ -814,6 +909,21 @@ footer p { font-size: 12px; color: var(--muted2); }
     <a href="employer-auth.html" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s" onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">Employer login</a>
   </div>
 </nav>
+
+<!-- STICKY SEARCH BAR -->
+<div class="sticky-search" id="stickySearch">
+  <div class="sticky-search-inner">
+    <div class="sticky-search-wrap">
+      <svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
+      <input type="text" placeholder="Role, skill, or keyword" id="stickySearchInput" oninput="document.getElementById('jobSearch').value=this.value;filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()">
+    </div>
+    <div class="sticky-search-wrap">
+      <svg viewBox="0 0 16 16"><path d="M8 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
+      <input type="text" placeholder="Location" id="stickyLocationInput" oninput="document.getElementById('jobLocation').value=this.value;filterJobs()">
+    </div>
+    <button class="sticky-search-btn" onclick="filterJobs()">Search</button>
+  </div>
+</div>
 
 <section class="hero">
   <div class="hero-tag">Early access</div>
@@ -868,15 +978,16 @@ footer p { font-size: 12px; color: var(--muted2); }
     </div>
 
     <!-- Search + location -->
-    <div class="search-row">
-      <div class="search-wrap">
+    <div class="search-row" style="display:flex;gap:10px;align-items:center">
+      <div class="search-wrap" style="flex:1">
         <svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
-        <input type="text" placeholder="Role, skill, or keyword" id="jobSearch" oninput="filterJobs()">
+        <input type="text" placeholder="Role, skill, or keyword" id="jobSearch" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()">
       </div>
-      <div class="search-wrap">
+      <div class="search-wrap" style="flex:1">
         <svg viewBox="0 0 16 16"><path d="M8 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
-        <input type="text" placeholder="Location — city, state, or remote" id="jobLocation" oninput="filterJobs()">
+        <input type="text" placeholder="Location — city, state, or remote" id="jobLocation" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()">
       </div>
+      <button class="search-btn" onclick="filterJobs()">Search</button>
     </div>
 
     <!-- Company type -->
@@ -1071,7 +1182,7 @@ async function loadJobs() {
   try {
     const { data: jobs } = await sbClient
       .from('jobs')
-      .select('*, employers(company_name, company_type)')
+      .select('*, employers(company_name, company_type, logo_url)')
       .eq('is_active', true)
       .order('created_at', { ascending: false });
 
@@ -1097,37 +1208,47 @@ function renderJobs(jobs) {
   const existingCards = list.querySelectorAll('.job-card');
   existingCards.forEach(c => c.remove());
 
+  const COMPANY_TYPE_LABELS = { direct: 'Direct employer', startup: 'Start-up', nfp: 'Not-for-profit', agency: 'Recruitment agency' };
+  const WORK_TYPE_LABELS = { office: 'In office', hybrid: 'Hybrid', remote: 'Remote' };
+  const EMP_TYPE_LABELS = { fulltime: 'Full-time', parttime: 'Part-time', casual: 'Casual', contractor: 'Contract' };
+
   jobs.forEach(job => {
     const daysAgo = Math.floor((Date.now() - new Date(job.created_at)) / (1000 * 60 * 60 * 24));
     const timeLabel = daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' : `${daysAgo}d ago`;
     const companyName = job.employers?.company_name || 'Company';
     const companyType = job.employers?.company_type || 'direct';
+    const logoUrl = job.employers?.logo_url || '';
+    const initials = companyName.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    const desc = job.description ? job.description.replace(/<[^>]+>/g, '').substring(0, 160) : '';
+    const empType = EMP_TYPE_LABELS[job.employment_type] || job.employment_type || 'Full-time';
+    const workType = WORK_TYPE_LABELS[job.work_type] || '';
+    const compTypeLabel = COMPANY_TYPE_LABELS[companyType] || companyType;
 
     const card = document.createElement('div');
     card.className = 'job-card';
     card.dataset.category = job.category || 'other';
-    card.dataset.location = job.location || '';
+    card.dataset.location = (job.location || '').toLowerCase();
     card.dataset.emptype = companyType;
     card.dataset.worktype = job.work_type || 'office';
     card.dataset.jobid = job.id;
+    card.onclick = (e) => { if (!e.target.classList.contains('job-apply-btn')) openApplyModal(escapeHtml(job.title), escapeHtml(companyName), job.id); };
 
     card.innerHTML = `
-      <div class="job-card-left">
-        <div class="job-co-mark">
-          <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="1.5"/><path d="M8 6V5a2 2 0 0 1 4 0v1"/></svg>
-        </div>
-        <div>
-          <div class="job-title">${escapeHtml(job.title)}</div>
-          <div class="job-co">${escapeHtml(companyName)} · ${SEEK_LABELS[job.category] || job.category || 'General'}</div>
-          <div class="job-tags">
-            <span class="job-tag">${formatEmpType(job.employment_type)}</span>
-            <span class="job-tag tag-loc">${escapeHtml(job.location || 'Location TBC')}</span>
-            ${job.work_type ? `<span class="job-tag">${formatWorkType(job.work_type)}</span>` : ''}
-            ${job.salary_range ? `<span class="job-tag tag-sal">${escapeHtml(job.salary_range)}</span>` : ''}
-          </div>
-        </div>
+      <div class="job-logo">
+        ${logoUrl ? `<img src="${logoUrl}" alt="${escapeHtml(companyName)}">` : initials}
       </div>
-      <div class="job-card-right">
+      <div class="job-main">
+        <div class="job-title">${escapeHtml(job.title)}</div>
+        <div class="job-co">${escapeHtml(companyName)} · ${escapeHtml(job.location || 'Location TBC')} · ${compTypeLabel}</div>
+        <div class="job-tags">
+          <span class="job-tag">${empType}</span>
+          ${workType ? `<span class="job-tag">${workType}</span>` : ''}
+          ${job.salary_range ? `<span class="job-tag green">${escapeHtml(job.salary_range)}</span>` : ''}
+          <span class="job-tag">${SEEK_LABELS[job.category] || job.category || 'General'}</span>
+        </div>
+        ${desc ? `<div class="job-desc">${escapeHtml(desc)}</div>` : ''}
+      </div>
+      <div class="job-right">
         <div class="job-time">${timeLabel}</div>
         <button class="job-apply-btn" onclick="openApplyModal('${escapeHtml(job.title)}', '${escapeHtml(companyName)}', '${job.id}')">Apply</button>
       </div>
@@ -1165,6 +1286,19 @@ function escapeHtml(str) {
 loadJobs();
 
 // toggleCats removed — now using select dropdown
+
+// Sticky search on scroll
+window.addEventListener('scroll', () => {
+  const jobsSection = document.getElementById('jobs');
+  if (!jobsSection) return;
+  const rect = jobsSection.getBoundingClientRect();
+  const sticky = document.getElementById('stickySearch');
+  if (rect.top < 64) {
+    sticky.classList.add('show');
+  } else {
+    sticky.classList.remove('show');
+  }
+});
 
 function showToast(msg) {
   const t = document.getElementById('toast');
