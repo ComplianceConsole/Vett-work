@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>vett.work — For Employers · Post a Role, Find the Right Person</title>
 <meta name="description" content="Post a role from $99. Watch video profiles before you shortlist. Browse candidates off-market. Built for Australian startups and small businesses.">
@@ -645,20 +646,19 @@ const CONFIG = {
 
 <nav>
   <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
-  <a href="index.html" class="nav-back">
-    <svg viewBox="0 0 14 14"><line x1="12" y1="7" x2="2" y2="7"/><polyline points="6,3 2,7 6,11"/></svg>
-    Back
-  </a>
-  <a href="contact.html" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;padding:7px 14px;border-radius:7px;" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">Contact us</a><button class="nav-cta" onclick="window.location.href='employer-auth.html'">Post a role</button>
+  <div style="display:flex;align-items:center;gap:8px">
+    <a href="employer-auth.html" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s" onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">Log in</a>
+    <button class="nav-cta" onclick="window.location.href='employer-auth.html'">Post a role</button>
+  </div>
 </nav>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
     <div>
-      <div class="hero-tag">For employers</div>
-      <h1>Post a role.<br>Find the right<br><em>person.</em></h1>
-      <p class="hero-sub">Built for Australian startups and small businesses. Watch video profiles before you shortlist. No more sifting through 80 PDFs.</p>
+      <div class="hero-tag">Recruitment that's actually human · From $99</div>
+      <h1>Stop reading<br>CVs written<br><em>by AI.</em></h1>
+      <p class="hero-sub">Our questions are built on 20 years of recruitment expertise, personalised by AI to each candidate's CV. Their answers are entirely their own — unscripted, unassisted, on camera. No AI cover letters. Just a real person talking. You decide if they're worth a call.</p>
       <div class="hero-actions">
         <button class="btn-primary" onclick="window.location.href='employer-auth.html'">Post a role from $99</button>
         <button class="btn-outline" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">View pricing</button>
@@ -682,7 +682,7 @@ const CONFIG = {
           </div>
         </div>
         <div class="pp-clips">
-          <div class="pp-clip"><div class="pp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div><div class="pp-clip-lbl">Cover Letter</div></div>
+          <div class="pp-clip"><div class="pp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div><div class="pp-clip-lbl">Passion & Direction</div></div>
           <div class="pp-clip"><div class="pp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div><div class="pp-clip-lbl">Work History</div></div>
           <div class="pp-clip"><div class="pp-play"><svg viewBox="0 0 8 10"><polygon points="1,1 7,5 1,9" fill="white"/></svg></div><div class="pp-clip-lbl">Highlight</div></div>
         </div>
@@ -708,7 +708,7 @@ const CONFIG = {
 <section class="how-section">
   <div class="how-inner">
     <span class="section-tag">How it works</span>
-    <div class="section-h">Post a role.<br>Watch videos.<br>Hire the right person.</div>
+    <div class="section-h">AI does the admin.<br>You see the human.<br>Then you decide.</div>
     <div class="how-grid">
       <div class="how-card">
         <div class="how-num">01</div>
@@ -719,14 +719,14 @@ const CONFIG = {
       <div class="how-card">
         <div class="how-num">02</div>
         <div class="how-icon"><svg viewBox="0 0 18 18"><circle cx="9" cy="7" r="4"/><path d="M3 16s-1 0-1-1 1-4 7-4 7 3 7 4-1 1-1 1H3z"/></svg></div>
-        <div class="how-title">Applications come in</div>
-        <div class="how-body">Candidates apply with their vett.work profile — video profile, work history, prompts. You see who they actually are before you schedule anything.</div>
+        <div class="how-title">Real people apply</div>
+        <div class="how-body">Candidates are asked 6 interview questions built on recruitment expertise and personalised to their background by AI. Their answers are entirely their own — recorded on camera, unscripted, unassisted. What you see is real.</div>
       </div>
       <div class="how-card">
         <div class="how-num">03</div>
         <div class="how-icon"><svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg></div>
-        <div class="how-title">Watch their videos</div>
-        <div class="how-body">A free preview of each candidate's video profile comes with every application. Unlock the full profile — all 6 clips, references, and checks — when you want more.</div>
+        <div class="how-title">Watch, then decide</div>
+        <div class="how-body">Every application includes the virtual interview — free. Watch before you shortlist. Hear how they think, how they communicate, whether they're the right fit. Then call the ones worth calling.</div>
       </div>
       <div class="how-card">
         <div class="how-num">04</div>
@@ -742,17 +742,17 @@ const CONFIG = {
 <section class="why-section">
   <div class="why-inner">
     <span class="section-tag">Why vett.work</span>
-    <div class="section-h">Built for small teams.<br>Not HR departments.</div>
+    <div class="section-h">Everyone's CV sounds<br>the same now.<br><em>This is different.</em></div>
     <div class="why-grid">
       <div class="why-card">
         <div class="why-icon"><svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg></div>
-        <div class="why-title">Video before you commit</div>
+        <div class="why-title">Hear them before you call</div>
         <div class="why-body">Watch a candidate's video profile before you even read their CV. Know if they can communicate, how they carry themselves, whether they get what you're building — in 2 minutes.</div>
       </div>
       <div class="why-card">
         <div class="why-icon"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/><line x1="9" y1="5" x2="9" y2="9"/><line x1="9" y1="9" x2="12" y2="11"/></svg></div>
         <div class="why-title">No more CV theatre</div>
-        <div class="why-body">Candidates who just get it done are terrible at writing CVs. vett.work profiles show you how someone thinks and works — not how well they formatted a Word document.</div>
+        <div class="why-body">Every CV and cover letter sounds the same now — polished, AI-enhanced, indistinguishable. Our interview questions come from 20 years of recruitment expertise. The answers come entirely from the candidate. No scripts, no assistance. You hear the real person.</div>
       </div>
       <div class="why-card">
         <div class="why-icon"><svg viewBox="0 0 18 18"><path d="M9 2L11 7H16L12 10L14 15L9 12L4 15L6 10L2 7H7Z"/></svg></div>
@@ -830,6 +830,67 @@ const CONFIG = {
 </section>
 
 
+
+<!-- VALUE CALLOUT -->
+<section style="background:var(--navy);padding:80px 48px">
+  <div style="max-width:1000px;margin:0 auto">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--emerald);margin-bottom:14px">Why candidates are different here</div>
+        <div style="font-size:clamp(26px,3.5vw,40px);font-weight:800;letter-spacing:-1.5px;color:white;line-height:1.05;margin-bottom:16px">Let the candidate speak for themselves.</div>
+        <p style="font-size:15px;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:24px">Our interview questions are built on 20 years of recruitment expertise — personalised by AI to each candidate's actual background. Their answers? Completely their own. No scripts, no prompts, no AI assistance. Just the candidate on camera, in their own words. What you see is what you get.</p>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <div style="width:20px;height:20px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg viewBox="0 0 10 10" width="9" height="9" stroke="#10b981" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
+            <span style="font-size:14px;color:rgba(255,255,255,0.65)">Watch their virtual interview before you pick up the phone</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <div style="width:20px;height:20px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg viewBox="0 0 10 10" width="9" height="9" stroke="#10b981" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
+            <span style="font-size:14px;color:rgba(255,255,255,0.65)">See their work rights status upfront — no surprises</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <div style="width:20px;height:20px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg viewBox="0 0 10 10" width="9" height="9" stroke="#10b981" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
+            <span style="font-size:14px;color:rgba(255,255,255,0.65)">Police checks, licences, certifications — all visible before interview</span>
+          </div>
+          <div style="display:flex;align-items:flex-start;gap:12px">
+            <div style="width:20px;height:20px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg viewBox="0 0 10 10" width="9" height="9" stroke="#10b981" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
+            <span style="font-size:14px;color:rgba(255,255,255,0.65)">Video profiles are free — you only pay to post your role</span>
+          </div>
+        </div>
+      </div>
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--emerald);margin-bottom:16px">What a $99 listing gets you</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
+            <span style="font-size:14px;color:rgba(255,255,255,0.7)">30-day listing</span>
+            <span style="font-size:11px;font-weight:700;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:var(--emerald);padding:3px 8px;border-radius:4px">Included</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
+            <span style="font-size:14px;color:rgba(255,255,255,0.7)">Applicant virtual interviews</span>
+            <span style="font-size:11px;font-weight:700;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:var(--emerald);padding:3px 8px;border-radius:4px">Free</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
+            <span style="font-size:14px;color:rgba(255,255,255,0.7)">Work rights visibility</span>
+            <span style="font-size:11px;font-weight:700;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:var(--emerald);padding:3px 8px;border-radius:4px">Included</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
+            <span style="font-size:14px;color:rgba(255,255,255,0.7)">Supporting document visibility</span>
+            <span style="font-size:11px;font-weight:700;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:var(--emerald);padding:3px 8px;border-radius:4px">Included</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
+            <span style="font-size:14px;color:rgba(255,255,255,0.7)">AI match unlocks (database candidates)</span>
+            <span style="font-size:13px;color:rgba(255,255,255,0.4)">$29 each</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <span style="font-size:15px;font-weight:700;color:white">Total</span>
+            <span style="font-size:22px;font-weight:800;letter-spacing:-1px;color:white">$99</span>
+          </div>
+        </div>
+        <a href="employer-auth.html" style="display:block;background:var(--emerald);color:white;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:14px;border-radius:10px;text-decoration:none;text-align:center;margin-top:20px;transition:background 0.15s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='var(--emerald)'">Post your first role — $99</a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- PRICING -->
 <section class="pricing-section" id="pricing">
