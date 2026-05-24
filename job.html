@@ -114,6 +114,9 @@ footer a:hover { color: white; }
         <div class="banner-meta" id="bannerMeta"></div>
       </div>
       <div class="banner-actions">
+        <button class="btn-save" onclick="emailToFriend()" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:11px 18px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.15);background:transparent;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)';this.style.color='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.color='rgba(255,255,255,0.6)'">
+          Share →
+        </button>
         <button class="btn-save" id="saveBtn" onclick="toggleSave()">☆ Save job</button>
         <button class="btn-apply" onclick="openApply()">Apply now</button>
       </div>
@@ -307,10 +310,10 @@ async function init() {
 }
 
 async function toggleSave() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) {
-    if (confirm('Sign in to save jobs to your profile. Go to sign in now?')) {
-      window.location.href = 'candidate-auth.html?tab=login';
+  // Must be logged in as a candidate specifically
+  if (!currentCandidateId) {
+    if (confirm('Create a free candidate account to save jobs. Go to sign in now?')) {
+      window.location.href = 'candidate-auth.html';
     }
     return;
   }
@@ -331,6 +334,22 @@ async function toggleSave() {
     btn.classList.add('saved');
     showToast('Job saved');
   }
+}
+
+function emailToFriend() {
+  const title = job?.title || 'Job listing';
+  const company = job?.employers?.company_name || 'a company';
+  const url = window.location.href;
+  const subject = encodeURIComponent(`Job opportunity — ${title} at ${company}`);
+  const body = encodeURIComponent(`Hi,
+
+I thought you might be interested in this role I found on vett.work:
+
+${title} at ${company}
+${url}
+
+vett.work — recruitment that's more human.`);
+  window.location.href = `mailto:?subject=${subject}&body=${body}`;
 }
 
 function openApply() { document.getElementById('applyModal').classList.add('open'); }
