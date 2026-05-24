@@ -879,6 +879,16 @@ footer p { font-size: 12px; color: var(--muted2); }
 }
 
 </style>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="vett.work">
+  <meta property="og:title" content="vett.work — Find work. Find people.">
+  <meta property="og:description" content="AU/NZ job board where candidates record a virtual interview. Employers watch before they call. No AI cover letters. Just real people.">
+  <meta property="og:image" content="https://vett.work/og-home.png">
+  <meta property="og:url" content="https://vett.work">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="vett.work — Find work. Find people.">
+  <meta name="twitter:description" content="AU/NZ job board where candidates record a virtual interview. Employers watch before they call. No AI cover letters. Just real people.">
+  <meta name="twitter:image" content="https://vett.work/og-home.png">
 </head>
 <body>
 
@@ -1032,22 +1042,22 @@ footer p { font-size: 12px; color: var(--muted2); }
         <option value="all">All categories</option>
         <option value="accounting" id="opt-accounting">Accounting</option>
         <option value="administration" id="opt-administration">Administration &amp; Office Support</option>
-        <option value="advertising" id="opt-advertising">Advertising, Arts &amp; Media</option>
+        <option value="creative" id="opt-advertising">Advertising, Arts &amp; Media</option>
         <option value="banking" id="opt-banking">Banking &amp; Financial Services</option>
-        <option value="callcentre" id="opt-callcentre">Call Centre &amp; Customer Service</option>
-        <option value="ceo" id="opt-ceo">CEO &amp; General Management</option>
+        <option value="cx" id="opt-callcentre">Call Centre &amp; Customer Service</option>
+        <option value="leadership" id="opt-ceo">CEO &amp; General Management</option>
         <option value="community" id="opt-community">Community Services &amp; Development</option>
         <option value="construction" id="opt-construction">Construction</option>
         <option value="consulting" id="opt-consulting">Consulting &amp; Strategy</option>
         <option value="design" id="opt-design">Design &amp; Architecture</option>
         <option value="education" id="opt-education">Education &amp; Training</option>
         <option value="engineering" id="opt-engineering">Engineering</option>
-        <option value="farming" id="opt-farming">Farming, Animals &amp; Conservation</option>
+        <option value="agriculture" id="opt-farming">Farming, Animals &amp; Conservation</option>
         <option value="government" id="opt-government">Government &amp; Defence</option>
         <option value="healthcare" id="opt-healthcare">Healthcare &amp; Medical</option>
         <option value="hospitality" id="opt-hospitality">Hospitality &amp; Tourism</option>
         <option value="hr" id="opt-hr">Human Resources &amp; Recruitment</option>
-        <option value="ict" id="opt-ict">Information &amp; Communication Technology</option>
+        <option value="technology" id="opt-ict">Information &amp; Communication Technology</option>
         <option value="insurance" id="opt-insurance">Insurance &amp; Superannuation</option>
         <option value="legal" id="opt-legal">Legal</option>
         <option value="manufacturing" id="opt-manufacturing">Manufacturing, Transport &amp; Logistics</option>
@@ -1144,16 +1154,16 @@ let allJobs = [];
 
 const SEEK_LABELS = {
   accounting: 'Accounting', administration: 'Administration & Office Support',
-  advertising: 'Advertising, Arts & Media', banking: 'Banking & Financial Services',
-  callcentre: 'Call Centre & Customer Service', ceo: 'CEO & General Management',
+  advertising: 'Creative, Media & Communications', banking: 'Banking & Financial Services',
+  callcentre: 'Customer Experience & Service', ceo: 'Leadership & General Management',
   community: 'Community Services & Development', construction: 'Construction',
   consulting: 'Consulting & Strategy', design: 'Design & Architecture',
   education: 'Education & Training', engineering: 'Engineering',
-  farming: 'Farming, Animals & Conservation', government: 'Government & Defence',
+  farming: 'Agriculture, Animals & Environment', government: 'Government & Defence',
   healthcare: 'Healthcare & Medical', hospitality: 'Hospitality & Tourism',
-  hr: 'Human Resources & Recruitment', ict: 'Information & Communication Technology',
-  insurance: 'Insurance & Superannuation', legal: 'Legal',
-  manufacturing: 'Manufacturing, Transport & Logistics', marketing: 'Marketing & Communications',
+  hr: 'Human Resources & Recruitment', ict: 'Technology & Digital',
+  insurance: 'Insurance & Wealth', legal: 'Legal',
+  manufacturing: 'Manufacturing & Production', transport: 'Transport & Logistics', marketing: 'Marketing & Communications',
   mining: 'Mining, Resources & Energy', realestate: 'Real Estate & Property',
   retail: 'Retail & Consumer Products', sales: 'Sales',
   science: 'Science & Technology', sport: 'Sport & Recreation', trades: 'Trades & Services'
