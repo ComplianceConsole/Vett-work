@@ -64,6 +64,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 .profile-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 .ptag { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 5px; background: var(--off); border: 1px solid var(--border); color: var(--muted); }
 .ptag.green { background: var(--emerald-light); color: var(--emerald-dark); border-color: var(--emerald-border); }
+.ptag.orange { background: #fffbeb; color: #92400e; border-color: #fde68a; }
 .profile-actions { display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
 .action-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 10px 20px; border-radius: 9px; cursor: pointer; transition: all 0.15s; white-space: nowrap; text-align: center; text-decoration: none; display: block; }
 .action-primary { background: var(--emerald); color: white; border: none; }
@@ -211,6 +212,11 @@ footer { background: var(--navy); padding: 20px 48px; display: flex; justify-con
       <div id="clipsContent"></div>
     </div>
 
+    <div class="profile-section" id="workRightsSection" style="display:none">
+      <div class="section-title">Work rights</div>
+      <div id="workRightsContent"></div>
+    </div>
+
     <div class="profile-section" id="docsSection" style="display:none">
       <div class="section-title">Supporting documents</div>
       <div id="docsContent"></div>
@@ -318,11 +324,25 @@ function renderProfile() {
   document.getElementById('profileName').textContent = `${candidate.first_name || ''} ${candidate.last_name || ''}`.trim() || 'Candidate';
   document.getElementById('profileHeadline').textContent = candidate.headline || '';
 
+  const WORK_RIGHTS_LABELS = {
+    citizen_au: 'Australian citizen', citizen_nz: 'NZ citizen',
+    pr_au: 'Australian PR', pr_nz: 'NZ PR',
+    visa_work: 'Work visa', visa_working_holiday: 'Working holiday visa',
+    visa_graduate: 'Graduate visa', visa_partner: 'Partner visa',
+    visa_student: 'Student visa', sponsorship_needed: 'Requires sponsorship',
+    palm: 'PALM Scheme', other: 'Other visa'
+  };
+
   const tags = [];
   if (candidate.location) tags.push({ text: candidate.location, green: false });
-  if (clips.length > 0) tags.push({ text: `${clips.length} video clips`, green: true });
+  if (candidate.work_rights_status) {
+    const label = WORK_RIGHTS_LABELS[candidate.work_rights_status] || candidate.work_rights_status;
+    const needsSponsorship = candidate.work_rights_status === 'sponsorship_needed';
+    tags.push({ text: label, green: !needsSponsorship, orange: needsSponsorship });
+  }
+  if (clips.length > 0) tags.push({ text: `${clips.length} interview answers`, green: true });
   if (documents.length > 0) tags.push({ text: `${documents.length} document${documents.length > 1 ? 's' : ''}`, green: false });
-  document.getElementById('profileTags').innerHTML = tags.map(t => `<span class="ptag ${t.green ? 'green' : ''}">${t.text}</span>`).join('');
+  document.getElementById('profileTags').innerHTML = tags.map(t => `<span class="ptag ${t.green ? 'green' : t.orange ? 'orange' : ''}">${t.text}</span>`).join('');
 
   if (application) {
     document.getElementById('appBanner').style.display = 'flex';
@@ -341,6 +361,42 @@ function renderProfile() {
     renderUnlockGate();
   } else {
     renderClips();
+  }
+
+  // Work rights
+  if (candidate.work_rights_status) {
+    const WORK_RIGHTS_LABELS = {
+      citizen_au: 'Australian citizen', citizen_nz: 'New Zealand citizen',
+      pr_au: 'Australian permanent resident', pr_nz: 'New Zealand permanent resident',
+      visa_work: 'Work visa (no sponsorship needed)', visa_working_holiday: 'Working holiday visa (417/462)',
+      visa_graduate: 'Graduate visa (485)', visa_partner: 'Partner/family visa',
+      visa_student: 'Student visa (with work rights)', sponsorship_needed: 'Requires employer sponsorship',
+      palm: 'PALM Scheme worker', other: 'Other — see notes'
+    };
+    const SPONSORSHIP_LABELS = {
+      tss_482: 'TSS (subclass 482)', ens_186: 'ENS (subclass 186)',
+      palm: 'PALM Scheme', graduate_485: 'Graduate Visa (485)',
+      partner: 'Partner/family pathway', skills_assessment: 'Skills assessment underway',
+      other: 'Other pathway'
+    };
+    const needsSponsorship = candidate.work_rights_status === 'sponsorship_needed';
+    const expiryStr = candidate.visa_expiry
+      ? new Date(candidate.visa_expiry).toLocaleDateString('en-AU', { day:'numeric', month:'long', year:'numeric' })
+      : null;
+    const expired = candidate.visa_expiry && new Date(candidate.visa_expiry) < new Date();
+
+    document.getElementById('workRightsSection').style.display = 'block';
+    document.getElementById('workRightsContent').innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-size:13px;font-weight:700;color:var(--navy)">${WORK_RIGHTS_LABELS[candidate.work_rights_status] || candidate.work_rights_status}</span>
+          ${needsSponsorship ? '<span style="font-size:10px;font-weight:700;background:#fffbeb;color:#92400e;border:1px solid #fde68a;padding:2px 8px;border-radius:4px">Sponsorship required</span>' : '<span style="font-size:10px;font-weight:700;background:var(--emerald-light);color:var(--emerald-dark);border:1px solid var(--emerald-border);padding:2px 8px;border-radius:4px">No sponsorship needed</span>'}
+        </div>
+        ${expiryStr ? `<div style="font-size:13px;color:var(--muted)">Visa expires: <strong style="color:${expired ? 'var(--error)' : 'var(--navy)'}">${expiryStr}</strong>${expired ? ' <span style="color:var(--error);font-size:11px;font-weight:700">(expired)</span>' : ''}</div>` : ''}
+        ${candidate.sponsorship_type ? `<div style="font-size:13px;color:var(--muted)">Pathway: <strong style="color:var(--navy)">${SPONSORSHIP_LABELS[candidate.sponsorship_type] || candidate.sponsorship_type}</strong></div>` : ''}
+        ${candidate.work_rights_notes ? `<div style="font-size:13px;color:var(--muted);font-style:italic">"${candidate.work_rights_notes}"</div>` : ''}
+        <div style="font-size:11px;color:var(--muted2);background:var(--off);border-radius:7px;padding:8px 12px;line-height:1.5">Work rights are self-reported. Verify eligibility independently before making hiring decisions.</div>
+      </div>`;
   }
 
   if (documents.length > 0) {

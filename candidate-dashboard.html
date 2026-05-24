@@ -496,6 +496,15 @@ function renderDashboard() {
   document.getElementById('headline').value = candidate.headline || '';
   document.getElementById('linkedinUrl').value = candidate.linkedin_url || '';
 
+  // Work rights
+  if (candidate.work_rights_status) {
+    document.getElementById('workRightsStatus').value = candidate.work_rights_status;
+    toggleWorkRightsFields();
+  }
+  if (candidate.visa_expiry) document.getElementById('visaExpiry').value = candidate.visa_expiry;
+  if (candidate.sponsorship_type) document.getElementById('sponsorshipType').value = candidate.sponsorship_type;
+  if (candidate.work_rights_notes) document.getElementById('workRightsNotes').value = candidate.work_rights_notes;
+
   // Step 1
   if (candidate.has_paid) {
     document.getElementById('paymentSection').style.display = 'none';
@@ -949,6 +958,26 @@ function scrollToNext() {
   else if (!candidate.ai_prompts) { document.getElementById('promptsSection').scrollIntoView({ behavior: 'smooth' }); }
   else if (clips.filter(c => c.is_complete).length < 6) { document.getElementById('clipsSection').scrollIntoView({ behavior: 'smooth' }); }
   else { document.getElementById('visibilitySection').scrollIntoView({ behavior: 'smooth' }); }
+}
+
+function toggleWorkRightsFields() {
+  const status = document.getElementById('workRightsStatus').value;
+  const needsExpiry = ['visa_work','visa_working_holiday','visa_graduate','visa_partner','visa_student','palm'].includes(status);
+  const needsSponsorship = status === 'sponsorship_needed';
+  document.getElementById('visaExpiryGroup').style.display = needsExpiry ? 'block' : 'none';
+  document.getElementById('sponsorshipGroup').style.display = needsSponsorship ? 'block' : 'none';
+}
+
+async function saveWorkRights() {
+  const { error } = await supabaseClient.from('candidates').update({
+    work_rights_status: document.getElementById('workRightsStatus').value || null,
+    visa_expiry: document.getElementById('visaExpiry').value || null,
+    sponsorship_type: document.getElementById('sponsorshipType').value || null,
+    work_rights_notes: document.getElementById('workRightsNotes').value.trim() || null,
+  }).eq('id', candidate.id);
+
+  if (error) { showToast('Error saving'); return; }
+  showToast('Work rights saved');
 }
 
 async function handleSignOut() { await supabaseClient.auth.signOut(); window.location.href = 'index.html'; }

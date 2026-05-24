@@ -113,6 +113,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 .cand-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .ctag { font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 4px; background: var(--off); border: 1px solid var(--border); color: var(--muted); }
 .ctag.green { background: var(--emerald-light); color: var(--emerald-dark); border-color: var(--emerald-border); }
+.ctag.orange { background: #fffbeb; color: #92400e; border-color: #fde68a; }
 .ctag.navy { background: var(--navy); color: white; border-color: var(--navy); }
 
 .cand-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
@@ -236,6 +237,13 @@ footer a:hover { color: white; }
         <label class="check-opt"><input type="checkbox" id="filterPolice" onchange="applyFilters()"><span>Police check</span></label>
         <label class="check-opt"><input type="checkbox" id="filterWWC" onchange="applyFilters()"><span>Working with children</span></label>
         <label class="check-opt"><input type="checkbox" id="filterLicence" onchange="applyFilters()"><span>Driver's licence</span></label>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-title">Work rights</div>
+        <label class="check-opt"><input type="checkbox" id="filterNoSponsorship" onchange="applyFilters()"><span>No sponsorship needed</span></label>
+        <label class="check-opt"><input type="checkbox" id="filterSponsorship" onchange="applyFilters()"><span>Open to sponsoring</span></label>
+        <label class="check-opt"><input type="checkbox" id="filterPALM" onchange="applyFilters()"><span>PALM Scheme</span></label>
       </div>
 
       <button class="clear-btn" onclick="clearFilters()">Clear all filters</button>
@@ -369,7 +377,7 @@ async function init() {
 async function loadCandidates() {
   const { data: candidates } = await supabaseClient
     .from('candidates')
-    .select('id, first_name, last_name, headline, location, is_public, created_at')
+    .select('id, first_name, last_name, headline, location, is_public, created_at, work_rights_status, sponsorship_type')
     .eq('is_public', true)
     .eq('has_paid', true);
 
@@ -413,6 +421,11 @@ function applyFilters() {
   const needsLicence = document.getElementById('filterLicence').checked;
   const sort = document.getElementById('sortSelect').value;
 
+  const filterNoSponsorship = document.getElementById('filterNoSponsorship')?.checked;
+  const filterSponsorship = document.getElementById('filterSponsorship')?.checked;
+  const filterPALM = document.getElementById('filterPALM')?.checked;
+  const noSponsorshipStatuses = ['citizen_au','citizen_nz','pr_au','pr_nz','visa_work','visa_working_holiday','visa_graduate','visa_partner','visa_student'];
+
   let filtered = allCandidates.filter(c => {
     const nameText = isUnlocked(c.id) ? `${c.first_name || ''} ${c.last_name || ''}`.toLowerCase() : '';
     const headlineText = (c.headline || '').toLowerCase();
@@ -423,8 +436,11 @@ function applyFilters() {
     const matchPolice = !needsPolice || c.documents.some(d => d.document_type === 'police_check');
     const matchWWC = !needsWWC || c.documents.some(d => d.document_type === 'working_with_children');
     const matchLicence = !needsLicence || c.documents.some(d => d.document_type === 'drivers_licence');
+    const matchNoSponsorship = !filterNoSponsorship || noSponsorshipStatuses.includes(c.work_rights_status);
+    const matchSponsorship = !filterSponsorship || c.work_rights_status === 'sponsorship_needed';
+    const matchPALM = !filterPALM || c.work_rights_status === 'palm';
 
-    return matchSearch && matchLocation && matchPolice && matchWWC && matchLicence;
+    return matchSearch && matchLocation && matchPolice && matchWWC && matchLicence && matchNoSponsorship && matchSponsorship && matchPALM;
   });
 
   // Sort
@@ -491,7 +507,7 @@ function renderCard(c) {
           <div class="cand-name ${unlocked ? '' : 'blurred'}">${unlocked ? name : 'Candidate Profile'}</div>
           <div class="cand-headline ${unlocked ? '' : 'blurred'}">${headline}</div>
           <div class="cand-tags">
-            ${tags.map(t => `<span class="ctag ${t.green ? 'green' : ''}">${t.text}</span>`).join('')}
+            ${tags.map(t => `<span class="ctag ${t.green ? 'green' : t.orange ? 'orange' : ''}">${t.text}</span>`).join('')}
           </div>
         </div>
         <div class="cand-actions">
