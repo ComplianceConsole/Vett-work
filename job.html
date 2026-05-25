@@ -144,8 +144,8 @@ footer a:hover { color: white; }
     </div>
 
     <div class="sidebar">
-      <div class="apply-section">
-        <p>Ready to apply? Your vett.work virtual interview goes straight to the employer.</p>
+      <div class="apply-section" id="applySection">
+        <p id="applySectionText">Ready to apply? Your vett.work virtual interview goes straight to the employer.</p>
         <button class="btn-apply" onclick="openApply()">Apply now</button>
       </div>
 
@@ -176,6 +176,10 @@ footer a:hover { color: white; }
             People & culture page
             <svg viewBox="0 0 12 12" width="10" height="10" stroke="currentColor" stroke-width="2" fill="none"><path d="M5 2H2v8h8V7M7 1h4v4M11 1L5 7"/></svg>
           </a>
+        </div>
+        <div id="docReqsWrap" style="display:none;margin-top:14px;padding-top:14px;border-top:1px solid #e2e8f0">
+          <div style="font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Typically required</div>
+          <div id="docReqsList"></div>
         </div>
       </div>
 
@@ -252,7 +256,7 @@ async function init() {
   const jobId = params.get('id');
   if (!jobId) { window.location.href = 'index.html'; return; }
 
-  const { data } = await sb.from('jobs').select('*, employers(company_name, company_type, logo_url, culture_description, culture_page_url, company_size, industry)').eq('id', jobId).single();
+  const { data } = await sb.from('jobs').select('*, employers(company_name, company_type, logo_url, culture_description, culture_page_url, company_size, industry, doc_requirements)').eq('id', jobId).single();
   if (!data) { window.location.href = 'index.html'; return; }
   job = data;
 
@@ -355,6 +359,11 @@ async function init() {
     }
   }
 
+  // Update apply section text for Adzuna jobs
+  if (job.source === 'adzuna') {
+    document.getElementById('applySectionText').textContent = 'Apply via vett.work — record a virtual interview and send it directly to the employer. Stand out from every other applicant.';
+  }
+
   document.getElementById('loadingState').style.display = 'none';
   document.getElementById('pageContent').style.display = 'block';
 }
@@ -411,15 +420,16 @@ vett.work — recruitment that's more human.`);
 }
 
 function openApply() {
+  // For Adzuna jobs, we still want applications through vett.work
+  // The application_url is stored but we use it only as fallback
+  document.getElementById('applyModal').classList.add('open');
   if (!currentCandidateId) {
-    document.getElementById('applyModal').classList.add('open');
     document.getElementById('applyLoggedOut').style.display = 'block';
     document.getElementById('applyLoggedIn').style.display = 'none';
-    return;
+  } else {
+    document.getElementById('applyLoggedOut').style.display = 'none';
+    document.getElementById('applyLoggedIn').style.display = 'block';
   }
-  document.getElementById('applyModal').classList.add('open');
-  document.getElementById('applyLoggedOut').style.display = 'none';
-  document.getElementById('applyLoggedIn').style.display = 'block';
 }
 function closeApply() { document.getElementById('applyModal').classList.remove('open'); }
 
