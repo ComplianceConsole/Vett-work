@@ -896,8 +896,10 @@ footer p { font-size: 12px; color: var(--muted2); }
   <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
   <div style="display:flex;align-items:center;gap:8px" id="navButtons">
     <div id="navUserArea" style="display:flex;align-items:center;gap:8px"></div>
-    <a href="candidate-auth.html?tab=login" id="navCandLogin" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s">Candidate login</a>
-    <a href="employer-auth.html?tab=login" id="navEmpLogin" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s">Employer login</a>
+    <a href="candidate.html" id="navForCand" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:color 0.15s;padding:4px 0" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">For candidates</a>
+    <a href="employer.html" id="navForEmp" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:color 0.15s;padding:4px 0" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">For employers</a>
+    <a href="candidate-auth.html" id="navCandLogin" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s">Candidate login</a>
+    <a href="employer-auth.html" id="navEmpLogin" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s">Employer login</a>
   </div>
 </nav>
 
@@ -1279,6 +1281,8 @@ loadJobs();
   if (!session) return;
   document.getElementById('navCandLogin').style.display = 'none';
   document.getElementById('navEmpLogin').style.display = 'none';
+  document.getElementById('navForCand').style.display = 'none';
+  document.getElementById('navForEmp').style.display = 'none';
   const { data: cand } = await sbClient.from('candidates').select('first_name, last_name').eq('user_id', session.user.id).single();
   if (cand) {
     const initials = ((cand.first_name||'')[0]+(cand.last_name||'')[0]).toUpperCase()||'?';
