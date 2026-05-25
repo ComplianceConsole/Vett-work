@@ -659,7 +659,7 @@ const CONFIG = {
   <div style="display:flex;align-items:center;gap:8px">
     <a href="employer-auth.html" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s" onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">Log in</a>
     <div id="navUserArea" style="display:flex;align-items:center;gap:8px"></div>
-    <button class="nav-cta" onclick="window.location.href='employer-auth.html'">Post a role</button>
+    <a href="employer-auth.html?tab=login" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s" onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">Log in</a>
   </div>
 </nav>
 
@@ -749,329 +749,54 @@ const CONFIG = {
   </div>
 </section>
 
-<!-- WHY DIFFERENT -->
-<section class="why-section">
-  <div class="why-inner">
-    <span class="section-tag">Why vett.work</span>
-    <div class="section-h">Everyone's CV sounds<br>the same now.<br><em>This is different.</em></div>
-    <div class="why-grid">
-      <div class="why-card">
-        <div class="why-icon"><svg viewBox="0 0 18 18"><polygon points="3,3 15,9 3,15"/></svg></div>
-        <div class="why-title">Hear them before you call</div>
-        <div class="why-body">Watch a candidate's video profile before you even read their CV. Know if they can communicate, how they carry themselves, whether they get what you're building — in 2 minutes.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="7"/><line x1="9" y1="5" x2="9" y2="9"/><line x1="9" y1="9" x2="12" y2="11"/></svg></div>
-        <div class="why-title">No more CV theatre</div>
-        <div class="why-body">Every CV and cover letter sounds the same now — polished, AI-enhanced, indistinguishable. Our interview questions come from 20 years of recruitment expertise. The answers come entirely from the candidate. No scripts, no assistance. You hear the real person.</div>
-      </div>
-      <div class="why-card">
-        <div class="why-icon"><svg viewBox="0 0 18 18"><path d="M9 2L11 7H16L12 10L14 15L9 12L4 15L6 10L2 7H7Z"/></svg></div>
-        <div class="why-title">Actually startup-appropriate</div>
-        <div class="why-body">Seek and LinkedIn are built for corporates. vett.work is built for founder-led teams, small businesses, and startups — the people who need someone who can own it, not just fill a role.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- POST A ROLE FORM -->
-<section class="post-section" id="post">
-  <div class="post-inner">
-    <div class="post-left">
-      <span class="section-tag">Get started</span>
-      <h2>Post your role.<br>Or <span>get in touch.</span></h2>
-      <p>We're in early access. Submit your role details and we'll get your listing live, or reach out to discuss a partner arrangement.</p>
-      <div class="what-you-get">
-        <div class="wyg-item">
-          <div class="wyg-icon"><svg viewBox="0 0 14 14"><polygon points="2,2 12,7 2,12"/></svg></div>
-          <div class="wyg-text"><strong>Video profiles with every application</strong><span>Free preview of each candidate's video profile included</span></div>
-        </div>
-        <div class="wyg-item">
-          <div class="wyg-icon"><svg viewBox="0 0 14 14"><circle cx="7" cy="5" r="3"/><path d="M2 13s-.5 0-.5-.5 .5-3.5 5.5-3.5 5.5 3 5.5 3.5-.5.5-.5.5H2z"/></svg></div>
-          <div class="wyg-text"><strong>Real candidates, not just CVs</strong><span>Profiles built for people who actually get things done</span></div>
-        </div>
-        <div class="wyg-item">
-          <div class="wyg-icon"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="12" height="9" rx="1"/><line x1="4" y1="6" x2="10" y2="6"/><line x1="4" y1="9" x2="8" y2="9"/></svg></div>
-          <div class="wyg-text"><strong>No corporate BS</strong><span>Built for startups and small businesses, not HR departments</span></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="post-form">
-      <h3>Post a role or get in touch</h3>
-      <p>We'll be back to you within one business day.</p>
-
-      <div class="form-row">
-        <div class="form-field">
-          <label>Your name</label>
-          <input type="text" id="empName" placeholder="[Your name]">
-        </div>
-        <div class="form-field">
-          <label>Company name</label>
-          <input type="text" id="empCompany" placeholder="[Company]">
-        </div>
-      </div>
-      <div class="form-field">
-        <label>Email address</label>
-        <input type="email" id="empEmail" placeholder="[Your email]">
-      </div>
-      <div class="form-field">
-        <label>Role title (if posting)</label>
-        <input type="text" id="empRole" placeholder="e.g. Head of Operations, Right Hand to Founder">
-      </div>
-      <div class="form-field">
-        <label>What are you looking for?</label>
-        <textarea id="empMessage" placeholder="Tell us about the role or what you need — we'll be in touch to get it live."></textarea>
-      </div>
-      <div class="form-field">
-        <label>I'm interested in</label>
-        <select id="empType">
-          <option value="">Select...</option>
-          <option value="base">Base listing — $99</option>
-          <option value="mid">Mid listing — $199</option>
-          <option value="pro">Pro subscription — $299/mo</option>
-          <option value="partner">Partner / agency deal</option>
-          <option value="browse">Just browsing candidates</option>
-        </select>
-      </div>
-      <button class="form-submit" onclick="handleEmployerSubmit()">Send enquiry</button>
-      <div class="form-note">We'll be in touch within one business day.</div>
-    </div>
-  </div>
-</section>
-
-
-
-<!-- VALUE CALLOUT -->
-<section style="background:var(--navy);padding:80px 48px">
-  <div style="max-width:1000px;margin:0 auto">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
-      <div>
-        <div style="font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--emerald);margin-bottom:14px">Why candidates are different here</div>
-        <div style="font-size:clamp(26px,3.5vw,40px);font-weight:800;letter-spacing:-1.5px;color:white;line-height:1.05;margin-bottom:16px">Let the candidate speak for themselves.</div>
-        <p style="font-size:15px;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:24px">Our interview questions are built on 20 years of recruitment expertise — personalised by AI to each candidate's actual background. Their answers? Completely their own. No scripts, no prompts, no AI assistance. Just the candidate on camera, in their own words. What you see is what you get.</p>
-        <div style="display:flex;flex-direction:column;gap:12px">
-          <div style="display:flex;align-items:flex-start;gap:12px">
-            <div style="width:20px;height:20px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg viewBox="0 0 10 10" width="9" height="9" stroke="#10b981" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
-            <span style="font-size:14px;color:rgba(255,255,255,0.65)">Watch their virtual interview before you pick up the phone</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:12px">
-            <div style="width:20px;height:20px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg viewBox="0 0 10 10" width="9" height="9" stroke="#10b981" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
-            <span style="font-size:14px;color:rgba(255,255,255,0.65)">See their work rights status upfront — no surprises</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:12px">
-            <div style="width:20px;height:20px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg viewBox="0 0 10 10" width="9" height="9" stroke="#10b981" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
-            <span style="font-size:14px;color:rgba(255,255,255,0.65)">Police checks, licences, certifications — all visible before interview</span>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:12px">
-            <div style="width:20px;height:20px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px"><svg viewBox="0 0 10 10" width="9" height="9" stroke="#10b981" stroke-width="2.5" fill="none"><polyline points="1,5 4,8 9,2"/></svg></div>
-            <span style="font-size:14px;color:rgba(255,255,255,0.65)">Video profiles are free — you only pay to post your role</span>
-          </div>
-        </div>
-      </div>
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px">
-        <div style="font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--emerald);margin-bottom:16px">What a $99 listing gets you</div>
-        <div style="display:flex;flex-direction:column;gap:12px">
-          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
-            <span style="font-size:14px;color:rgba(255,255,255,0.7)">30-day listing</span>
-            <span style="font-size:11px;font-weight:700;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:var(--emerald);padding:3px 8px;border-radius:4px">Included</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
-            <span style="font-size:14px;color:rgba(255,255,255,0.7)">Applicant virtual interviews</span>
-            <span style="font-size:11px;font-weight:700;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:var(--emerald);padding:3px 8px;border-radius:4px">Free</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
-            <span style="font-size:14px;color:rgba(255,255,255,0.7)">Work rights visibility</span>
-            <span style="font-size:11px;font-weight:700;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:var(--emerald);padding:3px 8px;border-radius:4px">Included</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
-            <span style="font-size:14px;color:rgba(255,255,255,0.7)">Supporting document visibility</span>
-            <span style="font-size:11px;font-weight:700;background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.2);color:var(--emerald);padding:3px 8px;border-radius:4px">Included</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.07)">
-            <span style="font-size:14px;color:rgba(255,255,255,0.7)">AI match unlocks (database candidates)</span>
-            <span style="font-size:13px;color:rgba(255,255,255,0.4)">$29 each</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <span style="font-size:15px;font-weight:700;color:white">Total</span>
-            <span style="font-size:22px;font-weight:800;letter-spacing:-1px;color:white">$99</span>
-          </div>
-        </div>
-        <a href="employer-auth.html" style="display:block;background:var(--emerald);color:white;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:14px;border-radius:10px;text-decoration:none;text-align:center;margin-top:20px;transition:background 0.15s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='var(--emerald)'">Post your first role — $99</a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- PRICING -->
 <section class="pricing-section" id="pricing">
   <div class="pricing-inner">
     <span class="section-tag">Pricing</span>
-    <div class="section-h">Simple pricing.<br>No surprises.</div>
-    <!-- Pricing explanation -->
-    <div class="pricing-note">
-      <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6.5"/><line x1="8" y1="7" x2="8" y2="11"/><circle cx="8" cy="5" r="0.5" fill="currentColor"/></svg>
-      <p>When a candidate has paid for their video CV and applies for your role, you get their full profile <strong>for free</strong> — they paid, not you. Unlocks are for AI-matched candidates from our database who haven't applied yet.</p>
-    </div>
-
+    <div class="section-h">Simple, flat pricing.<br><span>No surprises.</span></div>
     <div class="pricing-grid">
       <div class="price-card">
-        <div class="price-tier">Base</div>
-        <div class="price-amount">$99<span class="price-period">/listing</span></div>
-        <div class="price-desc">Post a role and receive applications. Applicant video CVs are free. Pay only to unlock AI-matched candidates.</div>
-        <div class="price-items">
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>1 role listed publicly for 30 days</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Applicant video CVs included free</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>$29 per AI match unlock</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Standard applicant management</div>
-        </div>
-        <button class="price-btn" onclick="window.location.href='employer-auth.html'">Post a role</button>
+        <div class="price-tier">Job Listing</div>
+        <div class="price-amount">$99</div>
+        <div class="price-period">one-time · 30 days</div>
+        <ul class="price-features">
+          <li>30-day listing on vett.work</li>
+          <li>Applicant virtual interviews free</li>
+          <li>Work rights visibility</li>
+          <li>Candidate supplied documents</li>
+          <li>AI match unlocks — $29 each (pay as you go)</li>
+        </ul>
+        <a href="employer-auth.html" class="price-cta">Post a role</a>
       </div>
-
-      <div class="price-card featured">
-        <div class="featured-label">Most popular</div>
-        <div class="price-tier">Mid</div>
-        <div class="price-amount">$199<span class="price-period">/listing</span></div>
-        <div class="price-desc">Everything in Base plus 10 AI match unlocks and follow-up video questions included.</div>
-        <div class="price-items">
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>1 role listed publicly for 30 days</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Applicant video CVs included free</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>10 AI match unlocks included</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Send follow-up video questions to candidates</div>
-        </div>
-        <button class="price-btn featured-btn" onclick="window.location.href='employer-auth.html'">Post a role</button>
+      <div class="price-card price-card-featured">
+        <div class="price-badge">Most popular</div>
+        <div class="price-tier">Premium Listing</div>
+        <div class="price-amount">$199</div>
+        <div class="price-period">one-time · 30 days</div>
+        <ul class="price-features">
+          <li>Everything in Job Listing</li>
+          <li>10 AI match unlocks included</li>
+          <li>Featured placement</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="employer-auth.html" class="price-cta">Post a role</a>
       </div>
-
       <div class="price-card">
-        <div class="price-tier">Pro</div>
-        <div class="price-amount">$299<span class="price-period">/mo</span></div>
-        <div class="price-desc">For teams that hire regularly. Five listings and 25 AI match unlocks every month.</div>
-        <div class="price-items">
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>5 active listings per month</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Applicant video CVs always free</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>25 AI match unlocks per month</div>
-          <div class="price-item"><div class="p-check"><svg viewBox="0 0 9 9"><polyline points="1.5,4.5 3.5,7 7.5,2"/></svg></div>Browse off-market candidates</div>
-        </div>
-        <button class="price-btn" onclick="window.location.href='employer-auth.html'">Get Pro</button>
+        <div class="price-tier">Listing Bundle</div>
+        <div class="price-amount">$399</div>
+        <div class="price-period">5 listings · 6 months</div>
+        <ul class="price-features">
+          <li>5 job listings</li>
+          <li>20 AI match unlocks per listing</li>
+          <li>6 month validity</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="employer-auth.html" class="price-cta">Get the bundle</a>
       </div>
     </div>
-  </div>
-</section>
-
-
-<!-- PARTNER / API -->
-<section class="partner-section">
-  <div class="partner-inner">
-    <div class="partner-left">
-      <span class="section-tag" style="background:rgba(16,185,129,0.1);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)">For recruitment networks</span>
-      <h2>Posting at volume?<br>Let's talk about a <span>partner deal.</span></h2>
-      <p>For recruitment agencies and networks posting multiple roles regularly. Volume pricing, free base listings, and a jobs upload API so your team can post directly without touching the platform.</p>
-      <div class="partner-list">
-        <div class="partner-item"><div class="p-dot"></div>Volume discount on all listing tiers</div>
-        <div class="partner-item"><div class="p-dot"></div>Free base listings for partner agencies</div>
-        <div class="partner-item"><div class="p-dot"></div>Reduced candidate profile unlock rates</div>
-        <div class="partner-item"><div class="p-dot"></div>Jobs upload API — POST listings directly</div>
-        <div class="partner-item"><div class="p-dot"></div>White-label option available</div>
-      </div>
-      <button class="partner-cta" onclick="window.location.href='employer-auth.html'">Get in touch about a partner deal</button>
-    </div>
-
-    <div>
-      <div class="api-card">
-        <div class="api-label">Jobs upload API · Phase 1</div>
-        <div class="api-title">Post listings <span>programmatically.</span></div>
-        <div class="api-desc">Partner agencies can POST job listings directly to vett.work via authenticated API. Simple, documented, rate-limited per key. Free for partner tier accounts.</div>
-        <div class="code-block"><span class="code-comment">// POST a new listing</span>
-POST /api/v1/jobs
-Authorization: Bearer YOUR_API_KEY
-
-{
-  "title": "Head of Operations",
-  "company": "NorthStack",
-  "location": "Brisbane",
-  "type": "full-time"
-}</div>
-        <div class="api-note">Phase 1 covers job upload only. Deeper API access — candidate data, AI matching — available by custom quote. <a href="#" style="color:rgba(255,255,255,0.35)">API docs coming soon</a></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- AGENCY COMING SOON -->
-<section class="agency-section">
-  <div class="agency-inner">
-    <div class="agency-left">
-      <span class="section-tag" style="background:rgba(16,185,129,0.1);color:var(--emerald);border:1px solid rgba(16,185,129,0.2)">Coming 2027</span>
-      <h2>Built for recruitment<br>agencies. <span>Properly.</span></h2>
-      <p>We're building a lite CRM and payroll integration layer designed specifically for small Australian and New Zealand recruitment agencies. Up to 5,000 active candidates, full video profiling, and direct integration with the payroll systems you already use.</p>
-
-      <div class="agency-list">
-        <div class="agency-item">
-          <div class="a-dot"></div>
-          <div>
-            <strong>Lite CRM</strong>
-            Manage up to 5,000 active candidates with status tracking, notes, tags, and video profiles built in.
-          </div>
-        </div>
-        <div class="agency-item">
-          <div class="a-dot"></div>
-          <div>
-            <strong>Astute Payroll integration</strong>
-            Push candidate and placement data directly into Astute — no double entry.
-          </div>
-        </div>
-        <div class="agency-item">
-          <div class="a-dot"></div>
-          <div>
-            <strong>FastTrack integration</strong>
-            Sync candidates, placements, and timesheets with FastTrack payroll.
-          </div>
-        </div>
-        <div class="agency-item">
-          <div class="a-dot"></div>
-          <div>
-            <strong>Other AU/NZ payroll systems</strong>
-            We're mapping the full landscape. If you use a system not listed here, tell us — it helps us prioritise.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="agency-form">
-      <div class="af-tag">Register your interest</div>
-      <h3>Be first in line<br>when we launch.</h3>
-      <p>We'll reach out directly when agency features are ready — no spam, just a heads up when it's live.</p>
-      <div class="form-field">
-        <label>Your name</label>
-        <input type="text" id="agencyName" placeholder="Your name">
-      </div>
-      <div class="form-field">
-        <label>Agency name</label>
-        <input type="text" id="agencyCompany" placeholder="Agency name">
-      </div>
-      <div class="form-field">
-        <label>Email address</label>
-        <input type="email" id="agencyEmail" placeholder="your@agency.com.au">
-      </div>
-      <div class="form-field">
-        <label>Payroll system you currently use</label>
-        <select id="agencyPayroll">
-          <option value="">Select...</option>
-          <option value="astute">Astute Payroll</option>
-          <option value="fasttrack">FastTrack</option>
-          <option value="keypay">KeyPay / Employment Hero</option>
-          <option value="xero">Xero Payroll</option>
-          <option value="myob">MYOB</option>
-          <option value="other">Other — I'll tell you below</option>
-          <option value="none">We don't use one yet</option>
-        </select>
-      </div>
-      <div class="form-field">
-        <label>Anything else we should know <span style="color:var(--muted2);font-weight:400">(optional)</span></label>
-        <textarea id="agencyNote" placeholder="Current candidate database size, systems you use, what matters most to you..."></textarea>
-      </div>
-      <button class="form-submit" onclick="handleAgencySignup()">Register my interest</button>
-      <div class="form-note">No commitment. Just a heads up when 2027 rolls around.</div>
+    <div class="pricing-note">
+      <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="7"/><line x1="8" y1="5" x2="8" y2="8"/><circle cx="8" cy="11" r=".5" fill="currentColor"/></svg>
+      <p>Need to post at volume? <strong><a href="mailto:hello@vett.work" style="color:var(--emerald-dark)">Contact us</a></strong> about High Volume Advertiser pricing.</p>
     </div>
   </div>
 </section>
