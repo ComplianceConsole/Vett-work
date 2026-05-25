@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>vett.work — Employer Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
@@ -243,12 +244,12 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
     <div class="auth-sub">Post roles, watch video profiles, and find the right person.</div>
 
     <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('signup')">Create account</button>
-      <button class="auth-tab" onclick="switchTab('login')">Sign in</button>
+      <button class="auth-tab" onclick="switchTab('signup')">Create account</button>
+      <button class="auth-tab active" onclick="switchTab('login')">Sign in</button>
     </div>
 
     <!-- SIGNUP -->
-    <div class="auth-form active" id="signupForm">
+    <div class="auth-form" id="signupForm" style="display:none">
       <div class="auth-error" id="signupError"></div>
       <div class="auth-success" id="signupSuccess"></div>
       <div class="form-row">
@@ -293,7 +294,7 @@ footer p { font-size: 12px; color: rgba(255,255,255,0.18); }
     </div>
 
     <!-- LOGIN -->
-    <div class="auth-form" id="loginForm">
+    <div class="auth-form" id="loginForm" style="display:flex">
       <div class="auth-error" id="loginError"></div>
       <div class="auth-success" id="loginSuccess"></div>
       <div class="form-field">
@@ -326,12 +327,26 @@ supabase.auth.getSession().then(({ data: { session } }) => {
   if (session) window.location.href = 'employer-dashboard.html';
 });
 
+// Default to login tab
+switchTab('login');
+// Unless ?signup in URL
+if (window.location.search.includes('signup')) switchTab('signup');
+
 function switchTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t, i) => {
-    t.classList.toggle('active', (tab === 'signup' && i === 0) || (tab === 'login' && i === 1));
-  });
-  document.getElementById('signupForm').classList.toggle('active', tab === 'signup');
-  document.getElementById('loginForm').classList.toggle('active', tab === 'login');
+  const signup = document.getElementById('signupForm');
+  const login = document.getElementById('loginForm');
+  const tabs = document.querySelectorAll('.auth-tab');
+  if (tab === 'login') {
+    signup.style.display = 'none';
+    login.style.display = 'flex';
+    tabs[0].classList.remove('active');
+    tabs[1].classList.add('active');
+  } else {
+    signup.style.display = 'flex';
+    login.style.display = 'none';
+    tabs[0].classList.add('active');
+    tabs[1].classList.remove('active');
+  }
 }
 
 function showError(id, msg) {
