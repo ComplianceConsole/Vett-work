@@ -124,9 +124,15 @@ let activeFilter = 'all';
 let selected = new Set();
 
 async function init() {
-  const { data: { session } } = await sb.auth.getSession();
-  if (!session) { window.location.href = 'candidate-auth.html'; return; }
-
+  const pw = sessionStorage.getItem('admin_auth');
+  if (pw !== 'vettwork-admin-2025') {
+    const input = prompt('Admin password:');
+    if (input !== 'vettwork-admin-2025') {
+      document.body.innerHTML = '<div style="padding:40px;font-family:sans-serif;color:#0c1445">Access denied.</div>';
+      return;
+    }
+    sessionStorage.setItem('admin_auth', input);
+  }
   await loadJobs();
 }
 
