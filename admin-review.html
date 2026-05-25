@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>vett.work — Job review queue</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #0f172a; min-height: 100vh; }
+nav { background: #0c1445; padding: 0 48px; height: 64px; display: flex; justify-content: space-between; align-items: center; }
+.logo { font-size: 20px; font-weight: 800; color: white; letter-spacing: -0.5px; text-decoration: none; }
+.logo em { color: #10b981; font-style: normal; }
+.nav-tag { font-size: 11px; font-weight: 700; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #10b981; padding: 4px 10px; border-radius: 100px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+.page { max-width: 1000px; margin: 0 auto; padding: 32px 24px 80px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.page-title { font-size: 24px; font-weight: 800; color: #0c1445; letter-spacing: -1px; }
+.stats { display: flex; gap: 12px; }
+.stat { background: white; border: 1px solid #e2e8f0; border-radius: 10px; padding: 10px 16px; text-align: center; }
+.stat-num { font-size: 20px; font-weight: 800; color: #0c1445; }
+.stat-label { font-size: 11px; color: #94a3b8; font-weight: 600; }
+
+.filters { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 7px 14px; border-radius: 7px; border: 1.5px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; transition: all 0.15s; }
+.filter-btn.active { background: #0c1445; color: white; border-color: #0c1445; }
+.filter-btn.green.active { background: #10b981; border-color: #10b981; }
+
+.bulk-bar { background: #0c1445; border-radius: 10px; padding: 12px 16px; display: none; align-items: center; gap: 12px; margin-bottom: 16px; }
+.bulk-bar.show { display: flex; }
+.bulk-bar span { font-size: 13px; color: white; flex: 1; }
+.bulk-approve { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 7px; border: none; background: #10b981; color: white; cursor: pointer; }
+.bulk-reject { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 7px; border: 1.5px solid rgba(255,255,255,0.2); background: transparent; color: white; cursor: pointer; }
+
+.job-card { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px 20px; margin-bottom: 10px; display: flex; gap: 14px; align-items: flex-start; transition: box-shadow 0.15s; }
+.job-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+.job-card.selected { border-color: #10b981; background: #f0fdf4; }
+
+.job-check { width: 18px; height: 18px; accent-color: #10b981; flex-shrink: 0; margin-top: 2px; cursor: pointer; }
+.job-body { flex: 1; min-width: 0; }
+.job-title { font-size: 15px; font-weight: 700; color: #0c1445; margin-bottom: 2px; }
+.job-meta { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+.job-desc { font-size: 13px; color: #475569; line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 8px; }
+.job-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; background: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; }
+.tag.blue { background: #eff6ff; color: #2563eb; border-color: #bfdbfe; }
+.tag.green { background: #ecfdf5; color: #059669; border-color: #a7f3d0; }
+.tag.orange { background: #fff7ed; color: #c2410c; border-color: #fed7aa; }
+
+.job-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.btn-approve { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 16px; border-radius: 7px; border: none; background: #10b981; color: white; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
+.btn-approve:hover { background: #059669; }
+.btn-reject { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 700; padding: 8px 16px; border-radius: 7px; border: 1.5px solid #fecaca; background: white; color: #ef4444; cursor: pointer; white-space: nowrap; transition: all 0.15s; }
+.btn-reject:hover { background: #ef4444; color: white; }
+.btn-preview { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 600; padding: 6px 12px; border-radius: 6px; border: 1.5px solid #e2e8f0; background: white; color: #64748b; cursor: pointer; white-space: nowrap; text-decoration: none; display: block; text-align: center; }
+.btn-preview:hover { border-color: #0c1445; color: #0c1445; }
+
+.empty { text-align: center; padding: 60px 24px; background: white; border-radius: 14px; border: 1px solid #e2e8f0; }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty-title { font-size: 18px; font-weight: 700; color: #0c1445; margin-bottom: 8px; }
+.empty-sub { font-size: 14px; color: #64748b; }
+
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: #0c1445; color: white; font-size: 13px; font-weight: 600; padding: 12px 20px; border-radius: 9px; border: 1px solid #10b981; box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s; z-index: 999; }
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+.loading { text-align: center; padding: 60px; color: #64748b; }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">vett<em>.</em>work</a>
+  <span class="nav-tag">Admin · Job review</span>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Job review queue</div>
+      <div style="font-size:13px;color:#64748b;margin-top:4px">Review and approve Adzuna-sourced listings before they go live</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="statPending">—</div><div class="stat-label">Pending</div></div>
+      <div class="stat"><div class="stat-num" id="statToday">—</div><div class="stat-label">Today</div></div>
+      <div class="stat"><div class="stat-num" id="statApproved">—</div><div class="stat-label">Live</div></div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="setFilter('all', this)">All pending</button>
+    <button class="filter-btn" onclick="setFilter('technology', this)">Technology</button>
+    <button class="filter-btn" onclick="setFilter('accounting', this)">Accounting</button>
+    <button class="filter-btn" onclick="setFilter('hr', this)">HR</button>
+    <button class="filter-btn" onclick="setFilter('marketing', this)">Marketing</button>
+    <button class="filter-btn" onclick="setFilter('legal', this)">Legal</button>
+    <button class="filter-btn" onclick="setFilter('sales', this)">Sales</button>
+    <button class="filter-btn" onclick="setFilter('leadership', this)">Leadership</button>
+    <button class="filter-btn green active" onclick="bulkApproveAll()" style="background:#10b981;color:white;border-color:#10b981;margin-left:auto">Approve all visible</button>
+  </div>
+
+  <div class="bulk-bar" id="bulkBar">
+    <span id="bulkCount">0 jobs selected</span>
+    <button class="bulk-approve" onclick="bulkAction('approve')">✓ Approve selected</button>
+    <button class="bulk-reject" onclick="bulkAction('reject')">✗ Reject selected</button>
+  </div>
+
+  <div id="jobList"><div class="loading">Loading queue...</div></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const SEEK_LABELS = { technology:'Technology & Digital', accounting:'Accounting', hr:'Human Resources & Recruitment', marketing:'Marketing & Communications', legal:'Legal', sales:'Sales', leadership:'Leadership & General Management', banking:'Banking & Financial Services' };
+
+let allJobs = [];
+let filtered = [];
+let activeFilter = 'all';
+let selected = new Set();
+
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'candidate-auth.html'; return; }
+
+  await loadJobs();
+}
+
+async function loadJobs() {
+  const { data: jobs } = await sb
+    .from('jobs')
+    .select('*, employers(company_name)')
+    .eq('source', 'adzuna')
+    .eq('status', 'pending_review')
+    .order('created_at', { ascending: false });
+
+  allJobs = jobs || [];
+  selected.clear();
+  updateStats();
+  applyFilter();
+}
+
+async function updateStats() {
+  const { count: pending } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('source', 'adzuna').eq('status', 'pending_review');
+  const { count: approved } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('source', 'adzuna').eq('is_active', true);
+  const today = new Date(); today.setHours(0,0,0,0);
+  const { count: todayCount } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('source', 'adzuna').gte('created_at', today.toISOString());
+
+  document.getElementById('statPending').textContent = pending || 0;
+  document.getElementById('statApproved').textContent = approved || 0;
+  document.getElementById('statToday').textContent = todayCount || 0;
+}
+
+function setFilter(cat, btn) {
+  activeFilter = cat;
+  document.querySelectorAll('.filter-btn:not(:last-child)').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter();
+}
+
+function applyFilter() {
+  filtered = activeFilter === 'all' ? allJobs : allJobs.filter(j => j.category === activeFilter);
+  renderJobs(filtered);
+}
+
+function renderJobs(jobs) {
+  const list = document.getElementById('jobList');
+  if (jobs.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">✅</div><div class="empty-title">Queue is empty</div><div class="empty-sub">No jobs pending review in this category.</div></div>';
+    return;
+  }
+
+  const EMP = { fulltime:'Full-time', parttime:'Part-time', casual:'Casual', contractor:'Contract' };
+  const WORK = { office:'In office', hybrid:'Hybrid', remote:'Remote' };
+
+  list.innerHTML = jobs.map(job => {
+    const company = job.employers?.company_name || 'Unknown';
+    const daysAgo = Math.floor((Date.now() - new Date(job.created_at)) / (1000*60*60*24));
+    const timeLabel = daysAgo === 0 ? 'Today' : `${daysAgo}d ago`;
+    const isSelected = selected.has(job.id);
+
+    return `<div class="job-card ${isSelected ? 'selected' : ''}" id="card_${job.id}">
+      <input type="checkbox" class="job-check" ${isSelected ? 'checked' : ''} onchange="toggleSelect('${job.id}', this)">
+      <div class="job-body">
+        <div class="job-title">${job.title}</div>
+        <div class="job-meta">${company} · ${job.location || 'Location TBC'} · ${timeLabel}</div>
+        <div class="job-desc">${job.short_description || job.description?.substring(0, 300) || ''}</div>
+        <div class="job-tags">
+          <span class="tag blue">${SEEK_LABELS[job.category] || job.category}</span>
+          <span class="tag">${EMP[job.employment_type] || job.employment_type || ''}</span>
+          ${job.salary_range ? `<span class="tag green">${job.salary_range}</span>` : ''}
+          ${job.work_type !== 'office' ? `<span class="tag">${WORK[job.work_type] || ''}</span>` : ''}
+          ${job.location?.toLowerCase().includes('auckland') || job.location?.toLowerCase().includes('wellington') || job.location?.toLowerCase().includes('christchurch') ? '<span class="tag orange">NZ</span>' : '<span class="tag">AU</span>'}
+        </div>
+      </div>
+      <div class="job-actions">
+        <button class="btn-approve" onclick="approveJob('${job.id}')">✓ Approve</button>
+        <button class="btn-reject" onclick="rejectJob('${job.id}')">✗ Reject</button>
+        <a class="btn-preview" href="job.html?id=${job.id}" target="_blank">Preview →</a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleSelect(jobId, cb) {
+  if (cb.checked) { selected.add(jobId); } else { selected.delete(jobId); }
+  document.getElementById(`card_${jobId}`).classList.toggle('selected', cb.checked);
+  const bar = document.getElementById('bulkBar');
+  bar.classList.toggle('show', selected.size > 0);
+  document.getElementById('bulkCount').textContent = `${selected.size} job${selected.size !== 1 ? 's' : ''} selected`;
+}
+
+async function approveJob(jobId) {
+  await sb.from('jobs').update({ is_active: true, status: 'approved' }).eq('id', jobId);
+  allJobs = allJobs.filter(j => j.id !== jobId);
+  selected.delete(jobId);
+  applyFilter();
+  updateStats();
+  showToast('Job approved — now live');
+}
+
+async function rejectJob(jobId) {
+  await sb.from('jobs').delete().eq('id', jobId);
+  allJobs = allJobs.filter(j => j.id !== jobId);
+  selected.delete(jobId);
+  applyFilter();
+  updateStats();
+  showToast('Job rejected and removed');
+}
+
+async function bulkAction(action) {
+  if (selected.size === 0) return;
+  const ids = [...selected];
+  if (action === 'approve') {
+    await sb.from('jobs').update({ is_active: true, status: 'approved' }).in('id', ids);
+    showToast(`${ids.length} jobs approved`);
+  } else {
+    await sb.from('jobs').delete().in('id', ids);
+    showToast(`${ids.length} jobs rejected`);
+  }
+  allJobs = allJobs.filter(j => !selected.has(j.id));
+  selected.clear();
+  document.getElementById('bulkBar').classList.remove('show');
+  applyFilter();
+  updateStats();
+}
+
+async function bulkApproveAll() {
+  if (filtered.length === 0) return;
+  if (!confirm(`Approve all ${filtered.length} visible jobs?`)) return;
+  const ids = filtered.map(j => j.id);
+  await sb.from('jobs').update({ is_active: true, status: 'approved' }).in('id', ids);
+  allJobs = allJobs.filter(j => !ids.includes(j.id));
+  applyFilter();
+  updateStats();
+  showToast(`${ids.length} jobs approved`);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+init();
+</script>
+</body>
+</html>
