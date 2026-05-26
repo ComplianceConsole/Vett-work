@@ -164,27 +164,27 @@ h1 em {
 }
 
 .btn-candidate {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.btn-candidate:hover {
+  background: rgba(255,255,255,0.13);
+  border-color: rgba(255,255,255,0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+}
+
+.btn-employer {
   background: var(--emerald);
   border-color: var(--emerald);
 }
 
-.btn-candidate:hover {
+.btn-employer:hover {
   background: var(--emerald-dark);
   border-color: var(--emerald-dark);
   transform: translateY(-3px);
   box-shadow: 0 16px 48px rgba(16,185,129,0.3);
-}
-
-.btn-employer {
-  background: rgba(255,255,255,0.06);
-  border-color: rgba(255,255,255,0.12);
-}
-
-.btn-employer:hover {
-  background: rgba(255,255,255,0.1);
-  border-color: rgba(255,255,255,0.28);
-  transform: translateY(-3px);
-  box-shadow: 0 16px 48px rgba(0,0,0,0.25);
 }
 
 .btn-label {
@@ -196,8 +196,8 @@ h1 em {
   opacity: 0.65;
 }
 
-.btn-candidate .btn-label { color: rgba(0,0,0,0.6); }
-.btn-employer .btn-label { color: rgba(255,255,255,0.5); }
+.btn-candidate .btn-label { color: rgba(255,255,255,0.5); }
+.btn-employer .btn-label { color: rgba(0,0,0,0.6); }
 
 .btn-title {
   font-size: 18px;
@@ -208,8 +208,8 @@ h1 em {
   white-space: nowrap;
 }
 
-.btn-candidate .btn-title { color: #0a2e1a; }
-.btn-employer .btn-title { color: white; }
+.btn-candidate .btn-title { color: white; }
+.btn-employer .btn-title { color: #0a2e1a; }
 
 .btn-desc {
   font-size: 13px;
@@ -217,8 +217,8 @@ h1 em {
   margin-bottom: 20px;
 }
 
-.btn-candidate .btn-desc { color: rgba(0,0,0,0.5); white-space: normal; }
-.btn-employer .btn-desc { color: rgba(255,255,255,0.4); white-space: normal; }
+.btn-candidate .btn-desc { color: rgba(255,255,255,0.4); white-space: normal; }
+.btn-employer .btn-desc { color: rgba(0,0,0,0.5); white-space: normal; }
 
 .btn-arrow {
   display: flex;
