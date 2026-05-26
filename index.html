@@ -896,10 +896,8 @@ footer p { font-size: 12px; color: var(--muted2); }
   <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
   <div style="display:flex;align-items:center;gap:8px" id="navButtons">
     <div id="navUserArea" style="display:flex;align-items:center;gap:8px"></div>
-    <a href="candidate.html" id="navForCand" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:color 0.15s;padding:4px 0" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">For candidates</a>
-    <a href="employer.html" id="navForEmp" style="font-size:13px;color:rgba(255,255,255,0.5);text-decoration:none;transition:color 0.15s;padding:4px 0" onmouseover="this.style.color='white'" onmouseout="this.style.color='rgba(255,255,255,0.5)'">For employers</a>
-    <a href="candidate-auth.html" id="navCandLogin" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s">Candidate login</a>
-    <a href="employer-auth.html" id="navEmpLogin" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s">Employer login</a>
+    <a href="candidate.html" id="navForCand" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.35);transition:all 0.15s" onmouseover="this.style.borderColor='white'" onmouseout="this.style.borderColor='rgba(255,255,255,0.35)'">For candidates</a>
+    <a href="employer.html" id="navForEmp" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:600;color:#10b981;text-decoration:none;padding:8px 16px;border-radius:8px;border:1.5px solid rgba(16,185,129,0.5);transition:all 0.15s" onmouseover="this.style.borderColor='#10b981'" onmouseout="this.style.borderColor='rgba(16,185,129,0.5)'">For employers</a>
   </div>
 </nav>
 
@@ -918,7 +916,7 @@ footer p { font-size: 12px; color: var(--muted2); }
   </div>
 </div>
 
-<section class="hero">
+<section class="hero" id="heroSection">
   <div class="hero-tag">Early access</div>
 
   <h1>Find work.<br><em>Find people.</em></h1>
@@ -956,7 +954,7 @@ footer p { font-size: 12px; color: var(--muted2); }
 </section>
 
 <!-- JOB BOARD -->
-<section class="jobs-section" id="jobs">
+<section class="jobs-section" id="jobs" data-scroll-id="jobBoard">
   <div class="jobs-inner">
 
     <div class="jobs-header">
@@ -972,11 +970,11 @@ footer p { font-size: 12px; color: var(--muted2); }
 
     <!-- Search + location -->
     <div style="display:flex;gap:10px;align-items:stretch;margin-bottom:16px">
-      <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s" onfocusin="this.style.borderColor='#10b981'" onfocusout="this.style.borderColor='var(--border)'">
+      <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s" style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid #10b981;border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s">
         <svg viewBox="0 0 16 16" width="14" height="14" stroke="#94a3b8" stroke-width="1.5" fill="none" flex-shrink="0"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
         <input type="text" placeholder="Role, skill, or keyword" id="jobSearch" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()" style="flex:1;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;background:transparent">
       </div>
-      <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s" onfocusin="this.style.borderColor='#10b981'" onfocusout="this.style.borderColor='var(--border)'">
+      <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s" style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid #10b981;border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s">
         <svg viewBox="0 0 16 16" width="14" height="14" stroke="#94a3b8" stroke-width="1.5" fill="none" flex-shrink="0"><path d="M8 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
         <input type="text" placeholder="Location — city, state, or remote" id="jobLocation" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()" style="flex:1;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;background:transparent">
       </div>
@@ -1275,12 +1273,30 @@ function escapeHtml(str) {
 // Load jobs on page load
 loadJobs();
 
+function playVideo() {
+  // Placeholder — swap with real video embed when ready
+  // For now collapse the hero to show the job board
+  const hero = document.getElementById('heroSection');
+  const video = document.getElementById('heroVideo');
+  if (hero) {
+    hero.style.transition = 'max-height 0.6s ease, padding 0.6s ease, opacity 0.4s ease';
+    hero.style.maxHeight = '0px';
+    hero.style.paddingTop = '0';
+    hero.style.paddingBottom = '0';
+    hero.style.opacity = '0';
+    hero.style.overflow = 'hidden';
+    setTimeout(() => { hero.style.display = 'none'; }, 700);
+  }
+  // Scroll to job board
+  setTimeout(() => {
+    document.getElementById('jobs')?.scrollIntoView({ behavior: 'smooth' });
+  }, 400);
+}
+
 // Check login state and update nav
 (async () => {
   const { data: { session } } = await sbClient.auth.getSession();
   if (!session) return;
-  document.getElementById('navCandLogin').style.display = 'none';
-  document.getElementById('navEmpLogin').style.display = 'none';
   document.getElementById('navForCand').style.display = 'none';
   document.getElementById('navForEmp').style.display = 'none';
   const { data: cand } = await sbClient.from('candidates').select('first_name, last_name').eq('user_id', session.user.id).single();

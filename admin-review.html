@@ -140,7 +140,6 @@ async function loadJobs() {
   const { data: jobs } = await sb
     .from('jobs')
     .select('*, employers(company_name)')
-    .eq('source', 'adzuna')
     .eq('status', 'pending_review')
     .order('created_at', { ascending: false });
 
@@ -151,10 +150,10 @@ async function loadJobs() {
 }
 
 async function updateStats() {
-  const { count: pending } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('source', 'adzuna').eq('status', 'pending_review');
-  const { count: approved } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('source', 'adzuna').eq('is_active', true);
+  const { count: pending } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('status', 'pending_review');
+  const { count: approved } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('is_active', true);
   const today = new Date(); today.setHours(0,0,0,0);
-  const { count: todayCount } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('source', 'adzuna').gte('created_at', today.toISOString());
+  const { count: todayCount } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('status', 'pending_review').gte('created_at', today.toISOString());
 
   document.getElementById('statPending').textContent = pending || 0;
   document.getElementById('statApproved').textContent = approved || 0;
