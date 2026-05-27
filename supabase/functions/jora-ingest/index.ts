@@ -8,95 +8,77 @@ const corsHeaders = {
 }
 
 const AGENCY_KEYWORDS = [
-  'recruitment', 'recruiting', 'staffing', 'talent solutions', 'executive search',
-  'headhunt', 'labour hire', 'labor hire', 'manpower', 'hays', 'robert half',
-  'hudson', 'randstad', 'adecco', 'michael page', 'people2people', 'chandler macleod',
-  'skilled group', 'drake', 'korn ferry'
+  'recruitment','recruiting','staffing','talent solutions','hays','robert half',
+  'hudson','randstad','adecco','michael page','people2people','chandler macleod',
+  'skilled group','drake','korn ferry'
 ]
 
-function isLikelyAgency(name: string): boolean {
-  if (!name) return false
-  const lower = name.toLowerCase()
-  return AGENCY_KEYWORDS.some(kw => lower.includes(kw))
+function isAgency(name: string): boolean {
+  const l = (name||'').toLowerCase()
+  return AGENCY_KEYWORDS.some(k => l.includes(k))
 }
 
-function cleanText(str: string): string {
-  return (str || '')
-    .replace(/<li[^>]*>/gi, ' • ')       // list items get bullet + space
-    .replace(/<br[^>]*>/gi, ' ')          // line breaks become spaces
-    .replace(/<\/p>/gi, ' ')             // paragraph ends become spaces
-    .replace(/<[^>]+>/g, '')              // strip remaining HTML tags
-    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&quot;/g, '"')
-    .replace(/([a-z])([A-Z])/g, '$1 $2') // fix camelCase joins e.g. systemsProvide
-    .replace(/([a-z])([A-Z])/g, '$1 $2') // run twice to catch consecutive
-    .replace(/([.,!?:;])([A-Za-z])/g, '$1 $2') // space after punctuation
-    .replace(/•([A-Za-z])/g, '• $1')     // space after bullet
-    .replace(/\s+/g, ' ')
-    .trim()
+function clean(str: string): string {
+  return (str||'')
+    .replace(/<[^>]+>/g,' ')
+    .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&nbsp;/g,' ')
+    .replace(/([a-z])([A-Z])/g,'$1 $2')
+    .replace(/([.!?])([A-Z])/g,'$1 $2')
+    .replace(/\s+/g,' ').trim()
 }
 
-function mapEmpType(badge: string): string {
-  const t = (badge || '').toLowerCase()
+function shortDesc(desc: string): string {
+  const c = clean(desc)
+  if (c.length <= 200) return c
+  const cut = c.substring(0, 197)
+  return cut.substring(0, cut.lastIndexOf(' ')) + '...'
+}
+
+function mapEmp(badge: string): string {
+  const t = (badge||'').toLowerCase()
   if (t.includes('part')) return 'parttime'
-  if (t.includes('casual') || t.includes('temp')) return 'casual'
+  if (t.includes('casual')||t.includes('temp')) return 'casual'
   if (t.includes('contract')) return 'contractor'
   return 'fulltime'
 }
 
-function mapWorkType(text: string): string {
-  const t = (text || '').toLowerCase()
-  if (t.includes('remote') || t.includes('work from home')) return 'remote'
+function mapWork(text: string): string {
+  const t = (text||'').toLowerCase()
+  if (t.includes('remote')||t.includes('work from home')) return 'remote'
   if (t.includes('hybrid')) return 'hybrid'
   return 'office'
 }
 
-function makeShortDesc(desc: string): string {
-  const clean = cleanText(desc)
-  // Take first 200 chars, cut at last complete word, add ellipsis
-  if (clean.length <= 200) return clean
-  const cut = clean.substring(0, 197)
-  const lastSpace = cut.lastIndexOf(' ')
-  return cut.substring(0, lastSpace) + '...'
+const BATCHES: Record<string, Array<{country: string, category: string, joraCategory: string}>> = {
+  'tech':           [{country:'au',category:'technology',joraCategory:'Information-Communication-Technology'},{country:'nz',category:'technology',joraCategory:'Information-Communication-Technology'}],
+  'accounting':     [{country:'au',category:'accounting',joraCategory:'Accounting'},{country:'nz',category:'accounting',joraCategory:'Accounting'}],
+  'hr':             [{country:'au',category:'hr',joraCategory:'Human-Resources-Recruitment'},{country:'nz',category:'hr',joraCategory:'Human-Resources-Recruitment'}],
+  'marketing':      [{country:'au',category:'marketing',joraCategory:'Marketing-Communications'},{country:'nz',category:'marketing',joraCategory:'Marketing-Communications'}],
+  'sales':          [{country:'au',category:'sales',joraCategory:'Sales'},{country:'nz',category:'sales',joraCategory:'Sales'}],
+  'leadership':     [{country:'au',category:'leadership',joraCategory:'General-Management'},{country:'nz',category:'leadership',joraCategory:'General-Management'}],
+  'legal':          [{country:'au',category:'legal',joraCategory:'Legal'},{country:'nz',category:'legal',joraCategory:'Legal'}],
+  'consulting':     [{country:'au',category:'consulting',joraCategory:'Consulting-Strategy'},{country:'nz',category:'consulting',joraCategory:'Consulting-Strategy'}],
+  'banking':        [{country:'au',category:'banking',joraCategory:'Banking-Financial-Services'},{country:'nz',category:'banking',joraCategory:'Banking-Financial-Services'}],
+  'community':      [{country:'au',category:'community',joraCategory:'Community-Services-Development'},{country:'nz',category:'community',joraCategory:'Community-Services-Development'}],
+  'healthcare':     [{country:'au',category:'healthcare',joraCategory:'Healthcare-Medical'},{country:'nz',category:'healthcare',joraCategory:'Healthcare-Medical'}],
+  'administration': [{country:'au',category:'administration',joraCategory:'Administration-Office-Support'},{country:'nz',category:'administration',joraCategory:'Administration-Office-Support'}],
+  'engineering':    [{country:'au',category:'engineering',joraCategory:'Engineering'},{country:'nz',category:'engineering',joraCategory:'Engineering'}],
+  'education':      [{country:'au',category:'education',joraCategory:'Education-Training'},{country:'nz',category:'education',joraCategory:'Education-Training'}],
+  'realestate':     [{country:'au',category:'realestate',joraCategory:'Real-Estate-Property'},{country:'nz',category:'realestate',joraCategory:'Real-Estate-Property'}],
 }
 
-async function fetchJobDetail(url: string, headers: Record<string, string>): Promise<string> {
-  try {
-    const res = await fetch(url, { headers })
-    if (!res.ok) return ''
-    const html = await res.text()
-    const doc = new DOMParser().parseFromString(html, 'text/html')
-    if (!doc) return ''
-    // Try multiple selectors for job description
-    const desc = doc.querySelector('.job-description, #job-description, [class*="description"], .content-body')
-    return cleanText(desc?.textContent || '')
-  } catch {
-    return ''
-  }
-}
-
-async function scrapeJoraPage(
-  supabase: any,
-  country: string, // 'au' or 'nz'
-  category: string,
-  joraCategory: string,
-  page: number
-): Promise<number> {
-  const baseUrl = country === 'au' ? 'https://au.jora.com' : 'https://nz.jora.com'
-  const url = `${baseUrl}/${joraCategory}-jobs?sp=facets&ca=${joraCategory.toLowerCase().replace(/-/g,'_')}&sort=date&p=${page}`
+async function scrapePage(supabase: any, country: string, category: string, joraCategory: string, page: number): Promise<number> {
+  const base = country === 'au' ? 'https://au.jora.com' : 'https://nz.jora.com'
+  const url = `${base}/${joraCategory}-jobs?sp=facets&ca=${joraCategory.toLowerCase().replace(/-/g,'_')}&sort=date&p=${page}`
 
   const headers = {
     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+    'Accept': 'text/html,application/xhtml+xml',
     'Accept-Language': 'en-AU,en;q=0.9',
-    'Accept-Encoding': 'gzip, deflate, br',
-    'Cache-Control': 'no-cache',
   }
 
   const res = await fetch(url, { headers })
-  if (!res.ok) {
-    console.error(`Jora ${country}/${joraCategory} page ${page}: ${res.status}`)
-    return 0
-  }
+  if (!res.ok) { console.log(`${country}/${joraCategory} p${page}: ${res.status}`); return 0 }
 
   const html = await res.text()
   const doc = new DOMParser().parseFromString(html, 'text/html')
@@ -107,38 +89,37 @@ async function scrapeJoraPage(
 
   for (const card of Array.from(cards)) {
     try {
-      const id = (card as Element).id?.replace('r_', '')
+      const el = card as Element
+      const id = el.id?.replace('r_', '')
       if (!id) continue
 
-      const title = cleanText((card.querySelector('.job-link') as Element)?.textContent || '')
-      const company = cleanText((card.querySelector('.job-company') as Element)?.textContent || '')
-      const location = cleanText((card.querySelector('.job-location') as Element)?.textContent || '')
-      const snippet = cleanText((card.querySelector('.job-abstract') as Element)?.textContent || '')
-      const empBadge = cleanText((card.querySelector('.badges') as Element)?.textContent || '')
-      const dateText = cleanText((card.querySelector('.job-listed-date') as Element)?.textContent || '')
-      const jobUrl = (card.querySelector('a.job-link') as HTMLAnchorElement)?.href || ''
+      const title = clean((el.querySelector('.job-link') as Element)?.textContent || '')
+      if (!title) continue
 
-      if (!title || !company) continue
-      if (isLikelyAgency(company)) continue
-      if (snippet.length < 50) continue
+      const company = clean((el.querySelector('.job-company') as Element)?.textContent || '')
+      if (!company || isAgency(company)) continue
 
-      // Skip jobs older than 7 days
-      if (dateText.includes('30d') || dateText.includes('14d')) continue
+      const location = clean((el.querySelector('.job-location') as Element)?.textContent || '')
+      const snippet = clean((el.querySelector('.job-abstract') as Element)?.textContent || '')
+      if (!snippet || snippet.length < 30) continue
 
-      // Dedup
+      const dateText = clean((el.querySelector('.job-listed-date') as Element)?.textContent || '')
+      if (dateText && (dateText.includes('30d') || dateText.includes('14d'))) continue
+
+      const empBadge = clean((el.querySelector('.job-type, .badges') as Element)?.textContent || '')
+      const jobUrl = (el.querySelector('a.job-link') as HTMLAnchorElement)?.href || ''
+
       const externalRef = `jora_${id}`
       const { data: existing } = await supabase.from('jobs').select('id').eq('external_reference', externalRef).single()
       if (existing) continue
 
-      // Find or create employer
       let employerId: string | null = null
       const { data: existingEmp } = await supabase.from('employers').select('id').eq('company_name', company).eq('source', 'jora').single()
       if (existingEmp) {
         employerId = existingEmp.id
       } else {
         const { data: newEmp } = await supabase.from('employers').insert({
-          company_name: company,
-          source: 'jora',
+          company_name: company, source: 'jora',
           email: `jora_${id}@placeholder.vettwork.internal`,
           company_type: 'direct',
         }).select('id').single()
@@ -146,98 +127,22 @@ async function scrapeJoraPage(
       }
       if (!employerId) continue
 
-      // Use snippet as description - no detail page fetch to save memory
-      const fullDesc = snippet
-      const workType = mapWorkType(empBadge + ' ' + snippet.substring(0, 200))
-
       await supabase.from('jobs').insert({
-        employer_id: employerId,
-        title,
-        description: fullDesc,
-        short_description: makeShortDesc(fullDesc || snippet),
-        location,
-        employment_type: mapEmpType(empBadge),
-        work_type: workType,
-        category,
-        is_active: false,
-        status: 'pending_review',
+        employer_id: employerId, title, description: snippet,
+        short_description: shortDesc(snippet), location,
+        employment_type: mapEmp(empBadge), work_type: mapWork(empBadge + ' ' + snippet),
+        category, is_active: false, status: 'pending_review',
         expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        external_reference: externalRef,
-        application_url: jobUrl || null,
-        source: 'jora',
+        external_reference: externalRef, application_url: jobUrl || null, source: 'jora',
       })
       inserted++
     } catch (err) {
-      console.error('Error processing Jora job:', err)
+      console.error('job error:', err)
     }
   }
 
-  console.log(`Jora ${country}/${joraCategory} page ${page}: ${inserted} inserted from ${cards.length} cards`)
+  console.log(`Jora ${country}/${joraCategory} p${page}: ${inserted} inserted from ${cards.length} cards`)
   return inserted
-}
-
-// All available batches
-const BATCHES: Record<string, Array<{country: string, category: string, joraCategory: string, pages: number}>> = {
-  'tech': [
-    { country: 'au', category: 'technology', joraCategory: 'Information-Communication-Technology', pages: 5 },
-    { country: 'nz', category: 'technology', joraCategory: 'Information-Communication-Technology', pages: 2 },
-  ],
-  'accounting': [
-    { country: 'au', category: 'accounting', joraCategory: 'Accounting', pages: 5 },
-    { country: 'nz', category: 'accounting', joraCategory: 'Accounting', pages: 2 },
-  ],
-  'hr': [
-    { country: 'au', category: 'hr', joraCategory: 'Human-Resources-Recruitment', pages: 5 },
-    { country: 'nz', category: 'hr', joraCategory: 'Human-Resources-Recruitment', pages: 2 },
-  ],
-  'marketing': [
-    { country: 'au', category: 'marketing', joraCategory: 'Marketing-Communications', pages: 5 },
-    { country: 'nz', category: 'marketing', joraCategory: 'Marketing-Communications', pages: 2 },
-  ],
-  'sales': [
-    { country: 'au', category: 'sales', joraCategory: 'Sales', pages: 5 },
-    { country: 'nz', category: 'sales', joraCategory: 'Sales', pages: 2 },
-  ],
-  'leadership': [
-    { country: 'au', category: 'leadership', joraCategory: 'General-Management', pages: 5 },
-    { country: 'nz', category: 'leadership', joraCategory: 'General-Management', pages: 2 },
-  ],
-  'legal': [
-    { country: 'au', category: 'legal', joraCategory: 'Legal', pages: 5 },
-    { country: 'nz', category: 'legal', joraCategory: 'Legal', pages: 2 },
-  ],
-  'consulting': [
-    { country: 'au', category: 'consulting', joraCategory: 'Consulting-Strategy', pages: 5 },
-    { country: 'nz', category: 'consulting', joraCategory: 'Consulting-Strategy', pages: 2 },
-  ],
-  'banking': [
-    { country: 'au', category: 'banking', joraCategory: 'Banking-Financial-Services', pages: 5 },
-    { country: 'nz', category: 'banking', joraCategory: 'Banking-Financial-Services', pages: 2 },
-  ],
-  'community': [
-    { country: 'au', category: 'community', joraCategory: 'Community-Services-Development', pages: 5 },
-    { country: 'nz', category: 'community', joraCategory: 'Community-Services-Development', pages: 2 },
-  ],
-  'healthcare': [
-    { country: 'au', category: 'healthcare', joraCategory: 'Healthcare-Medical', pages: 5 },
-    { country: 'nz', category: 'healthcare', joraCategory: 'Healthcare-Medical', pages: 2 },
-  ],
-  'administration': [
-    { country: 'au', category: 'administration', joraCategory: 'Administration-Office-Support', pages: 5 },
-    { country: 'nz', category: 'administration', joraCategory: 'Administration-Office-Support', pages: 2 },
-  ],
-  'engineering': [
-    { country: 'au', category: 'engineering', joraCategory: 'Engineering', pages: 5 },
-    { country: 'nz', category: 'engineering', joraCategory: 'Engineering', pages: 2 },
-  ],
-  'education': [
-    { country: 'au', category: 'education', joraCategory: 'Education-Training', pages: 5 },
-    { country: 'nz', category: 'education', joraCategory: 'Education-Training', pages: 2 },
-  ],
-  'realestate': [
-    { country: 'au', category: 'realestate', joraCategory: 'Real-Estate-Property', pages: 5 },
-    { country: 'nz', category: 'realestate', joraCategory: 'Real-Estate-Property', pages: 2 },
-  ],
 }
 
 serve(async (req) => {
@@ -255,42 +160,33 @@ serve(async (req) => {
       })
     }
 
-    // Get batch from query param or body - defaults to 'tech'
-    const url = new URL(req.url)
-    let batch = url.searchParams.get('batch') || 'tech'
-    try {
-      const body = await req.json()
-      if (body.batch) batch = body.batch
-    } catch {}
+    const reqUrl = new URL(req.url)
+    let batch = reqUrl.searchParams.get('batch') || 'tech'
+    try { const body = await req.json(); if (body.batch) batch = body.batch } catch {}
 
     const runs = BATCHES[batch] || BATCHES['tech']
     console.log(`Running batch: ${batch}`)
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
-    // Expire old jora jobs
     await supabase.from('jobs').update({ is_active: false })
-      .eq('source', 'jora')
-      .lt('expires_at', new Date().toISOString())
+      .eq('source', 'jora').lt('expires_at', new Date().toISOString())
 
     let total = 0
     for (const run of runs) {
-      for (let page = 1; page <= run.pages; page++) {
-        total += await scrapeJoraPage(supabase, run.country, run.category, run.joraCategory, page)
-        await new Promise(r => setTimeout(r, 800))
-      }
+      // Just 1 page per country to stay within memory limits
+      total += await scrapePage(supabase, run.country, run.category, run.joraCategory, 1)
+      await new Promise(r => setTimeout(r, 1000))
     }
 
     return new Response(
       JSON.stringify({ success: true, batch, inserted: total }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
-
   } catch (err) {
     console.error(err)
-    return new Response(
-      JSON.stringify({ error: err.message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
   }
 })
