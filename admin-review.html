@@ -65,6 +65,9 @@ nav { background: #0c1445; padding: 0 48px; height: 64px; display: flex; justify
 .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px); background: #0c1445; color: white; font-size: 13px; font-weight: 600; padding: 12px 20px; border-radius: 9px; border: 1px solid #10b981; box-shadow: 0 8px 32px rgba(0,0,0,0.2); transition: transform 0.3s; z-index: 999; }
 .toast.show { transform: translateX(-50%) translateY(0); }
 
+.batch-btn { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 12px; font-weight: 600; padding: 6px 14px; border-radius: 7px; border: 1.5px solid #e2e8f0; background: white; color: #0c1445; cursor: pointer; transition: all 0.15s; }
+.batch-btn:hover { background: #0c1445; color: white; border-color: #0c1445; }
+.batch-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .loading { text-align: center; padding: 60px; color: #64748b; }
 </style>
 </head>
@@ -100,6 +103,29 @@ nav { background: #0c1445; padding: 0 48px; height: 64px; display: flex; justify
     <button class="filter-btn" onclick="setFilter('sales', this)">Sales</button>
     <button class="filter-btn" onclick="setFilter('leadership', this)">Leadership</button>
     <button class="filter-btn green active" onclick="bulkApproveAll()" style="background:#10b981;color:white;border-color:#10b981;margin-left:auto">Approve all visible</button>
+  </div>
+
+  <!-- BATCH RUNNER -->
+  <div style="background:white;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div style="font-size:13px;font-weight:700;color:#0c1445;flex-shrink:0">Run scraper:</div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;flex:1">
+      <button onclick="runBatch('tech')" class="batch-btn">Technology</button>
+      <button onclick="runBatch('accounting')" class="batch-btn">Accounting</button>
+      <button onclick="runBatch('hr')" class="batch-btn">HR</button>
+      <button onclick="runBatch('marketing')" class="batch-btn">Marketing</button>
+      <button onclick="runBatch('sales')" class="batch-btn">Sales</button>
+      <button onclick="runBatch('leadership')" class="batch-btn">Leadership</button>
+      <button onclick="runBatch('legal')" class="batch-btn">Legal</button>
+      <button onclick="runBatch('consulting')" class="batch-btn">Consulting</button>
+      <button onclick="runBatch('banking')" class="batch-btn">Banking</button>
+      <button onclick="runBatch('community')" class="batch-btn">Community</button>
+      <button onclick="runBatch('healthcare')" class="batch-btn">Healthcare</button>
+      <button onclick="runBatch('administration')" class="batch-btn">Admin</button>
+      <button onclick="runBatch('engineering')" class="batch-btn">Engineering</button>
+      <button onclick="runBatch('education')" class="batch-btn">Education</button>
+      <button onclick="runBatch('realestate')" class="batch-btn">Real Estate</button>
+    </div>
+    <div id="batchStatus" style="font-size:12px;color:#64748b;min-width:120px;text-align:right"></div>
   </div>
 
   <div class="bulk-bar" id="bulkBar">
@@ -309,6 +335,39 @@ async function bulkApproveAll() {
   applyFilter();
   updateStats();
   showToast(`${ids.length} jobs approved`);
+}
+
+async function runBatch(batch) {
+  const btns = document.querySelectorAll('.batch-btn');
+  const status = document.getElementById('batchStatus');
+  btns.forEach(b => b.disabled = true);
+  status.textContent = `Running ${batch}...`;
+  status.style.color = '#0c1445';
+
+  try {
+    const res = await fetch(`https://gsdjlfdodauuwqspjpae.supabase.co/functions/v1/jora-ingest?batch=${batch}`, {
+      method: 'POST',
+      headers: {
+        'x-api-key': 'vettwork-ingest-2025',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M'
+      }
+    });
+    const data = await res.json();
+    if (data.success) {
+      status.textContent = `✓ ${batch}: ${data.inserted} new jobs`;
+      status.style.color = '#10b981';
+      await loadJobs();
+      await updateStats();
+    } else {
+      status.textContent = `Error: ${data.error}`;
+      status.style.color = '#ef4444';
+    }
+  } catch (err) {
+    status.textContent = 'Failed — check logs';
+    status.style.color = '#ef4444';
+  }
+
+  btns.forEach(b => b.disabled = false);
 }
 
 function showToast(msg) {
