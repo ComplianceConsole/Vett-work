@@ -1042,7 +1042,7 @@ footer p { font-size: 12px; color: var(--muted2); }
     <!-- Categories -->
     <div class="filter-cats">
       <span class="filter-label">Category</span>
-      <select id="categorySelect" onchange="setFilter(this.value)" style="width:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);background:white;border:1.5px solid var(--page-border);border-radius:9px;padding:9px 14px;outline:none;cursor:pointer;transition:border-color 0.2s;margin-top:4px">
+      <select id="categorySelect" onchange="activeFilter=this.value;filterJobs()" style="width:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);background:white;border:1.5px solid var(--page-border);border-radius:9px;padding:9px 14px;outline:none;cursor:pointer;transition:border-color 0.2s;margin-top:4px">
         <option value="all">All categories</option>
         <option value="accounting" id="opt-accounting">Accounting</option>
         <option value="administration" id="opt-administration">Administration &amp; Office Support</option>
