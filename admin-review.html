@@ -116,6 +116,43 @@ const SUPABASE_URL = 'https://gsdjlfdodauuwqspjpae.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdzZGpsZmRvZGF1dXdxc3BqcGFlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0MjcyMTYsImV4cCI6MjA5NTAwMzIxNn0.LDpg0VfUtYKdactmSfn7HqHSVzkWNTK-FZCZjNjXU5M';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Known large employers - anything not matching is likely SME
+const LARGE_EMPLOYERS = [
+  // Banks & Finance
+  'anz','westpac','commonwealth bank','cba','nab','national australia bank','macquarie',
+  'bendigo bank','bank of queensland','boq','suncorp','iag','qbe','allianz','axa',
+  'asb bank','bnz','kiwibank','anz bank new zealand',
+  // Big 4 Consulting
+  'deloitte','pwc','pricewaterhousecoopers','kpmg','ernst & young','ey ',
+  // Government AU
+  'department of','ato','australian tax','services australia','australian federal',
+  'queensland government','nsw government','victorian government','sa government',
+  'wa government','act government','department of health','department of education',
+  'australian public service','centrelink','medicare','defence housing',
+  // Government NZ
+  'ministry of','new zealand government','nz government','acc ','waka kotahi',
+  'kainga ora','health new zealand','te whatu ora','inland revenue','ird ',
+  // Big corporates
+  'woolworths','coles','wesfarmers','telstra','optus','vodafone','tpg',
+  'bhp','rio tinto','fortescue','woodside','santos','origin energy','agl',
+  'transurban','sydney airport','qantas','virgin australia','air new zealand',
+  'amazon','google','microsoft','apple','meta','salesforce','ibm','accenture',
+  'atlassian','canva','seek','realestate.com','domain','news corp','nine entertainment',
+  'medibank','bupa','hcf','nib health','ramsay health','healthscope',
+  'lendlease','stockland','mirvac','dexus','scentre group','vicinity centres',
+  'toll group','linfox','tmx','aramex','dhl','fedex','ups',
+  // NZ corporates
+  'spark new zealand','one nz','2degrees','fletcher building','fonterra',
+  'meridian energy','contact energy','genesis energy','vector limited',
+  'fletcher construction','steel & tube','mainfreight','freightways',
+]
+
+function isSME(companyName) {
+  if (!companyName) return false
+  const lower = companyName.toLowerCase()
+  return !LARGE_EMPLOYERS.some(big => lower.includes(big))
+}
+
 const SEEK_LABELS = { technology:'Technology & Digital', accounting:'Accounting', hr:'Human Resources & Recruitment', marketing:'Marketing & Communications', legal:'Legal', sales:'Sales', leadership:'Leadership & General Management', banking:'Banking & Financial Services' };
 
 let allJobs = [];
@@ -200,6 +237,7 @@ function renderJobs(jobs) {
           ${job.salary_range ? `<span class="tag green">${job.salary_range}</span>` : ''}
           ${job.work_type !== 'office' ? `<span class="tag">${WORK[job.work_type] || ''}</span>` : ''}
           ${job.location?.toLowerCase().includes('auckland') || job.location?.toLowerCase().includes('wellington') || job.location?.toLowerCase().includes('christchurch') ? '<span class="tag orange">NZ</span>' : '<span class="tag">AU</span>'}
+          ${isSME(job.employers?.company_name) ? '<span class="tag" style="background:#eff6ff;color:#2563eb;border-color:#bfdbfe">SME</span>' : ''}
         </div>
       </div>
       <div class="job-actions">
