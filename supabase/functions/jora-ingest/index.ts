@@ -146,21 +146,15 @@ async function scrapeJoraPage(
       }
       if (!employerId) continue
 
-      // Fetch full description from job detail page
-      let fullDesc = snippet
-      if (jobUrl) {
-        await new Promise(r => setTimeout(r, 500)) // polite delay
-        const detail = await fetchJobDetail(jobUrl, headers)
-        if (detail.length > snippet.length) fullDesc = detail
-      }
-
-      const workType = mapWorkType(empBadge + ' ' + fullDesc.substring(0, 200))
+      // Use snippet as description - no detail page fetch to save memory
+      const fullDesc = snippet
+      const workType = mapWorkType(empBadge + ' ' + snippet.substring(0, 200))
 
       await supabase.from('jobs').insert({
         employer_id: employerId,
         title,
         description: fullDesc,
-        short_description: aiShortDesc,
+        short_description: makeShortDesc(fullDesc || snippet),
         location,
         employment_type: mapEmpType(empBadge),
         work_type: workType,
@@ -222,7 +216,7 @@ serve(async (req) => {
 
     let total = 0
     for (const run of runs) {
-      for (let page = 1; page <= 3; page++) {
+      for (let page = 1; page <= 2; page++) {
         total += await scrapeJoraPage(supabase, run.country, run.category, run.joraCategory, page)
         await new Promise(r => setTimeout(r, 1000)) // 1s between pages
       }

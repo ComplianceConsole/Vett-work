@@ -195,8 +195,8 @@ async function updateStats() {
   const { count: todayCount } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('status', 'pending_review').gte('created_at', today.toISOString());
 
   // AU/NZ counts from pending
-  const auCount = allJobs.filter(j => !j.location?.toLowerCase().match(/auckland|wellington|christchurch|hamilton|tauranga|dunedin|napier|palmerston|rotorua|new zealand/)).length;
-  const nzCount = allJobs.filter(j => j.location?.toLowerCase().match(/auckland|wellington|christchurch|hamilton|tauranga|dunedin|napier|palmerston|rotorua|new zealand/)).length;
+  const auCount = allJobs.filter(j => !j.location?.toLowerCase().match(/auckland|wellington|christchurch|hamilton|tauranga|dunedin|napier|palmerston|rotorua|new zealand|north island|south island/)).length;
+  const nzCount = allJobs.filter(j => j.location?.toLowerCase().match(/auckland|wellington|christchurch|hamilton|tauranga|dunedin|napier|palmerston|rotorua|new zealand|north island|south island/)).length;
 
   document.getElementById('statPending').textContent = pending || 0;
   document.getElementById('statApproved').textContent = approved || 0;
@@ -244,7 +244,7 @@ function renderJobs(jobs) {
           <span class="tag">${EMP[job.employment_type] || job.employment_type || ''}</span>
           ${job.salary_range ? `<span class="tag green">${job.salary_range}</span>` : ''}
           ${job.work_type !== 'office' ? `<span class="tag">${WORK[job.work_type] || ''}</span>` : ''}
-          ${job.location?.toLowerCase().includes('auckland') || job.location?.toLowerCase().includes('wellington') || job.location?.toLowerCase().includes('christchurch') ? '<span class="tag orange">NZ</span>' : '<span class="tag">AU</span>'}
+          ${job.location?.toLowerCase().match(/auckland|wellington|christchurch|hamilton|tauranga|dunedin|north island|south island|new zealand/) ? '<span class="tag orange">NZ</span>' : '<span class="tag">AU</span>'}
           ${isSME(job.employers?.company_name) ? '<span class="tag" style="background:#eff6ff;color:#2563eb;border-color:#bfdbfe">SME</span>' : ''}
         </div>
       </div>
