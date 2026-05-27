@@ -115,7 +115,7 @@ h1 {
   letter-spacing: -3.5px;
   line-height: 0.95;
   color: white;
-  margin-bottom: 20px;
+  margin-bottom: 48px;
   position: relative;
   z-index: 1;
 }
@@ -833,14 +833,13 @@ footer p { font-size: 12px; color: var(--muted2); }
 
 /* JOB CARDS — Option C */
 .job-card {
-  background: white;
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--emerald);
+  background: #ffffff !important;
+  border: 1.5px solid #10b981;
   border-radius: 12px;
-  padding: 18px 20px;
-  margin-bottom: 10px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
   cursor: pointer;
-  transition: box-shadow 0.15s;
+  transition: box-shadow 0.15s, border-color 0.15s;
   display: flex;
   gap: 14px;
   align-items: flex-start;
@@ -1425,7 +1424,8 @@ function filterJobs() {
   const location = document.getElementById('jobLocation').value.toLowerCase();
   const empTypes = [...document.querySelectorAll('input[name="empType"]:checked')].map(i => i.value);
   const workTypes = [...document.querySelectorAll('input[name="workType"]:checked')].map(i => i.value);
-  activeFilter = document.getElementById('categorySelect')?.value || activeFilter;
+  const selectVal = document.getElementById('categorySelect')?.value;
+  if (selectVal) activeFilter = selectVal;
   const cards = document.querySelectorAll('.job-card');
   let visible = 0;
   cards.forEach(card => {
