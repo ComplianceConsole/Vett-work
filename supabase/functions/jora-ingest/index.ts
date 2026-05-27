@@ -176,6 +176,70 @@ async function scrapeJoraPage(
   return inserted
 }
 
+// All available batches
+const BATCHES: Record<string, Array<{country: string, category: string, joraCategory: string, pages: number}>> = {
+  'tech': [
+    { country: 'au', category: 'technology', joraCategory: 'Information-Communication-Technology', pages: 5 },
+    { country: 'nz', category: 'technology', joraCategory: 'Information-Communication-Technology', pages: 2 },
+  ],
+  'accounting': [
+    { country: 'au', category: 'accounting', joraCategory: 'Accounting', pages: 5 },
+    { country: 'nz', category: 'accounting', joraCategory: 'Accounting', pages: 2 },
+  ],
+  'hr': [
+    { country: 'au', category: 'hr', joraCategory: 'Human-Resources-Recruitment', pages: 5 },
+    { country: 'nz', category: 'hr', joraCategory: 'Human-Resources-Recruitment', pages: 2 },
+  ],
+  'marketing': [
+    { country: 'au', category: 'marketing', joraCategory: 'Marketing-Communications', pages: 5 },
+    { country: 'nz', category: 'marketing', joraCategory: 'Marketing-Communications', pages: 2 },
+  ],
+  'sales': [
+    { country: 'au', category: 'sales', joraCategory: 'Sales', pages: 5 },
+    { country: 'nz', category: 'sales', joraCategory: 'Sales', pages: 2 },
+  ],
+  'leadership': [
+    { country: 'au', category: 'leadership', joraCategory: 'General-Management', pages: 5 },
+    { country: 'nz', category: 'leadership', joraCategory: 'General-Management', pages: 2 },
+  ],
+  'legal': [
+    { country: 'au', category: 'legal', joraCategory: 'Legal', pages: 5 },
+    { country: 'nz', category: 'legal', joraCategory: 'Legal', pages: 2 },
+  ],
+  'consulting': [
+    { country: 'au', category: 'consulting', joraCategory: 'Consulting-Strategy', pages: 5 },
+    { country: 'nz', category: 'consulting', joraCategory: 'Consulting-Strategy', pages: 2 },
+  ],
+  'banking': [
+    { country: 'au', category: 'banking', joraCategory: 'Banking-Financial-Services', pages: 5 },
+    { country: 'nz', category: 'banking', joraCategory: 'Banking-Financial-Services', pages: 2 },
+  ],
+  'community': [
+    { country: 'au', category: 'community', joraCategory: 'Community-Services-Development', pages: 5 },
+    { country: 'nz', category: 'community', joraCategory: 'Community-Services-Development', pages: 2 },
+  ],
+  'healthcare': [
+    { country: 'au', category: 'healthcare', joraCategory: 'Healthcare-Medical', pages: 5 },
+    { country: 'nz', category: 'healthcare', joraCategory: 'Healthcare-Medical', pages: 2 },
+  ],
+  'administration': [
+    { country: 'au', category: 'administration', joraCategory: 'Administration-Office-Support', pages: 5 },
+    { country: 'nz', category: 'administration', joraCategory: 'Administration-Office-Support', pages: 2 },
+  ],
+  'engineering': [
+    { country: 'au', category: 'engineering', joraCategory: 'Engineering', pages: 5 },
+    { country: 'nz', category: 'engineering', joraCategory: 'Engineering', pages: 2 },
+  ],
+  'education': [
+    { country: 'au', category: 'education', joraCategory: 'Education-Training', pages: 5 },
+    { country: 'nz', category: 'education', joraCategory: 'Education-Training', pages: 2 },
+  ],
+  'realestate': [
+    { country: 'au', category: 'realestate', joraCategory: 'Real-Estate-Property', pages: 5 },
+    { country: 'nz', category: 'realestate', joraCategory: 'Real-Estate-Property', pages: 2 },
+  ],
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders })
 
@@ -191,6 +255,17 @@ serve(async (req) => {
       })
     }
 
+    // Get batch from query param or body - defaults to 'tech'
+    const url = new URL(req.url)
+    let batch = url.searchParams.get('batch') || 'tech'
+    try {
+      const body = await req.json()
+      if (body.batch) batch = body.batch
+    } catch {}
+
+    const runs = BATCHES[batch] || BATCHES['tech']
+    console.log(`Running batch: ${batch}`)
+
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 
     // Expire old jora jobs
@@ -198,32 +273,16 @@ serve(async (req) => {
       .eq('source', 'jora')
       .lt('expires_at', new Date().toISOString())
 
-    // White collar categories, AU + NZ, 3 pages each
-    const runs = [
-      { country: 'au', category: 'technology',      joraCategory: 'Information-Communication-Technology' },
-      { country: 'nz', category: 'technology',      joraCategory: 'Information-Communication-Technology' },
-      { country: 'au', category: 'accounting',      joraCategory: 'Accounting' },
-      { country: 'nz', category: 'accounting',      joraCategory: 'Accounting' },
-      { country: 'au', category: 'hr',              joraCategory: 'Human-Resources-Recruitment' },
-      { country: 'nz', category: 'hr',              joraCategory: 'Human-Resources-Recruitment' },
-      { country: 'au', category: 'marketing',       joraCategory: 'Marketing-Communications' },
-      { country: 'nz', category: 'marketing',       joraCategory: 'Marketing-Communications' },
-      { country: 'au', category: 'sales',           joraCategory: 'Sales' },
-      { country: 'nz', category: 'sales',           joraCategory: 'Sales' },
-      { country: 'au', category: 'leadership',      joraCategory: 'General-Management' },
-      { country: 'nz', category: 'leadership',      joraCategory: 'General-Management' },
-    ]
-
     let total = 0
     for (const run of runs) {
-      for (let page = 1; page <= 2; page++) {
+      for (let page = 1; page <= run.pages; page++) {
         total += await scrapeJoraPage(supabase, run.country, run.category, run.joraCategory, page)
-        await new Promise(r => setTimeout(r, 1000)) // 1s between pages
+        await new Promise(r => setTimeout(r, 800))
       }
     }
 
     return new Response(
-      JSON.stringify({ success: true, inserted: total }),
+      JSON.stringify({ success: true, batch, inserted: total }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
 
