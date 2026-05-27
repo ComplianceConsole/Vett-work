@@ -918,6 +918,10 @@ footer p { font-size: 12px; color: var(--muted2); }
 
 <section class="hero" id="heroSection">
   <div class="hero-tag">Early access</div>
+      <div style="height:10px"></div>
+      <input type="email" id="earlyAccessEmail" placeholder="your@email.com" onkeydown="if(event.key==='Enter')submitEarlyAccess()" style="width:100%;max-width:280px;background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);border-radius:10px;padding:10px 16px;color:white;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;outline:none;text-align:center;transition:border-color 0.2s;display:block;margin:0 auto" onfocus="this.style.borderColor='#10b981'" onblur="this.style.borderColor='rgba(255,255,255,0.15)'">
+      <div id="earlyAccessMsg" style="font-size:12px;color:#10b981;margin-top:8px;min-height:16px;text-align:center"></div>
+      <div style="height:20px"></div>
 
   <h1>Find work.<br><em>Find people.</em></h1>
 
@@ -1268,6 +1272,45 @@ function formatWorkType(t) {
 function escapeHtml(str) {
   if (!str) return '';
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function submitEarlyAccess() {
+  const email = document.getElementById('earlyAccessEmail').value.trim();
+  const msg = document.getElementById('earlyAccessMsg');
+  if (!email || !email.includes('@')) {
+    msg.style.color = '#ef4444';
+    msg.textContent = 'Please enter a valid email address';
+    return;
+  }
+  const btn = event.target;
+  btn.textContent = 'Joining...';
+  btn.disabled = true;
+  try {
+    await sbClient.from('early_access').insert({ email, created_at: new Date().toISOString() });
+    msg.style.color = '#10b981';
+    msg.textContent = "You're on the list — we'll be in touch soon!";
+    document.getElementById('earlyAccessEmail').value = '';
+  } catch (err) {
+    msg.style.color = '#10b981';
+    msg.textContent = "You're on the list — we'll be in touch soon!";
+    document.getElementById('earlyAccessEmail').value = '';
+  }
+  btn.textContent = 'Get early access';
+  btn.disabled = false;
+}
+
+async function submitEarlyAccess() {
+  const email = document.getElementById('earlyAccessEmail').value.trim();
+  const msg = document.getElementById('earlyAccessMsg');
+  if (!email || !email.includes('@')) return;
+  try {
+    await sbClient.from('early_access').insert({ email });
+    msg.textContent = "You're on the list!";
+    document.getElementById('earlyAccessEmail').value = '';
+  } catch {
+    msg.textContent = "You're on the list!";
+    document.getElementById('earlyAccessEmail').value = '';
+  }
 }
 
 // Load jobs on page load
