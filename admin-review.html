@@ -79,12 +79,14 @@ nav { background: #0c1445; padding: 0 48px; height: 64px; display: flex; justify
   <div class="page-header">
     <div>
       <div class="page-title">Job review queue</div>
-      <div style="font-size:13px;color:#64748b;margin-top:4px">Review and approve Adzuna-sourced listings before they go live</div>
+      <div style="font-size:13px;color:#64748b;margin-top:4px">Review and approve scraped listings before they go live</div>
     </div>
     <div class="stats">
       <div class="stat"><div class="stat-num" id="statPending">—</div><div class="stat-label">Pending</div></div>
       <div class="stat"><div class="stat-num" id="statToday">—</div><div class="stat-label">Today</div></div>
       <div class="stat"><div class="stat-num" id="statApproved">—</div><div class="stat-label">Live</div></div>
+      <div class="stat"><div class="stat-num" id="statAU">—</div><div class="stat-label">AU</div></div>
+      <div class="stat"><div class="stat-num" id="statNZ">—</div><div class="stat-label">NZ</div></div>
     </div>
   </div>
 
@@ -192,9 +194,15 @@ async function updateStats() {
   const today = new Date(); today.setHours(0,0,0,0);
   const { count: todayCount } = await sb.from('jobs').select('*', { count: 'exact', head: true }).eq('status', 'pending_review').gte('created_at', today.toISOString());
 
+  // AU/NZ counts from pending
+  const auCount = allJobs.filter(j => !j.location?.toLowerCase().match(/auckland|wellington|christchurch|hamilton|tauranga|dunedin|napier|palmerston|rotorua|new zealand/)).length;
+  const nzCount = allJobs.filter(j => j.location?.toLowerCase().match(/auckland|wellington|christchurch|hamilton|tauranga|dunedin|napier|palmerston|rotorua|new zealand/)).length;
+
   document.getElementById('statPending').textContent = pending || 0;
   document.getElementById('statApproved').textContent = approved || 0;
   document.getElementById('statToday').textContent = todayCount || 0;
+  document.getElementById('statAU').textContent = auCount;
+  document.getElementById('statNZ').textContent = nzCount;
 }
 
 function setFilter(cat, btn) {
