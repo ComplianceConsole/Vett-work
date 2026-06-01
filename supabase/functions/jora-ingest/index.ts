@@ -127,13 +127,53 @@ async function scrapePage(supabase: any, country: string, category: string, jora
       }
       if (!employerId) continue
 
+      // Fetch full description from job detail page
+      let fullDesc = snippet
+      let appEmail: string | null = null
+      let contactName: string | null = null
+      
+      if (jobUrl) {
+        try {
+          const detailRes = await fetch(jobUrl, {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+              'Accept': 'text/html,application/xhtml+xml',
+              'Accept-Language': country === 'au' ? 'en-AU,en;q=0.9' : 'en-NZ,en;q=0.9',
+            }
+          })
+          if (detailRes.ok) {
+            const detailHtml = await detailRes.text()
+            const detailDoc = new DOMParser().parseFromString(detailHtml, 'text/html')
+            if (detailDoc) {
+              const descEl = detailDoc.querySelector('.job-description, .description, [class*="description"]')
+              const detailDesc = cleanText(descEl?.textContent || '')
+              if (detailDesc.length > fullDesc.length) fullDesc = detailDesc
+              
+              // Extract email
+              const emailMatch = detailHtml.match(/mailto:([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})/i)
+              const rawEmail = emailMatch?.[1]?.toLowerCase()
+              if (rawEmail && !rawEmail.includes('jora.')) appEmail = rawEmail
+
+              // Extract contact name
+              const contactPatterns = [/contact\s+([A-Z][a-z]+\s+[A-Z][a-z]+)/i, /speak\s+(?:to|with)\s+([A-Z][a-z]+\s+[A-Z][a-z]+)/i]
+              for (const p of contactPatterns) {
+                const m = fullDesc.match(p)
+                if (m?.[1] && m[1].length > 4 && m[1].length < 40) { contactName = m[1].trim(); break }
+              }
+            }
+          }
+          await new Promise(r => setTimeout(r, 300))
+        } catch { /* use snippet */ }
+      }
+
       await supabase.from('jobs').insert({
-        employer_id: employerId, title, description: snippet,
-        short_description: shortDesc(snippet), location,
-        employment_type: mapEmp(empBadge), work_type: mapWork(empBadge + ' ' + snippet),
+        employer_id: employerId, title, description: fullDesc,
+        short_description: shortDesc(fullDesc), location,
+        employment_type: mapEmp(empBadge), work_type: mapWork(empBadge + ' ' + fullDesc),
         category, is_active: false, status: 'pending_review',
         expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-        external_reference: externalRef, application_url: jobUrl || null, source: 'jora',
+        external_reference: externalRef, application_url: jobUrl || null, 
+        application_email: appEmail, source: 'jora',
       })
       inserted++
     } catch (err) {
@@ -174,8 +214,11 @@ serve(async (req) => {
 
     let total = 0
     for (const run of runs) {
-      // Just 1 page per country to stay within memory limits
-      total += await scrapePage(supabase, run.country, run.category, run.joraCategory, 1)
+      // 2 pages per country
+      for (let page = 1; page <= 2; page++) {
+        total += await scrapePage(supabase, run.country, run.category, run.joraCategory, page)
+        await new Promise(r => setTimeout(r, 800))
+      }
       await new Promise(r => setTimeout(r, 1000))
     }
 

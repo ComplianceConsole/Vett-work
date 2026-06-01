@@ -78,9 +78,9 @@ serve(async (req) => {
     </table>
 
     ${coverNote ? `
-    <!-- Cover note -->
+    <!-- Personal note -->
     <div style="background:#f0fdf4;border-left:3px solid #10b981;padding:14px 18px;border-radius:0 8px 8px 0;margin-bottom:24px">
-      <div style="font-size:11px;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Cover note</div>
+      <div style="font-size:11px;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px">Personal note</div>
       <p style="font-size:14px;color:#0f172a;margin:0;line-height:1.65">${coverNote}</p>
     </div>
     ` : ''}

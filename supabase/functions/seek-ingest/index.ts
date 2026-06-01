@@ -26,6 +26,54 @@ function cleanText(str: string): string {
   return (str || '').replace(/\s+/g, ' ').trim()
 }
 
+async function fetchSeekJobDetail(jobUrl: string, headers: Record<string, string>): Promise<{description: string, email: string | null, contactName: string | null}> {
+  try {
+    const res = await fetch(jobUrl, { headers })
+    if (!res.ok) return { description: '', email: null, contactName: null }
+    const html = await res.text()
+    
+    // Seek job description is in data-automation="jobAdDetails"
+    const descMatch = html.match(/data-automation="jobAdDetails"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/i)
+    let desc = ''
+    if (descMatch) {
+      desc = cleanText(descMatch[1]
+        .replace(/<br\s*\/?>/gi, ' ')
+        .replace(/<li[^>]*>/gi, ' • ')
+        .replace(/<[^>]+>/g, ' '))
+    }
+    
+    // Also try getting full text from the job content section
+    if (desc.length < 100) {
+      const altMatch = html.match(/class="[^"]*jobDescription[^"]*"[^>]*>([\s\S]*?)<\/div>/i)
+      if (altMatch) {
+        desc = cleanText(altMatch[1].replace(/<[^>]+>/g, ' '))
+      }
+    }
+
+    // Extract email
+    const emailMatch = html.match(/mailto:([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})/i)
+    const rawEmail = emailMatch?.[1]?.toLowerCase() || null
+    const email = rawEmail && !rawEmail.includes('seek.com') ? rawEmail : null
+
+    // Extract contact name
+    const contactPatterns = [
+      /contact\s+([A-Z][a-z]+\s+[A-Z][a-z]+)/i,
+      /speak\s+(?:to|with)\s+([A-Z][a-z]+\s+[A-Z][a-z]+)/i,
+      /please\s+(?:call|email|contact)\s+([A-Z][a-z]+\s+[A-Z][a-z]+)/i,
+      /hiring\s+manager[:\s]+([A-Z][a-z]+\s+[A-Z][a-z]+)/i,
+    ]
+    let contactName = null
+    for (const p of contactPatterns) {
+      const m = desc.match(p)
+      if (m?.[1] && m[1].length > 4 && m[1].length < 40) { contactName = m[1].trim(); break }
+    }
+
+    return { description: desc, email, contactName }
+  } catch {
+    return { description: '', email: null, contactName: null }
+  }
+}
+
 function extractContactName(text: string): string | null {
   if (!text) return null
   // Common patterns for contact names in job ads
@@ -88,10 +136,10 @@ function parseSeekPage(html: string, country: string, category: string): Array<a
 
       // Extract application email from card HTML and text
       const cardHtml = card.innerHTML || ''
-      const cardText = card.textContent || ''
+      const cardRawText = card.textContent || ''
       // Check mailto links first, then bare email patterns in text
       const mailtoMatch = cardHtml.match(/mailto:([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})/i)
-      const bareEmailMatch = cardText.match(/\b([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})\b/)
+      const bareEmailMatch = cardRawText.match(/\b([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})\b/)
       // Exclude seek's own emails and generic ones
       const rawEmail = (mailtoMatch?.[1] || bareEmailMatch?.[1] || '').toLowerCase()
       const applicationEmail = rawEmail && !rawEmail.includes('seek.com') && !rawEmail.includes('example.') ? rawEmail : null
@@ -200,12 +248,29 @@ async function scrapeSeekPage(
 
       if (!employerId) continue
 
-      const desc = job.desc || job.title
+      // Fetch full job description from detail page
+      let fullDesc = job.desc || ''
+      let detailEmail = job.applicationEmail
+      let detailContact = job.contactName
+
+      if (job.href) {
+        const detail = await fetchSeekJobDetail(job.href, {
+          'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml',
+          'Accept-Language': country === 'au' ? 'en-AU,en;q=0.9' : 'en-NZ,en;q=0.9',
+        })
+        if (detail.description.length > fullDesc.length) fullDesc = detail.description
+        if (!detailEmail && detail.email) detailEmail = detail.email
+        if (!detailContact && detail.contactName) detailContact = detail.contactName
+        await new Promise(r => setTimeout(r, 300)) // polite delay
+      }
+
+      const desc = fullDesc || job.title
       await supabase.from('jobs').insert({
         employer_id: employerId,
         title: job.title,
         description: desc,
-        short_description: makeShortDesc(desc),
+        short_description: makeShortDesc(fullDesc || desc),
         location: job.location,
         salary_range: job.salary || null,
         employment_type: job.empType,
@@ -216,7 +281,7 @@ async function scrapeSeekPage(
         expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         external_reference: externalRef,
         application_url: job.href,
-        application_email: job.applicationEmail || null,
+        application_email: detailEmail || null,
         source: 'seek',
       })
       inserted++
@@ -288,17 +353,10 @@ serve(async (req) => {
 
     let total = 0
 
-    // AU - 3 pages per category
-    for (let page = 1; page <= 3; page++) {
-      total += await scrapeSeekPage(supabase, 'au', batchFilter, seekSlug, page)
-      await new Promise(r => setTimeout(r, 1000))
-    }
-
-    // NZ - 2 pages
-    for (let page = 1; page <= 2; page++) {
-      total += await scrapeSeekPage(supabase, 'nz', batchFilter, seekSlug, page)
-      await new Promise(r => setTimeout(r, 1000))
-    }
+    // 1 page AU + 1 page NZ per batch — fetching full descriptions takes ~1s per job
+    total += await scrapeSeekPage(supabase, 'au', batchFilter, seekSlug, 1)
+    await new Promise(r => setTimeout(r, 500))
+    total += await scrapeSeekPage(supabase, 'nz', batchFilter, seekSlug, 1)
 
     return new Response(
       JSON.stringify({ success: true, batch: batchFilter, inserted: total }),
