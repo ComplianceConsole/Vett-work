@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-23PJRB0DFP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-23PJRB0DFP');
+</script>
 <meta charset="UTF-8">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -223,7 +231,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 <body>
 
 <nav>
-  <a href="index.html" class="logo">vett<span class="logo-dot">.</span>work</a>
+  <a href="index.html" class="logo"><span style="color:#10b981">vett</span><span class="logo-dot">.</span>work</a>
   <div class="nav-right">
     <div class="nav-user">
       <div class="nav-avatar" id="navAvatar">?</div>
@@ -242,6 +250,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
   <div style="display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:24px">
     <button onclick="switchDashTab('profile')" id="dtab-profile" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:12px 20px;border:none;background:transparent;color:var(--emerald-dark);border-bottom:2px solid var(--emerald);margin-bottom:-2px;cursor:pointer">My profile</button>
     <button onclick="switchDashTab('saved')" id="dtab-saved" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:12px 20px;border:none;background:transparent;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer">Saved jobs</button>
+    <button onclick="switchDashTab('searches')" id="dtab-searches" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;padding:12px 20px;border:none;background:transparent;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-2px;cursor:pointer">Saved searches</button>
   </div>
 
   <!-- STEPS (profile tab only) -->
@@ -430,7 +439,7 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
 </div>
 
 <footer style="background:var(--navy);padding:20px 48px;display:flex;justify-content:space-between;align-items:center;margin-top:20px">
-  <a href="index.html" style="font-size:16px;font-weight:800;color:white;text-decoration:none;letter-spacing:-0.5px">vett<span style="color:#10b981">.</span>work</a>
+  <a href="index.html" style="font-size:16px;font-weight:800;color:white;text-decoration:none;letter-spacing:-0.5px"><span style="color:#10b981">vett</span><span style="color:#10b981">.</span>work</a>
   <div style="display:flex;gap:20px;align-items:center">
     <a href="privacy.html" style="font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none">Privacy Policy</a>
     <a href="terms.html" style="font-size:12px;color:rgba(255,255,255,0.3);text-decoration:none">Terms of Use</a>
@@ -448,6 +457,15 @@ nav { background: var(--navy); padding: 0 48px; height: 64px; display: flex; jus
         <a href="index.html" style="font-size:13px;color:var(--emerald-dark);text-decoration:none;font-weight:600">Browse jobs →</a>
       </div>
       <div id="savedJobsList"></div>
+    </div>
+
+    <!-- SAVED SEARCHES TAB -->
+    <div id="dash-searches-content" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div style="font-size:18px;font-weight:800;color:var(--navy);letter-spacing:-0.5px">Saved searches</div>
+        <a href="index.html" style="font-size:13px;font-weight:600;color:#10b981;text-decoration:none">+ New search</a>
+      </div>
+      <div id="savedSearchesList"></div>
     </div>
   </div>
 
@@ -1115,11 +1133,15 @@ function closeVideo() {
 function switchDashTab(tab) {
   document.getElementById('dash-profile-content').style.display = tab === 'profile' ? 'block' : 'none';
   document.getElementById('dash-saved-content').style.display = tab === 'saved' ? 'block' : 'none';
+  document.getElementById('dash-searches-content').style.display = tab === 'searches' ? 'block' : 'none';
   document.getElementById('dtab-profile').style.color = tab === 'profile' ? 'var(--emerald-dark)' : 'var(--muted)';
   document.getElementById('dtab-profile').style.borderBottomColor = tab === 'profile' ? 'var(--emerald)' : 'transparent';
   document.getElementById('dtab-saved').style.color = tab === 'saved' ? 'var(--emerald-dark)' : 'var(--muted)';
   document.getElementById('dtab-saved').style.borderBottomColor = tab === 'saved' ? 'var(--emerald)' : 'transparent';
+  document.getElementById('dtab-searches').style.color = tab === 'searches' ? 'var(--emerald-dark)' : 'var(--muted)';
+  document.getElementById('dtab-searches').style.borderBottomColor = tab === 'searches' ? 'var(--emerald)' : 'transparent';
   if (tab === 'saved') loadSavedJobs();
+  if (tab === 'searches') loadSavedSearches();
 }
 
 async function loadSavedJobs() {

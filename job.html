@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-23PJRB0DFP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-23PJRB0DFP');
+</script>
 <meta charset="UTF-8">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -271,7 +279,7 @@ footer a:hover { color: white; }
       <p id="applyModalSub" style="font-size:13px;color:#64748b;margin-bottom:16px">Your application will be sent to the employer.</p>
       <div class="modal-field"><label>Full name</label><input type="text" id="applyName" placeholder="Your name"></div>
       <div class="modal-field"><label>Email address</label><input type="email" id="applyEmail" placeholder="your@email.com"></div>
-      <div class="modal-field"><label>Cover note <span style="font-weight:400;text-transform:none;font-size:10px;color:#94a3b8">(optional)</span></label><textarea id="applyNote" placeholder="Anything you want the employer to know..."></textarea></div>
+      <div class="modal-field"><label>Personal note <span style="font-weight:400;text-transform:none;font-size:10px;color:#94a3b8">(optional)</span></label><textarea id="applyNote" placeholder="Anything you want the employer to know..."></textarea></div>
       <div class="modal-btns">
         <button class="modal-cancel" onclick="closeApply()">Cancel</button>
         <button class="modal-submit" id="applySubmit" onclick="submitApply()">Submit application</button>

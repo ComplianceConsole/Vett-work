@@ -1080,7 +1080,13 @@ footer p { font-size: 12px; color: var(--muted2); }
 
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div id="resultsCount" style="font-size:13px;color:var(--text-muted)">Loading...</div>
-      <button onclick="clearAllFilters()" id="clearFiltersBtn" style="display:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:2px">Clear filters</button>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button onclick="clearAllFilters()" id="clearFiltersBtn" style="display:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:2px">Clear filters</button>
+        <button onclick="saveSearch()" id="saveSearchBtn" style="display:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:#10b981;background:none;border:1px solid #a7f3d0;border-radius:100px;padding:4px 12px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.background='#ecfdf5'" onmouseout="this.style.background='none'">
+          &#9825; Save search
+        </button>
+        <span id="saveSearchDone" style="display:none;font-size:12px;color:#10b981;font-weight:600">&#10003; Search saved</span>
+      </div>
     </div>
     <div class="jobs-list" id="jobsList">
       <div class="empty-state" id="emptyState">
@@ -1472,6 +1478,49 @@ function filterJobs() {
 
   const clearBtn = document.getElementById('clearFiltersBtn');
   if (clearBtn) clearBtn.style.display = (query || location || salaryMin > 0) ? '' : 'none';
+
+  // Show save search button when there's an active search
+  const saveBtn = document.getElementById('saveSearchBtn');
+  const saveDone = document.getElementById('saveSearchDone');
+  if (saveBtn) {
+    const hasSearch = query || location;
+    saveBtn.style.display = hasSearch && currentCandidateId ? '' : 'none';
+    if (saveDone) saveDone.style.display = 'none';
+  }
+}
+
+async function saveSearch() {
+  if (!currentCandidateId) return;
+  const keyword = document.getElementById('jobSearch').value.trim();
+  const location = document.getElementById('jobLocation').value.trim();
+  const categories = [...document.querySelectorAll('input[name="catFilter"]:checked')].map(i => i.value);
+  const workTypes = [...document.querySelectorAll('input[name="workType"]:checked')].map(i => i.value);
+  const salaryMin = parseInt(document.querySelector('input[name="salaryMin"]:checked')?.value || '0');
+
+  const name = [keyword, location].filter(Boolean).join(' in ') || 'My search';
+
+  try {
+    const { error } = await sbClient.from('saved_searches').insert({
+      candidate_id: currentCandidateId,
+      name,
+      keyword: keyword || null,
+      location: location || null,
+      categories,
+      work_types: workTypes,
+      salary_min: salaryMin,
+    });
+
+    if (!error) {
+      document.getElementById('saveSearchBtn').style.display = 'none';
+      document.getElementById('saveSearchDone').style.display = '';
+      setTimeout(() => {
+        document.getElementById('saveSearchDone').style.display = 'none';
+        document.getElementById('saveSearchBtn').style.display = '';
+      }, 3000);
+    }
+  } catch (err) {
+    console.error('Save search error:', err);
+  }
 }
 
 let currentJobId = null;
