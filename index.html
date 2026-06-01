@@ -1,14 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-23PJRB0DFP"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-23PJRB0DFP');
-</script>
 <meta charset="UTF-8">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -328,15 +320,15 @@ h1 em {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: white;
-  border: 2px solid #10b981;
+  background: var(--off);
+  border: 1.5px solid var(--page-border);
   border-radius: 10px;
   padding: 0 16px;
   margin-bottom: 14px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s;
 }
 
-.search-wrap:focus-within { border-color: #059669; box-shadow: 0 0 0 3px rgba(16,185,129,0.12); }
+.search-wrap:focus-within { border-color: var(--emerald); }
 .search-wrap svg { width: 16px; height: 16px; stroke: var(--text-muted2); stroke-width: 2; fill: none; flex-shrink: 0; }
 
 .search-wrap input {
@@ -979,114 +971,113 @@ footer p { font-size: 12px; color: var(--muted2); }
       </a>
     </div>
 
-    <!-- Search panel -->
-    <div style="background:#f1f5f9;border-radius:14px;padding:18px 18px 14px;margin-bottom:20px">
-
-      <!-- Fields row -->
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:2px solid #10b981;border-radius:10px;padding:0 14px;height:46px;transition:border-color 0.2s,box-shadow 0.2s" onfocuswithin="this.style.boxShadow='0 0 0 3px rgba(16,185,129,0.12)'">
-          <svg viewBox="0 0 16 16" width="14" height="14" stroke="#10b981" stroke-width="2" fill="none"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
-          <input type="text" placeholder="Role, skill, or keyword" id="jobSearch" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()" style="flex:1;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;background:transparent">
-        </div>
-        <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:2px solid #10b981;border-radius:10px;padding:0 14px;height:46px;transition:border-color 0.2s,box-shadow 0.2s">
-          <svg viewBox="0 0 16 16" width="14" height="14" stroke="#10b981" stroke-width="2" fill="none"><path d="M8 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
-          <input type="text" placeholder="Location — city, state, or remote" id="jobLocation" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()" style="flex:1;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;background:transparent">
-        </div>
-        <button onclick="filterJobs()" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:0 24px;height:46px;border-radius:10px;border:none;background:#10b981;color:white;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">Search</button>
+    <!-- Search + location -->
+    <div style="display:flex;gap:10px;align-items:stretch;margin-bottom:16px">
+      <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s" style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid #10b981;border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s">
+        <svg viewBox="0 0 16 16" width="14" height="14" stroke="#94a3b8" stroke-width="1.5" fill="none" flex-shrink="0"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10" y1="10" x2="14" y2="14"/></svg>
+        <input type="text" placeholder="Role, skill, or keyword" id="jobSearch" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()" style="flex:1;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;background:transparent">
       </div>
-
-      <!-- Filter pills row -->
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;position:relative">
-
-        <!-- Company type -->
-        <div style="position:relative">
-          <button onclick="toggleFilter('companyDropdown',this)" id="companyPill" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:100px;padding:5px 12px;color:#059669;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.15s">
-            Company type <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#059669" stroke-width="2"><polyline points="2,4 6,8 10,4"/></svg>
-          </button>
-          <div id="companyDropdown" style="display:none;position:absolute;top:38px;left:0;background:white;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;min-width:190px;z-index:50;box-shadow:0 4px 20px rgba(0,0,0,0.1)">
-            <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px">Company type</div>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="empType" value="direct" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Direct employer</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="empType" value="startup" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Start-up</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="empType" value="nfp" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Not-for-profit</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="empType" value="government" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Government</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="empType" value="agency" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Recruitment agency</label>
-          </div>
-        </div>
-
-        <!-- Work type -->
-        <div style="position:relative">
-          <button onclick="toggleFilter('workDropdown',this)" id="workPill" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:100px;padding:5px 12px;color:#059669;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.15s">
-            Work type <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#059669" stroke-width="2"><polyline points="2,4 6,8 10,4"/></svg>
-          </button>
-          <div id="workDropdown" style="display:none;position:absolute;top:38px;left:0;background:white;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;min-width:180px;z-index:50;box-shadow:0 4px 20px rgba(0,0,0,0.1)">
-            <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px">Work type</div>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="workType" value="fulltime" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Full-time</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="workType" value="parttime" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Part-time</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="workType" value="casual" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Casual</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="workType" value="contractor" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Contract</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="workType" value="remote" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Remote</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="workType" value="hybrid" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Hybrid</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="workType" value="office" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> On-site</label>
-          </div>
-        </div>
-
-        <!-- Category -->
-        <div style="position:relative">
-          <button onclick="toggleFilter('categoryDropdown',this)" id="categoryPill" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:100px;padding:5px 12px;color:#059669;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.15s">
-            Category <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#059669" stroke-width="2"><polyline points="2,4 6,8 10,4"/></svg>
-          </button>
-          <div id="categoryDropdown" style="display:none;position:absolute;top:38px;left:0;background:white;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;min-width:230px;z-index:50;box-shadow:0 4px 20px rgba(0,0,0,0.1);max-height:320px;overflow-y:auto">
-            <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px">Category</div>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="accounting" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Accounting</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="administration" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Administration</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="banking" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Banking & Finance</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="community" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Community Services</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="consulting" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Consulting & Strategy</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="education" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Education & Training</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="engineering" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Engineering</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="healthcare" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Healthcare & Medical</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="hr" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Human Resources</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="technology" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Information Technology</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="leadership" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Leadership & Management</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="legal" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Legal</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="marketing" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Marketing & Communications</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="checkbox" name="catFilter" value="sales" checked onchange="filterJobs()" style="accent-color:#10b981;width:14px;height:14px"> Sales</label>
-          </div>
-        </div>
-
-        <!-- Salary -->
-        <div style="position:relative">
-          <button onclick="toggleFilter('salaryDropdown',this)" id="salaryPill" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;background:#ecfdf5;border:1px solid #a7f3d0;border-radius:100px;padding:5px 12px;color:#059669;cursor:pointer;display:flex;align-items:center;gap:5px;transition:all 0.15s">
-            Salary <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="#059669" stroke-width="2"><polyline points="2,4 6,8 10,4"/></svg>
-          </button>
-          <div id="salaryDropdown" style="display:none;position:absolute;top:38px;left:0;background:white;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;min-width:180px;z-index:50;box-shadow:0 4px 20px rgba(0,0,0,0.1)">
-            <div style="font-size:10px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px">Minimum salary</div>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="radio" name="salaryMin" value="0" checked onchange="filterJobs()" style="accent-color:#10b981"> Any</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="radio" name="salaryMin" value="50000" onchange="filterJobs()" style="accent-color:#10b981"> $50,000+</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="radio" name="salaryMin" value="70000" onchange="filterJobs()" style="accent-color:#10b981"> $70,000+</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="radio" name="salaryMin" value="100000" onchange="filterJobs()" style="accent-color:#10b981"> $100,000+</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="radio" name="salaryMin" value="130000" onchange="filterJobs()" style="accent-color:#10b981"> $130,000+</label>
-            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:#0f172a;padding:5px 0;cursor:pointer"><input type="radio" name="salaryMin" value="150000" onchange="filterJobs()" style="accent-color:#10b981"> $150,000+</label>
-          </div>
-        </div>
-
-        <!-- Pin button -->
-        <button id="filterPinBtn" onclick="togglePinFilters()" title="Pin filters open" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;background:white;border:0.5px solid #e2e8f0;border-radius:100px;padding:5px 10px;color:#94a3b8;cursor:pointer;display:flex;align-items:center;gap:4px;transition:all 0.15s">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"/></svg>
-        </button>
-
+      <div style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid var(--border);border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s" style="flex:1;display:flex;align-items:center;gap:8px;background:white;border:1.5px solid #10b981;border-radius:9px;padding:0 14px;height:46px;transition:border-color 0.2s">
+        <svg viewBox="0 0 16 16" width="14" height="14" stroke="#94a3b8" stroke-width="1.5" fill="none" flex-shrink="0"><path d="M8 2a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4z"/><circle cx="8" cy="6" r="1.5"/></svg>
+        <input type="text" placeholder="Location — city, state, or remote" id="jobLocation" oninput="filterJobs()" onkeydown="if(event.key==='Enter')filterJobs()" style="flex:1;border:none;outline:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;color:#0f172a;background:transparent">
       </div>
-    </div><!-- end search panel -->
+      <button onclick="filterJobs()" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:700;padding:0 24px;height:46px;border-radius:9px;border:none;background:#10b981;color:white;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.15s" onmouseover="this.style.background='#059669'" onmouseout="this.style.background='#10b981'">Search</button>
+    </div>
+
+    <!-- Company type -->
+    <div class="emp-type-row">
+      <span class="filter-label">Company type</span>
+      <label class="check-opt">
+        <input type="checkbox" name="empType" value="direct" checked onchange="filterJobs()">
+        <span>Direct employer</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="empType" value="startup" checked onchange="filterJobs()">
+        <span>Start-up</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="empType" value="nfp" checked onchange="filterJobs()">
+        <span>Not-for-profit</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="empType" value="agency" checked onchange="filterJobs()">
+        <span>Recruitment agency</span>
+      </label>
+    </div>
+
+    <!-- Work type -->
+    <div class="emp-type-row">
+      <span class="filter-label">Work type</span>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="fulltime" checked onchange="filterJobs()">
+        <span>Full-time</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="parttime" checked onchange="filterJobs()">
+        <span>Part-time</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="casual" checked onchange="filterJobs()">
+        <span>Casual</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="contractor" checked onchange="filterJobs()">
+        <span>Contractor</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="office" checked onchange="filterJobs()">
+        <span>In office</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="hybrid" checked onchange="filterJobs()">
+        <span>Hybrid</span>
+      </label>
+      <label class="check-opt">
+        <input type="checkbox" name="workType" value="remote" checked onchange="filterJobs()">
+        <span>Remote</span>
+      </label>
+    </div>
+
+    <!-- Categories -->
+    <div class="filter-cats">
+      <span class="filter-label">Category</span>
+      <select id="categorySelect" onchange="activeFilter=this.value;filterJobs()" style="width:100%;font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;color:var(--text);background:white;border:1.5px solid var(--page-border);border-radius:9px;padding:9px 14px;outline:none;cursor:pointer;transition:border-color 0.2s;margin-top:4px">
+        <option value="all">All categories</option>
+        <option value="accounting" id="opt-accounting">Accounting</option>
+        <option value="administration" id="opt-administration">Administration &amp; Office Support</option>
+        <option value="creative" id="opt-advertising">Advertising, Arts &amp; Media</option>
+        <option value="banking" id="opt-banking">Banking &amp; Financial Services</option>
+        <option value="cx" id="opt-callcentre">Call Centre &amp; Customer Service</option>
+        <option value="leadership" id="opt-ceo">CEO &amp; General Management</option>
+        <option value="community" id="opt-community">Community Services &amp; Development</option>
+        <option value="construction" id="opt-construction">Construction</option>
+        <option value="consulting" id="opt-consulting">Consulting &amp; Strategy</option>
+        <option value="design" id="opt-design">Design &amp; Architecture</option>
+        <option value="education" id="opt-education">Education &amp; Training</option>
+        <option value="engineering" id="opt-engineering">Engineering</option>
+        <option value="agriculture" id="opt-farming">Farming, Animals &amp; Conservation</option>
+        <option value="government" id="opt-government">Government &amp; Defence</option>
+        <option value="healthcare" id="opt-healthcare">Healthcare &amp; Medical</option>
+        <option value="hospitality" id="opt-hospitality">Hospitality &amp; Tourism</option>
+        <option value="hr" id="opt-hr">Human Resources &amp; Recruitment</option>
+        <option value="technology" id="opt-ict">Information &amp; Communication Technology</option>
+        <option value="insurance" id="opt-insurance">Insurance &amp; Superannuation</option>
+        <option value="legal" id="opt-legal">Legal</option>
+        <option value="manufacturing" id="opt-manufacturing">Manufacturing, Transport &amp; Logistics</option>
+        <option value="marketing" id="opt-marketing">Marketing &amp; Communications</option>
+        <option value="mining" id="opt-mining">Mining, Resources &amp; Energy</option>
+        <option value="realestate" id="opt-realestate">Real Estate &amp; Property</option>
+        <option value="retail" id="opt-retail">Retail &amp; Consumer Products</option>
+        <option value="sales" id="opt-sales">Sales</option>
+        <option value="science" id="opt-science">Science &amp; Technology</option>
+        <option value="sport" id="opt-sport">Sport &amp; Recreation</option>
+        <option value="trades" id="opt-trades">Trades &amp; Services</option>
+      </select>
+    </div>
 
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
       <div id="resultsCount" style="font-size:13px;color:var(--text-muted)">Loading...</div>
-      <div style="display:flex;align-items:center;gap:10px">
-        <button onclick="clearAllFilters()" id="clearFiltersBtn" style="display:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:2px">Clear filters</button>
-        <button onclick="saveSearch()" id="saveSearchBtn" style="display:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:#10b981;background:none;border:1px solid #a7f3d0;border-radius:100px;padding:4px 12px;cursor:pointer;transition:all 0.15s" onmouseover="this.style.background='#ecfdf5'" onmouseout="this.style.background='none'">
-          &#9825; Save search
-        </button>
-        <span id="saveSearchDone" style="display:none;font-size:12px;color:#10b981;font-weight:600">&#10003; Search saved</span>
-      </div>
+      <button onclick="clearAllFilters()" id="clearFiltersBtn" style="display:none;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;font-weight:600;color:var(--text-muted);background:none;border:none;cursor:pointer;text-decoration:underline;text-underline-offset:2px">Clear filters</button>
     </div>
     <div class="jobs-list" id="jobsList">
       <div class="empty-state" id="emptyState">
@@ -1232,8 +1223,6 @@ function renderJobs(jobs) {
     card.dataset.category = job.category || 'other';
     card.dataset.location = (job.location || '').toLowerCase();
     card.dataset.emptype = companyType;
-    card.dataset.worktype = job.work_type || 'office';
-    card.dataset.salary = job.salary_range ? parseInt((job.salary_range.match(/\d+/) || ['0'])[0]) * (job.salary_range.includes('k') || job.salary_range.includes('K') ? 1000 : 1) : 0;
     card.dataset.worktype = job.work_type || 'office';
     card.dataset.jobid = job.id;
     card.onclick = (e) => { if (!e.target.classList.contains('job-apply-btn')) window.location.href = `job.html?id=${job.id}`; };
@@ -1389,65 +1378,54 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// Filter dropdown toggle
-let filterPinned = false;
+let activeFilter = 'all';
 
-function toggleFilter(dropdownId, btn) {
-  const dropdown = document.getElementById(dropdownId);
-  const allDropdowns = ['companyDropdown','workDropdown','categoryDropdown','salaryDropdown'];
-  const isOpen = dropdown.style.display === 'block';
-  if (!filterPinned) {
-    allDropdowns.forEach(id => { document.getElementById(id).style.display = 'none'; });
-  }
-  dropdown.style.display = isOpen ? 'none' : 'block';
+function setFilter(filter, el) {
+  activeFilter = filter;
+  document.querySelectorAll('.cat-btn, .cat-sub').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  filterJobs();
 }
 
-function togglePinFilters() {
-  filterPinned = !filterPinned;
-  const btn = document.getElementById('filterPinBtn');
-  const allDropdowns = ['companyDropdown','workDropdown','categoryDropdown','salaryDropdown'];
-  if (filterPinned) {
-    allDropdowns.forEach(id => { document.getElementById(id).style.display = 'block'; });
-    btn.style.background = '#ecfdf5';
-    btn.style.borderColor = '#a7f3d0';
-    btn.style.color = '#059669';
-  } else {
-    allDropdowns.forEach(id => { document.getElementById(id).style.display = 'none'; });
-    btn.style.background = '';
-    btn.style.borderColor = '';
-    btn.style.color = '';
-  }
+function updateCategoryCounts() {
+  const cards = document.querySelectorAll('.job-card');
+  const counts = {};
+  cards.forEach(card => {
+    const cat = card.dataset.category || 'other';
+    counts[cat] = (counts[cat] || 0) + 1;
+  });
+  const select = document.getElementById('categorySelect');
+  if (!select) return;
+  Array.from(select.options).forEach(opt => {
+    if (opt.value === 'all') {
+      opt.text = `All categories (${cards.length})`;
+    } else {
+      const count = counts[opt.value] || 0;
+      const label = opt.text.replace(/ \(\d+\)$/, '');
+      opt.text = count > 0 ? `${label} (${count})` : label;
+      opt.disabled = count === 0;
+      opt.style.color = count === 0 ? '#94a3b8' : '';
+    }
+  });
 }
-
-// Close dropdowns on outside click
-document.addEventListener('click', function(e) {
-  if (!filterPinned && !e.target.closest('[id$="Dropdown"]') && !e.target.closest('[onclick*="toggleFilter"]') && !e.target.closest('[onclick*="togglePinFilters"]')) {
-    ['companyDropdown','workDropdown','categoryDropdown','salaryDropdown'].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.style.display = 'none';
-    });
-  }
-});
 
 function clearAllFilters() {
   document.getElementById('jobSearch').value = '';
   document.getElementById('jobLocation').value = '';
   document.querySelectorAll('input[name="empType"]').forEach(cb => cb.checked = true);
   document.querySelectorAll('input[name="workType"]').forEach(cb => cb.checked = true);
-  document.querySelectorAll('input[name="catFilter"]').forEach(cb => cb.checked = true);
-  const salAny = document.querySelector('input[name="salaryMin"][value="0"]');
-  if (salAny) salAny.checked = true;
+  document.getElementById('categorySelect').value = 'all';
+  activeFilter = 'all';
   filterJobs();
 }
 
 function filterJobs() {
-  const query = document.getElementById('jobSearch').value.toLowerCase().trim();
-  const location = document.getElementById('jobLocation').value.toLowerCase().trim();
+  const query = document.getElementById('jobSearch').value.toLowerCase();
+  const location = document.getElementById('jobLocation').value.toLowerCase();
   const empTypes = [...document.querySelectorAll('input[name="empType"]:checked')].map(i => i.value);
   const workTypes = [...document.querySelectorAll('input[name="workType"]:checked')].map(i => i.value);
-  const catFilters = [...document.querySelectorAll('input[name="catFilter"]:checked')].map(i => i.value);
-  const salaryMin = parseInt(document.querySelector('input[name="salaryMin"]:checked')?.value || '0');
-
+  const selectVal = document.getElementById('categorySelect')?.value;
+  if (selectVal) activeFilter = selectVal;
   const cards = document.querySelectorAll('.job-card');
   let visible = 0;
   cards.forEach(card => {
@@ -1455,72 +1433,18 @@ function filterJobs() {
     const loc = (card.dataset.location || '').toLowerCase();
     const type = card.dataset.emptype || 'direct';
     const work = card.dataset.worktype || 'office';
-    const salary = parseInt(card.dataset.salary || '0');
     const text = card.textContent.toLowerCase();
-
+    const matchCat = activeFilter === 'all' || cat === activeFilter;
     const matchSearch = !query || text.includes(query);
     const matchLoc = !location || loc.includes(location) || text.includes(location);
     const matchType = empTypes.length === 0 || empTypes.includes(type);
     const matchWork = workTypes.length === 0 || workTypes.includes(work);
-    const matchCat = catFilters.length === 0 || catFilters.includes(cat);
-    const matchSalary = salaryMin === 0 || salary >= salaryMin;
-
-    const show = matchSearch && matchLoc && matchType && matchWork && matchCat && matchSalary;
+    const show = matchCat && matchSearch && matchLoc && matchType && matchWork;
     card.style.display = show ? '' : 'none';
     if (show) visible++;
   });
-
   const empty = document.getElementById('emptyState');
   if (empty) empty.style.display = visible === 0 ? '' : 'none';
-
-  const countEl = document.getElementById('resultsCount');
-  if (countEl) countEl.textContent = visible === 1 ? '1 role' : `${visible} roles`;
-
-  const clearBtn = document.getElementById('clearFiltersBtn');
-  if (clearBtn) clearBtn.style.display = (query || location || salaryMin > 0) ? '' : 'none';
-
-  // Show save search button when there's an active search
-  const saveBtn = document.getElementById('saveSearchBtn');
-  const saveDone = document.getElementById('saveSearchDone');
-  if (saveBtn) {
-    const hasSearch = query || location;
-    saveBtn.style.display = hasSearch && currentCandidateId ? '' : 'none';
-    if (saveDone) saveDone.style.display = 'none';
-  }
-}
-
-async function saveSearch() {
-  if (!currentCandidateId) return;
-  const keyword = document.getElementById('jobSearch').value.trim();
-  const location = document.getElementById('jobLocation').value.trim();
-  const categories = [...document.querySelectorAll('input[name="catFilter"]:checked')].map(i => i.value);
-  const workTypes = [...document.querySelectorAll('input[name="workType"]:checked')].map(i => i.value);
-  const salaryMin = parseInt(document.querySelector('input[name="salaryMin"]:checked')?.value || '0');
-
-  const name = [keyword, location].filter(Boolean).join(' in ') || 'My search';
-
-  try {
-    const { error } = await sbClient.from('saved_searches').insert({
-      candidate_id: currentCandidateId,
-      name,
-      keyword: keyword || null,
-      location: location || null,
-      categories,
-      work_types: workTypes,
-      salary_min: salaryMin,
-    });
-
-    if (!error) {
-      document.getElementById('saveSearchBtn').style.display = 'none';
-      document.getElementById('saveSearchDone').style.display = '';
-      setTimeout(() => {
-        document.getElementById('saveSearchDone').style.display = 'none';
-        document.getElementById('saveSearchBtn').style.display = '';
-      }, 3000);
-    }
-  } catch (err) {
-    console.error('Save search error:', err);
-  }
 }
 
 let currentJobId = null;
